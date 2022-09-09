@@ -10,11 +10,16 @@ namespace Project1
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Texture2D bGtile;
+        private Texture2D ballTexture;
+        private SpriteFont deBugFont;
 
         public Texture2D farmer;
         public Vector2 pos;
+        public Vector2 ballPos = new Vector2(0,0);
         public Rectangle rec;
+        private string text;
 
+        bool personHit = false;
         int speed = 3;
         int direction = 0;
 
@@ -37,8 +42,9 @@ namespace Project1
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+
             camera = new Camera(GraphicsDevice.Viewport);
+            text = "";
 
             base.Initialize();
         }
@@ -47,6 +53,8 @@ namespace Project1
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             bGtile = base.Content.Load<Texture2D>("IMG_0130");
+            ballTexture = Content.Load<Texture2D>("ball");
+            deBugFont = Content.Load<SpriteFont>("MyFont");
             farmer = Content.Load<Texture2D>("Char01");
             frame = 0;
             totalframe = 4;
@@ -54,7 +62,8 @@ namespace Project1
             timeperframe = (float)1 / framepersec;
             totalelapsed = 0;
             pos = new Vector2(720, 270);
-            // TODO: use this.Content to load your game content here
+            ballPos = new Vector2(820, 290);
+ 
         }
 
         protected override void Update(GameTime gameTime)
@@ -108,8 +117,26 @@ namespace Project1
                     direction = 2;
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
+                Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 32, 48);
+                Rectangle ballRectangle = new Rectangle((int)ballPos.X, (int)ballPos.Y, 24, 24);
+                if (personRectangle.Intersects(ballRectangle) == true)
+                {
+                    personHit = true;
+                    text = "inter";
+                    {
+                        if (ks.IsKeyDown(Keys.F)) //Intereact object
+                        {
+                            text = "It is a phong";
+                        }
+                    }
+                }
+                else if (personRectangle.Intersects(ballRectangle) ==false)
+                {
+                    personHit = false;
+                    text = "outer";
+                }
             }
-            // TODO: Add your update logic here
+
 
             camera.Update(gameTime, this);
 
@@ -121,8 +148,10 @@ namespace Project1
             GraphicsDevice.Clear(Color.CornflowerBlue);
             _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transform);
             _spriteBatch.Draw(bGtile, new Vector2(0f, 0f), new Rectangle?(new Rectangle(0, 0, bGtile.Width, bGtile.Height)), Color.White);
+            _spriteBatch.Draw(ballTexture, ballPos,new Rectangle(0,0,24,24), (Color.White));
             _spriteBatch.Draw(farmer, pos, new Rectangle(32 * frame, 48 * direction, 32, 48), (Color.White));
-            // TODO: Add your drawing code here
+            _spriteBatch.DrawString(deBugFont, text, new Vector2(800, 200), (Color.White));
+
             _spriteBatch.End();
             base.Draw(gameTime);
         }
