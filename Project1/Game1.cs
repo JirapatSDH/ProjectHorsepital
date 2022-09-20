@@ -19,7 +19,7 @@ namespace Project1
         public Rectangle rec;
         private string text;
 
-        bool personHit = false;
+        private bool personHit;
         int speed = 3;
         int direction = 0;
 
