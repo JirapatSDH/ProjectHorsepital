@@ -63,7 +63,7 @@ namespace Project1
             bGtile = base.Content.Load<Texture2D>("IMG_0130");
             ballTexture = Content.Load<Texture2D>("ball");
             deBugFont = Content.Load<SpriteFont>("MyFont");
-            farmer = Content.Load<Texture2D>("Char01");
+            farmer = Content.Load<Texture2D>("kaolad_walking");
 
             frame = 0;
             totalframe = 4;
@@ -91,9 +91,9 @@ namespace Project1
                 {
                     //pos.Y = 270;
                     pos.Y = pos.Y - speed.Y;
-                    if (pos.Y <= 240)
+                    if (pos.Y <= 200)
                     {
-                        pos.Y = 240;
+                        pos.Y = 200;
                     }
                     direction = 3;
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -102,16 +102,16 @@ namespace Project1
                 {
                     //pos.Y = 350;
                     pos.Y = pos.Y + speed.Y;
-                    if (pos.Y >= 380)
+                    if (pos.Y >= 340)
                     {
-                        pos.Y = 380;
+                        pos.Y = 340;
                     }
                     direction = 0;
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
-                if (ks.IsKeyDown(Keys.A))
+                if (ks.IsKeyDown(Keys.A) && pos.X > 0)
                 {
-                    if(pos.X <= bLine.X)
+                    if(pos.X <= bLine.X && camPos.X > 0)
                     {
                         fLine -= new Vector2(3,0);
                         bLine -= new Vector2(3,0);
@@ -120,16 +120,12 @@ namespace Project1
 
                     pos.X = pos.X - speed.X;
 
-                    if (pos.X < 0)
-                    {
-                        pos.X = 0;
-                    }
                     direction = 1;
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
-                if (ks.IsKeyDown(Keys.D))
+                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width*2 - 25)
                 {
-                    if (pos.X >= fLine.X)
+                    if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width)
                     {
                         fLine += new Vector2(3, 0);
                         bLine += new Vector2(3, 0);
@@ -138,14 +134,11 @@ namespace Project1
 
                     pos.X = pos.X + speed.X;
 
-                    if (pos.X > 1415)
-                    {
-                        pos.X = 1415;
-                    }
+                    
                     direction = 2;
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
-                Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 32, 48);
+                Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 74, 100);
                 Rectangle ballRectangle = new Rectangle((int)ballPos.X, (int)ballPos.Y, 24, 24);
 
                 if (personRectangle.Intersects(ballRectangle) == true)
@@ -180,7 +173,7 @@ namespace Project1
             _spriteBatch.Draw(bGtile, (bgPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(bGtile, (bgPos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
             _spriteBatch.Draw(ballTexture, (ballPos - camPos) * scroll_factor, new Rectangle(24, 0, 24, 24), (Color.White));
-            _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(32 * frame, 48 * direction, 32, 48), (Color.White));
+            _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(74 * frame, 100 * direction, 74, 100), (Color.White));
             _spriteBatch.DrawString(deBugFont, text, (ballPos - new Vector2(0,20) - camPos) * scroll_factor, (Color.White));
 
             _spriteBatch.End();
