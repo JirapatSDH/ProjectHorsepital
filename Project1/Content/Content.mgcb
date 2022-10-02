@@ -73,7 +73,7 @@
 /processorParam:TextureFormat=Color
 /build:kaolad_standing.png
 
-#begin kaolad_walking.png
+#begin kaolad_walk_new.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -83,7 +83,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:kaolad_walking.png
+/build:kaolad_walk_new.png
 
 #begin MyFont.spritefont
 /importer:FontDescriptionImporter

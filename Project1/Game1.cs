@@ -2,12 +2,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
+using Penumbra;
+using System;
 
 namespace Project1
 {
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
+        PenumbraComponent dylight;
         private SpriteBatch _spriteBatch;
         private Texture2D bGtile;
         private Texture2D ballTexture;
@@ -25,7 +28,7 @@ namespace Project1
         public Rectangle rec;
         private string text;
 
-        bool personHit = false;
+        public bool personHit;
         Vector2 speed = new Vector2(3,3);
         int direction = 0;
         int rad = 50;
@@ -36,7 +39,11 @@ namespace Project1
         float timeperframe;
         float totalelapsed;
 
-        //Camera camera;
+        Light light = new PointLight
+        {
+            Scale = new Vector2(450f), // Range of the light source (how far the light will travel)
+            ShadowType = ShadowType.Illuminated // Will not lit hulls themselves
+        };
 
         public Game1()
         {
@@ -46,6 +53,9 @@ namespace Project1
             _graphics.ApplyChanges();   
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            dylight = new PenumbraComponent(this);
+            dylight.Lights.Add(light);
         }
 
         protected override void Initialize()
@@ -55,6 +65,7 @@ namespace Project1
             text = "";
 
             base.Initialize();
+            dylight.Initialize();
         }
 
         protected override void LoadContent()
@@ -63,11 +74,11 @@ namespace Project1
             bGtile = base.Content.Load<Texture2D>("IMG_0130");
             ballTexture = Content.Load<Texture2D>("ball");
             deBugFont = Content.Load<SpriteFont>("MyFont");
-            farmer = Content.Load<Texture2D>("kaolad_walking");
+            farmer = Content.Load<Texture2D>("kaolad_walk_new");
 
             frame = 0;
             totalframe = 4;
-            framepersec = 12;
+            framepersec = 6;
             timeperframe = (float)1 / framepersec;
             totalelapsed = 0;
 
@@ -158,6 +169,7 @@ namespace Project1
                     text = "outer";
                 }
             }
+            light.Position = pos - camPos + new Vector2 (40,40);
 
 
             //camera.Update(gameTime, this);
@@ -167,16 +179,18 @@ namespace Project1
 
         protected override void Draw(GameTime gameTime)
         {
+            dylight.BeginDraw();
             GraphicsDevice.Clear(Color.CornflowerBlue);
             _spriteBatch.Begin();
 
             _spriteBatch.Draw(bGtile, (bgPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(bGtile, (bgPos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
             _spriteBatch.Draw(ballTexture, (ballPos - camPos) * scroll_factor, new Rectangle(24, 0, 24, 24), (Color.White));
-            _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(74 * frame, 100 * direction, 74, 100), (Color.White));
+            _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             _spriteBatch.DrawString(deBugFont, text, (ballPos - new Vector2(0,20) - camPos) * scroll_factor, (Color.White));
 
             _spriteBatch.End();
+            dylight.Draw(gameTime);
             base.Draw(gameTime);
         }
         void UpdateFrame(float elapsed)
