@@ -13,6 +13,8 @@ namespace Project1
         PenumbraComponent dylight;
         private SpriteBatch _spriteBatch;
         private Texture2D bGtile;
+        private Texture2D bGtile2;
+        private Texture2D bGtile3;
         private Texture2D ballTexture;
         private SpriteFont deBugFont;
 
@@ -20,6 +22,7 @@ namespace Project1
         public Vector2 pos;
         public Vector2 bgPos = Vector2.Zero;
         public Vector2 ballPos = new Vector2(0,0);
+        public Vector2 textPos;
 
         Vector2 camPos = Vector2.Zero;
         Vector2 fLine, bLine;
@@ -27,6 +30,7 @@ namespace Project1
 
         public Rectangle rec;
         private string text;
+        private string ptext;
 
         public bool personHit;
         Vector2 speed = new Vector2(3,3);
@@ -49,7 +53,7 @@ namespace Project1
         {
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferredBackBufferWidth = 720;
-            _graphics.PreferredBackBufferHeight = 480;
+            _graphics.PreferredBackBufferHeight = 380;
             _graphics.ApplyChanges();   
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -63,6 +67,8 @@ namespace Project1
 
             //camera = new Camera(GraphicsDevice.Viewport);
             text = "";
+            ptext = "";
+            
 
             base.Initialize();
             dylight.Initialize();
@@ -71,7 +77,9 @@ namespace Project1
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            bGtile = base.Content.Load<Texture2D>("IMG_0130");
+            bGtile = base.Content.Load<Texture2D>("room2-1");
+            bGtile2 = base.Content.Load<Texture2D>("room2-2 ");
+            bGtile3 = base.Content.Load<Texture2D>("room2-3 ");
             ballTexture = Content.Load<Texture2D>("ball");
             deBugFont = Content.Load<SpriteFont>("MyFont");
             farmer = Content.Load<Texture2D>("kaolad_walk_new");
@@ -83,7 +91,8 @@ namespace Project1
             totalelapsed = 0;
 
             pos = new Vector2(150, 270);
-            ballPos = new Vector2(270, 290);
+            ballPos = new Vector2(260, 200);
+            
             fLine.X = pos.X + rad;
             bLine.X = pos.X - rad;
  
@@ -102,9 +111,9 @@ namespace Project1
                 {
                     //pos.Y = 270;
                     pos.Y = pos.Y - speed.Y;
-                    if (pos.Y <= 200)
+                    if (pos.Y <= 210)
                     {
-                        pos.Y = 200;
+                        pos.Y = 210;
                     }
                     direction = 3;
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -113,14 +122,14 @@ namespace Project1
                 {
                     //pos.Y = 350;
                     pos.Y = pos.Y + speed.Y;
-                    if (pos.Y >= 340)
+                    if (pos.Y >= 280)
                     {
-                        pos.Y = 340;
+                        pos.Y = 280;
                     }
                     direction = 0;
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
-                if (ks.IsKeyDown(Keys.A) && pos.X > 0)
+                if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                 {
                     if(pos.X <= bLine.X && camPos.X > 0)
                     {
@@ -134,9 +143,9 @@ namespace Project1
                     direction = 1;
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
-                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width*2 - 25)
+                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width*3 - 25)
                 {
-                    if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width)
+                    if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width*2)
                     {
                         fLine += new Vector2(3, 0);
                         bLine += new Vector2(3, 0);
@@ -170,8 +179,8 @@ namespace Project1
                 }
             }
             light.Position = pos - camPos + new Vector2 (40,40);
-
-
+            ptext = "" + pos.ToString();
+            textPos = pos + new Vector2(5, 95);
             //camera.Update(gameTime, this);
 
             base.Update(gameTime);
@@ -184,10 +193,12 @@ namespace Project1
             _spriteBatch.Begin();
 
             _spriteBatch.Draw(bGtile, (bgPos - camPos) * scroll_factor, Color.White);
-            _spriteBatch.Draw(bGtile, (bgPos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
+            _spriteBatch.Draw(bGtile2, (bgPos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
+            _spriteBatch.Draw(bGtile3, (bgPos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width + 720, 0), Color.White);
             _spriteBatch.Draw(ballTexture, (ballPos - camPos) * scroll_factor, new Rectangle(24, 0, 24, 24), (Color.White));
             _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             _spriteBatch.DrawString(deBugFont, text, (ballPos - new Vector2(0,20) - camPos) * scroll_factor, (Color.White));
+            _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
 
             _spriteBatch.End();
             dylight.Draw(gameTime);
