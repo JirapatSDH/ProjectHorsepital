@@ -21,6 +21,8 @@ namespace Project1
         private Texture2D uiTexture;
         private Texture2D sanityBar;
         private Texture2D staminaBar;
+        private Texture2D eTexture;
+        private Texture2D eWalk;
         private SpriteFont deBugFont;
 
         public Texture2D farmer;
@@ -35,8 +37,8 @@ namespace Project1
         Vector2 camPos = Vector2.Zero;
         Vector2 fLine, bLine;
         Vector2 scroll_factor = new Vector2(1.0f, 1);
-        
 
+        public Rectangle enemyRec;
         public Rectangle rec;
         private string text;
         private string ptext;
@@ -106,18 +108,20 @@ namespace Project1
             ShadowType = ShadowType.Illuminated
         };
         //-------------------------------------------------------------enemy-----------------------------------------------------------------------
-        enum FaceDirection
-        {
-            Left = -1,
-            Right = 1,
-        }
+        int eframe;
+        int etotalframe;
+        int eframepersec;
+        float etimeperframe;
+        float etotalelapsed;
         public Light eLight { get; } = new PointLight
         {
             Color = new Color(255, 0, 0),
             Scale = new Vector2(400),
             Intensity = 1.5f
         };
-        public Vector2 ePosition;
+        public Vector2 ePos;
+        Vector2 eSpeed = new Vector2(1, 1);
+
         public Game1()
         {
 
@@ -164,6 +168,8 @@ namespace Project1
             uiTexture = Content.Load<Texture2D>("UI_emty");
             sanityBar = Content.Load<Texture2D>("SanityBar");
             staminaBar = Content.Load<Texture2D>("StaminaBar");
+            eTexture = Content.Load<Texture2D>("Ghost_stand");
+            eWalk = Content.Load<Texture2D>("Ghost_walk");
 
             frame = 0;
             totalframe = 4;
@@ -171,9 +177,16 @@ namespace Project1
             timeperframe = (float)1 / framepersec;
             totalelapsed = 0;
 
+            eframe = 0;
+            etotalframe = 5;
+            eframepersec = 6;
+            etimeperframe = (float)1 / eframepersec;
+            etotalelapsed = 0;
+
             pos = new Vector2(150, 270);
             ballPos = new Vector2(20, 255);
             uiPos = new Vector2(0, 0);
+            ePos = new Vector2(1850,170);
 
             fLine.X = pos.X + rad;
             bLine.X = pos.X - rad;
@@ -302,10 +315,21 @@ namespace Project1
                     speed.X = 0;
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
+
                 Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 70);
                 Rectangle ballRectangle = new Rectangle((int)ballPos.X, (int)ballPos.Y, 24, 24);
+                Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
 
-                if (personRectangle.Intersects(ballRectangle) == true)
+                if (personRectangle.Intersects(enemyRectangle) == true)
+                {
+                    hBarRec.Width -= 5;
+                }
+                else if (personRectangle.Intersects(enemyRectangle) == false)
+                {
+                    UpdateEnemy((float)gameTime.ElapsedGameTime.TotalSeconds);
+                }
+
+                    if (personRectangle.Intersects(ballRectangle) == true)
                 {
                     personHit = true;
                     text = "F To Enter";
@@ -323,8 +347,9 @@ namespace Project1
                 }
                 old_ks = ks;
             }
+            eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2 (40,40);
-            ptext = "" + pos.ToString() + "" + speed.ToString();
+            ptext = "" + pos.ToString() + "" + speed.ToString() + "" + ePos.ToString();
             textPos = pos + new Vector2(5, 95);
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             //camera.Update(gameTime, this);
@@ -356,6 +381,7 @@ namespace Project1
                 totalframe = 4;
                 _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             }
+            _spriteBatch.Draw(eTexture,ePos - camPos * scroll_factor,new Rectangle(120 * eframe, 0 , 120, 120), (Color.White));
             _spriteBatch.DrawString(deBugFont, text, (ballPos - new Vector2(0,20) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor,Color.White);
@@ -367,6 +393,7 @@ namespace Project1
             spotLight2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
             spotLight3.Position = (new Vector2(1557, 30) - camPos) * scroll_factor;
             spotLight4.Position = (new Vector2(163, 30) - camPos) * scroll_factor;
+
            
             _spriteBatch.End();
             dylight.Draw(gameTime);
@@ -379,6 +406,15 @@ namespace Project1
             {
                 frame = (frame + 1) % totalframe;
                 totalelapsed -= timeperframe;
+            }
+        }
+        void UpdateEnemy(float elapsed)
+        {
+            etotalelapsed += elapsed;
+            if (etotalelapsed > etimeperframe)
+            {
+                eframe = (eframe + 1) % etotalframe;
+                etotalelapsed -= etimeperframe;
             }
         }
         protected void ProcessInput()
