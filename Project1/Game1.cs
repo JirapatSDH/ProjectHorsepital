@@ -11,6 +11,7 @@ namespace Project1
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
+        
         PenumbraComponent dylight;
         private SpriteBatch _spriteBatch;
         private Texture2D bGtile;
@@ -23,6 +24,7 @@ namespace Project1
         private SpriteFont deBugFont;
 
         public Texture2D farmer;
+        public Texture2D pIdle;
         public Vector2 pos;
         public Vector2 bgPos = Vector2.Zero;
         public Vector2 ballPos = new Vector2(0,0);
@@ -33,6 +35,7 @@ namespace Project1
         Vector2 camPos = Vector2.Zero;
         Vector2 fLine, bLine;
         Vector2 scroll_factor = new Vector2(1.0f, 1);
+        
 
         public Rectangle rec;
         private string text;
@@ -50,6 +53,7 @@ namespace Project1
         float timeperframe;
         float totalelapsed;
 
+        //--------------------------------------------------------------------------Set Light---------------------------------------------
         Light light2 = new Spotlight
         {
             Color = Color.White,
@@ -80,7 +84,7 @@ namespace Project1
             Scale = new Vector2(400),
             Radius = 120,
             Rotation = MathHelper.Pi - MathHelper.PiOver2 * 1f,
-            ConeDecay = 3.5f,
+            ConeDecay = 2.5f,
             ShadowType = ShadowType.Illuminated 
         };
         Light spotLight3 = new Spotlight
@@ -101,11 +105,22 @@ namespace Project1
             ConeDecay = 1.5f,
             ShadowType = ShadowType.Illuminated
         };
-        
-
-
+        //-------------------------------------------------------------enemy-----------------------------------------------------------------------
+        enum FaceDirection
+        {
+            Left = -1,
+            Right = 1,
+        }
+        public Light eLight { get; } = new PointLight
+        {
+            Color = new Color(255, 0, 0),
+            Scale = new Vector2(400),
+            Intensity = 1.5f
+        };
+        public Vector2 ePosition;
         public Game1()
         {
+
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferredBackBufferWidth = 720;
             _graphics.PreferredBackBufferHeight = 380;
@@ -114,12 +129,14 @@ namespace Project1
             IsMouseVisible = true;
 
             dylight = new PenumbraComponent(this);
+            //add Light
             dylight.Lights.Add(light);
             dylight.Lights.Add(light2);
             dylight.Lights.Add(spotLight);
             dylight.Lights.Add(spotLight2);
             dylight.Lights.Add(spotLight3);
             dylight.Lights.Add(spotLight4);
+            dylight.Lights.Add(eLight);
 
         }
 
@@ -143,6 +160,7 @@ namespace Project1
             ballTexture = Content.Load<Texture2D>("ball");
             deBugFont = Content.Load<SpriteFont>("MyFont");
             farmer = Content.Load<Texture2D>("kaolad_walk_newV2");
+            pIdle = Content.Load<Texture2D>("kaolad_standing");
             uiTexture = Content.Load<Texture2D>("UI_emty");
             sanityBar = Content.Load<Texture2D>("SanityBar");
             staminaBar = Content.Load<Texture2D>("StaminaBar");
@@ -173,29 +191,38 @@ namespace Project1
             KeyboardState ks = Keyboard.GetState();
             KeyboardState old_ks = Keyboard.GetState();
             {
-                if (ks.IsKeyDown(Keys.Space))//Health debug
+                if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
                 {
                     hBarRec.Width -= 5;
                 }
 
                 if (ks.IsKeyDown(Keys.W))
                 {
-                    //pos.Y = 270;
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
                     pos.Y = pos.Y - speed.Y;
                     if (pos.Y <= 210)
                     {
                         pos.Y = 210;
+
                     }
                     direction = 3;
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
                 if (ks.IsKeyDown(Keys.S))
                 {
-                    //pos.Y = 350;
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
                     pos.Y = pos.Y + speed.Y;
                     if (pos.Y >= 280)
                     {
-                        pos.Y = 280;
+                        pos.Y = 280; 
                     }
                     direction = 0;
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -216,21 +243,24 @@ namespace Project1
                         bLine -= new Vector2(6, 0);
                         camPos -= new Vector2(6, 0);
                         uiPos -= new Vector2(6, 0);
-                        sBarRec.Width -= 1;
+                        sBarRec.Width -= 3;
                     }
                     else
                     {
                         speed.X = 3;
-                        sBarRec.Width += 1; 
-                        if (sBarRec.Width >= 163)
-                        {
-                            sBarRec.Width = 163;
-                        }
                     }
                     pos.X = pos.X - speed.X;
                     direction = 1;
                     
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                }
+                else
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
                 }
                 if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width*3 - 25)
                 {
@@ -248,20 +278,28 @@ namespace Project1
                         bLine += new Vector2(6, 0);
                         camPos += new Vector2(6, 0);
                         uiPos += new Vector2(6, 0);
-                        sBarRec.Width -= 1;
+                        sBarRec.Width -= 3;
                     }
                     else
                     {
                         speed.X = 3;
-                        sBarRec.Width += 1; 
-                        if (sBarRec.Width >= 163)
-                        {
-                            sBarRec.Width = 163;
-                        }
                     }
                     pos.X = pos.X + speed.X;
 
                     direction = 2;
+                    UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                }
+                else
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                }
+                if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
+                {
+                    speed.X = 0;
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
                 Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 70);
@@ -304,7 +342,20 @@ namespace Project1
             _spriteBatch.Draw(bGtile2, (bgPos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
             _spriteBatch.Draw(bGtile3, (bgPos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width + 720, 0), Color.White);
             _spriteBatch.Draw(ballTexture, (ballPos - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
-            _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
+            if(speed.X == 0)
+            {
+                totalframe = 20; 
+                _spriteBatch.Draw(pIdle, pos - camPos, new Rectangle(72 * frame, 0 , 72, 96), (Color.White));
+            }
+            else
+            {
+                if (totalframe > 4 )
+                {
+                    frame = 0;
+                }
+                totalframe = 4;
+                _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
+            }
             _spriteBatch.DrawString(deBugFont, text, (ballPos - new Vector2(0,20) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor,Color.White);
