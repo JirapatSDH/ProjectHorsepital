@@ -209,10 +209,23 @@ namespace Project1
                         camPos -= new Vector2(3,0);
                         uiPos -= new Vector2(3, 0);
                     }
-                    if (ks.IsKeyDown(Keys.LeftShift))
+                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
-                        speed.Y = 9;
+                            speed.X = 6;
+                        fLine -= new Vector2(6, 0);
+                        bLine -= new Vector2(6, 0);
+                        camPos -= new Vector2(6, 0);
+                        uiPos -= new Vector2(6, 0);
                         sBarRec.Width -= 1;
+                    }
+                    else
+                    {
+                        speed.X = 3;
+                        sBarRec.Width += 1; 
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
                     }
                     pos.X = pos.X - speed.X;
                     direction = 1;
@@ -228,10 +241,23 @@ namespace Project1
                         camPos += new Vector2(3, 0);
                         uiPos += new Vector2(3, 0);
                     }
-                    if (ks.IsKeyDown(Keys.LeftShift))
+                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
-                        speed.Y = 9;
+                        speed.X = 6;
+                        fLine += new Vector2(6, 0);
+                        bLine += new Vector2(6, 0);
+                        camPos += new Vector2(6, 0);
+                        uiPos += new Vector2(6, 0);
                         sBarRec.Width -= 1;
+                    }
+                    else
+                    {
+                        speed.X = 3;
+                        sBarRec.Width += 1; 
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
                     }
                     pos.X = pos.X + speed.X;
 
@@ -260,7 +286,7 @@ namespace Project1
                 old_ks = ks;
             }
             light.Position = pos - camPos + new Vector2 (40,40);
-            ptext = "" + pos.ToString();
+            ptext = "" + pos.ToString() + "" + speed.ToString();
             textPos = pos + new Vector2(5, 95);
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             //camera.Update(gameTime, this);
