@@ -17,6 +17,9 @@ namespace Project1
         private Texture2D bGtile2;
         private Texture2D bGtile3;
         private Texture2D ballTexture;
+        private Texture2D uiTexture;
+        private Texture2D sanityBar;
+        private Texture2D staminaBar;
         private SpriteFont deBugFont;
 
         public Texture2D farmer;
@@ -24,6 +27,7 @@ namespace Project1
         public Vector2 bgPos = Vector2.Zero;
         public Vector2 ballPos = new Vector2(0,0);
         public Vector2 textPos;
+        public Vector2 uiPos;
 
         Vector2 camPos = Vector2.Zero;
         Vector2 fLine, bLine;
@@ -44,6 +48,16 @@ namespace Project1
         float timeperframe;
         float totalelapsed;
 
+        Light light2 = new Spotlight
+        {
+            Color = Color.White,
+            Scale = new Vector2(500f),
+            Radius = 20,
+            CastsShadows = false,
+            Rotation = MathHelper.Pi - MathHelper.PiOver2 * 1f,
+            ConeDecay = 2.5f,
+            ShadowType = ShadowType.Solid
+        };
         Light light = new PointLight
         {
             Scale = new Vector2(250f), 
@@ -55,7 +69,8 @@ namespace Project1
             Scale = new Vector2(400),
             Radius = 90,
             Rotation = MathHelper.Pi - MathHelper.PiOver2 * 1f,
-            ConeDecay = 1.5f
+            ConeDecay = 1.5f,
+            ShadowType = ShadowType.Illuminated
         };
         Light spotLight2 = new Spotlight
         {
@@ -63,7 +78,8 @@ namespace Project1
             Scale = new Vector2(400),
             Radius = 120,
             Rotation = MathHelper.Pi - MathHelper.PiOver2 * 1f,
-            ConeDecay = 1.5f
+            ConeDecay = 3.5f,
+            ShadowType = ShadowType.Illuminated 
         };
         Light spotLight3 = new Spotlight
         {
@@ -71,7 +87,8 @@ namespace Project1
             Scale = new Vector2(400),
             Radius = 90,
             Rotation = MathHelper.Pi - MathHelper.PiOver2 * 1f,
-            ConeDecay = 1.5f
+            ConeDecay = 1.5f,
+            ShadowType = ShadowType.Illuminated
         };
         Light spotLight4 = new Spotlight
         {
@@ -79,8 +96,11 @@ namespace Project1
             Scale = new Vector2(400),
             Radius = 90,
             Rotation = MathHelper.Pi - MathHelper.PiOver2 * 1f,
-            ConeDecay = 1.5f
+            ConeDecay = 1.5f,
+            ShadowType = ShadowType.Illuminated
         };
+        
+
 
         public Game1()
         {
@@ -93,10 +113,12 @@ namespace Project1
 
             dylight = new PenumbraComponent(this);
             dylight.Lights.Add(light);
+            dylight.Lights.Add(light2);
             dylight.Lights.Add(spotLight);
             dylight.Lights.Add(spotLight2);
             dylight.Lights.Add(spotLight3);
             dylight.Lights.Add(spotLight4);
+
         }
 
         protected override void Initialize()
@@ -119,6 +141,9 @@ namespace Project1
             ballTexture = Content.Load<Texture2D>("ball");
             deBugFont = Content.Load<SpriteFont>("MyFont");
             farmer = Content.Load<Texture2D>("kaolad_walk_newV2");
+            uiTexture = Content.Load<Texture2D>("UI_emty");
+            sanityBar = Content.Load<Texture2D>("SanityBar");
+            staminaBar = Content.Load<Texture2D>("StaminaBar");
 
             frame = 0;
             totalframe = 4;
@@ -128,7 +153,8 @@ namespace Project1
 
             pos = new Vector2(150, 270);
             ballPos = new Vector2(20, 255);
-           
+            uiPos = new Vector2(0, 0);
+
             fLine.X = pos.X + rad;
             bLine.X = pos.X - rad;
             
@@ -172,11 +198,11 @@ namespace Project1
                     {
                         fLine -= new Vector2(3,0);
                         bLine -= new Vector2(3,0);
-                        camPos -= new Vector2(3,0);   
+                        camPos -= new Vector2(3,0);
+                        uiPos -= new Vector2(3, 0);
                     }
 
                     pos.X = pos.X - speed.X;
-
                     direction = 1;
                     
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -188,11 +214,11 @@ namespace Project1
                         fLine += new Vector2(3, 0);
                         bLine += new Vector2(3, 0);
                         camPos += new Vector2(3, 0);
+                        uiPos += new Vector2(3, 0);
                     }
 
                     pos.X = pos.X + speed.X;
 
-                    
                     direction = 2;
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
@@ -220,17 +246,18 @@ namespace Project1
             light.Position = pos - camPos + new Vector2 (40,40);
             ptext = "" + pos.ToString();
             textPos = pos + new Vector2(5, 95);
+            light2.Position = uiPos - camPos + new Vector2(125, -350);
             //camera.Update(gameTime, this);
-            
+
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            dylight.BeginDraw();
+            
             GraphicsDevice.Clear(Color.CornflowerBlue);
             _spriteBatch.Begin();
-
+            dylight.BeginDraw();
             _spriteBatch.Draw(bGtile, (bgPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(bGtile2, (bgPos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
             _spriteBatch.Draw(bGtile3, (bgPos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width + 720, 0), Color.White);
@@ -238,13 +265,14 @@ namespace Project1
             _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             _spriteBatch.DrawString(deBugFont, text, (ballPos - new Vector2(0,20) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
+            _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor,Color.White);
 
             //SpotLight
-            spotLight.Position = (new Vector2 (894,20) - camPos) * scroll_factor;
+            spotLight.Position = (new Vector2 (894,30) - camPos) * scroll_factor;
             spotLight2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
-            spotLight3.Position = (new Vector2(1557, 20) - camPos) * scroll_factor;
+            spotLight3.Position = (new Vector2(1557, 30) - camPos) * scroll_factor;
             spotLight4.Position = (new Vector2(163, 30) - camPos) * scroll_factor;
-
+           
             _spriteBatch.End();
             dylight.Draw(gameTime);
             base.Draw(gameTime);
