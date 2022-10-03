@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 using Penumbra;
 using System;
+using System.Collections.Generic;
 
 namespace Project1
 {
@@ -45,8 +46,40 @@ namespace Project1
 
         Light light = new PointLight
         {
-            Scale = new Vector2(450f), // Range of the light source (how far the light will travel)
-            ShadowType = ShadowType.Illuminated // Will not lit hulls themselves
+            Scale = new Vector2(250f), 
+            ShadowType = ShadowType.Illuminated 
+        };
+        Light spotLight = new Spotlight
+        {
+            Color = Color.YellowGreen,
+            Scale = new Vector2(400),
+            Radius = 90,
+            Rotation = MathHelper.Pi - MathHelper.PiOver2 * 1f,
+            ConeDecay = 1.5f
+        };
+        Light spotLight2 = new Spotlight
+        {
+            Color = Color.Yellow,
+            Scale = new Vector2(400),
+            Radius = 120,
+            Rotation = MathHelper.Pi - MathHelper.PiOver2 * 1f,
+            ConeDecay = 1.5f
+        };
+        Light spotLight3 = new Spotlight
+        {
+            Color = Color.YellowGreen,
+            Scale = new Vector2(400),
+            Radius = 90,
+            Rotation = MathHelper.Pi - MathHelper.PiOver2 * 1f,
+            ConeDecay = 1.5f
+        };
+        Light spotLight4 = new Spotlight
+        {
+            Color = Color.YellowGreen,
+            Scale = new Vector2(400),
+            Radius = 90,
+            Rotation = MathHelper.Pi - MathHelper.PiOver2 * 1f,
+            ConeDecay = 1.5f
         };
 
         public Game1()
@@ -60,6 +93,10 @@ namespace Project1
 
             dylight = new PenumbraComponent(this);
             dylight.Lights.Add(light);
+            dylight.Lights.Add(spotLight);
+            dylight.Lights.Add(spotLight2);
+            dylight.Lights.Add(spotLight3);
+            dylight.Lights.Add(spotLight4);
         }
 
         protected override void Initialize()
@@ -68,7 +105,6 @@ namespace Project1
             //camera = new Camera(GraphicsDevice.Viewport);
             text = "";
             ptext = "";
-            
 
             base.Initialize();
             dylight.Initialize();
@@ -77,12 +113,12 @@ namespace Project1
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            bGtile = base.Content.Load<Texture2D>("room2-1");
-            bGtile2 = base.Content.Load<Texture2D>("room2-2 ");
-            bGtile3 = base.Content.Load<Texture2D>("room2-3 ");
+            bGtile = base.Content.Load<Texture2D>("2-1D");
+            bGtile2 = base.Content.Load<Texture2D>("2-2D");
+            bGtile3 = base.Content.Load<Texture2D>("2-3D");
             ballTexture = Content.Load<Texture2D>("ball");
             deBugFont = Content.Load<SpriteFont>("MyFont");
-            farmer = Content.Load<Texture2D>("kaolad_walk_new");
+            farmer = Content.Load<Texture2D>("kaolad_walk_newV2");
 
             frame = 0;
             totalframe = 4;
@@ -91,11 +127,11 @@ namespace Project1
             totalelapsed = 0;
 
             pos = new Vector2(150, 270);
-            ballPos = new Vector2(260, 200);
-            
+            ballPos = new Vector2(20, 255);
+           
             fLine.X = pos.X + rad;
             bLine.X = pos.X - rad;
- 
+            
         }
 
         protected override void Update(GameTime gameTime)
@@ -106,6 +142,7 @@ namespace Project1
 
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             KeyboardState ks = Keyboard.GetState();
+            KeyboardState old_ks = Keyboard.GetState();
             {
                 if (ks.IsKeyDown(Keys.W))
                 {
@@ -141,6 +178,7 @@ namespace Project1
                     pos.X = pos.X - speed.X;
 
                     direction = 1;
+                    
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
                 if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width*3 - 25)
@@ -158,31 +196,32 @@ namespace Project1
                     direction = 2;
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
-                Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 74, 100);
+                Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 70);
                 Rectangle ballRectangle = new Rectangle((int)ballPos.X, (int)ballPos.Y, 24, 24);
 
                 if (personRectangle.Intersects(ballRectangle) == true)
                 {
                     personHit = true;
-                    text = "inter";
+                    text = "F To Enter";
                     {
                         if (ks.IsKeyDown(Keys.F)) //Intereact object
                         {
-                            text = "It is a phong";
+                            text = "Enter room 1";
                         }
                     }
                 }
                 else if (personRectangle.Intersects(ballRectangle) ==false)
                 {
                     personHit = false;
-                    text = "outer";
+                    text = "Check";
                 }
+                old_ks = ks;
             }
             light.Position = pos - camPos + new Vector2 (40,40);
             ptext = "" + pos.ToString();
             textPos = pos + new Vector2(5, 95);
             //camera.Update(gameTime, this);
-
+            
             base.Update(gameTime);
         }
 
@@ -195,10 +234,16 @@ namespace Project1
             _spriteBatch.Draw(bGtile, (bgPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(bGtile2, (bgPos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
             _spriteBatch.Draw(bGtile3, (bgPos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width + 720, 0), Color.White);
-            _spriteBatch.Draw(ballTexture, (ballPos - camPos) * scroll_factor, new Rectangle(24, 0, 24, 24), (Color.White));
+            _spriteBatch.Draw(ballTexture, (ballPos - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             _spriteBatch.DrawString(deBugFont, text, (ballPos - new Vector2(0,20) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
+
+            //SpotLight
+            spotLight.Position = (new Vector2 (894,20) - camPos) * scroll_factor;
+            spotLight2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
+            spotLight3.Position = (new Vector2(1557, 20) - camPos) * scroll_factor;
+            spotLight4.Position = (new Vector2(163, 30) - camPos) * scroll_factor;
 
             _spriteBatch.End();
             dylight.Draw(gameTime);
