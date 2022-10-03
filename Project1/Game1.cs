@@ -28,6 +28,7 @@ namespace Project1
         public Vector2 ballPos = new Vector2(0,0);
         public Vector2 textPos;
         public Vector2 uiPos;
+        public Vector2 sbarPos = new Vector2(73,12);
 
         Vector2 camPos = Vector2.Zero;
         Vector2 fLine, bLine;
@@ -36,7 +37,8 @@ namespace Project1
         public Rectangle rec;
         private string text;
         private string ptext;
-
+        public Rectangle hBarRec;
+        public Rectangle sBarRec;
         public bool personHit;
         Vector2 speed = new Vector2(3,3);
         int direction = 0;
@@ -51,11 +53,11 @@ namespace Project1
         Light light2 = new Spotlight
         {
             Color = Color.White,
-            Scale = new Vector2(500f),
-            Radius = 20,
+            Scale = new Vector2(510f),
+            Radius = 100,
             CastsShadows = false,
             Rotation = MathHelper.Pi - MathHelper.PiOver2 * 1f,
-            ConeDecay = 2.5f,
+            ConeDecay = 300.5f,
             ShadowType = ShadowType.Solid
         };
         Light light = new PointLight
@@ -127,7 +129,7 @@ namespace Project1
             //camera = new Camera(GraphicsDevice.Viewport);
             text = "";
             ptext = "";
-
+            
             base.Initialize();
             dylight.Initialize();
         }
@@ -157,7 +159,9 @@ namespace Project1
 
             fLine.X = pos.X + rad;
             bLine.X = pos.X - rad;
-            
+
+            hBarRec = new Rectangle(0, 0, sanityBar.Width, sanityBar.Height);
+            sBarRec = new Rectangle(0, 0, staminaBar.Width, staminaBar.Height);
         }
 
         protected override void Update(GameTime gameTime)
@@ -165,11 +169,15 @@ namespace Project1
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             ProcessInput();
-
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             KeyboardState ks = Keyboard.GetState();
             KeyboardState old_ks = Keyboard.GetState();
             {
+                if (ks.IsKeyDown(Keys.Space))//Health debug
+                {
+                    hBarRec.Width -= 5;
+                }
+
                 if (ks.IsKeyDown(Keys.W))
                 {
                     //pos.Y = 270;
@@ -201,7 +209,11 @@ namespace Project1
                         camPos -= new Vector2(3,0);
                         uiPos -= new Vector2(3, 0);
                     }
-
+                    if (ks.IsKeyDown(Keys.LeftShift))
+                    {
+                        speed.Y = 9;
+                        sBarRec.Width -= 1;
+                    }
                     pos.X = pos.X - speed.X;
                     direction = 1;
                     
@@ -216,7 +228,11 @@ namespace Project1
                         camPos += new Vector2(3, 0);
                         uiPos += new Vector2(3, 0);
                     }
-
+                    if (ks.IsKeyDown(Keys.LeftShift))
+                    {
+                        speed.Y = 9;
+                        sBarRec.Width -= 1;
+                    }
                     pos.X = pos.X + speed.X;
 
                     direction = 2;
@@ -246,7 +262,7 @@ namespace Project1
             light.Position = pos - camPos + new Vector2 (40,40);
             ptext = "" + pos.ToString();
             textPos = pos + new Vector2(5, 95);
-            light2.Position = uiPos - camPos + new Vector2(125, -350);
+            light2.Position = uiPos - camPos + new Vector2(65, -370);
             //camera.Update(gameTime, this);
 
             base.Update(gameTime);
@@ -266,6 +282,8 @@ namespace Project1
             _spriteBatch.DrawString(deBugFont, text, (ballPos - new Vector2(0,20) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor,Color.White);
+            _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor,hBarRec, Color.White);
+            _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0,33)) - camPos) * scroll_factor,sBarRec, Color.White);
 
             //SpotLight
             spotLight.Position = (new Vector2 (894,30) - camPos) * scroll_factor;
