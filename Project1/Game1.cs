@@ -22,6 +22,7 @@ namespace Project1
         private Texture2D sanityBar;
         private Texture2D staminaBar;
         private Texture2D eTexture;
+        private Texture2D trap;
         private Texture2D eWalk;
         private SpriteFont deBugFont;
 
@@ -120,6 +121,7 @@ namespace Project1
             Intensity = 1.5f
         };
         public Vector2 ePos;
+        public Vector2 trapPos;
         Vector2 eSpeed = new Vector2(1, 1);
 
         public Game1()
@@ -170,6 +172,7 @@ namespace Project1
             staminaBar = Content.Load<Texture2D>("StaminaBar");
             eTexture = Content.Load<Texture2D>("Ghost_stand");
             eWalk = Content.Load<Texture2D>("Ghost_walk");
+            trap = Content.Load<Texture2D>("Hand_up-down");
 
             frame = 0;
             totalframe = 4;
@@ -187,6 +190,7 @@ namespace Project1
             ballPos = new Vector2(20, 255);
             uiPos = new Vector2(0, 0);
             ePos = new Vector2(1850,170);
+            trapPos = new Vector2(900, 340);
 
             fLine.X = pos.X + rad;
             bLine.X = pos.X - rad;
@@ -220,8 +224,8 @@ namespace Project1
                     if (pos.Y <= 210)
                     {
                         pos.Y = 210;
-
                     }
+                    speed.X = 3;
                     direction = 3;
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
@@ -237,6 +241,7 @@ namespace Project1
                     {
                         pos.Y = 280; 
                     }
+                    speed.X = 3;
                     direction = 0;
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
@@ -315,11 +320,21 @@ namespace Project1
                     speed.X = 0;
                     UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
-
-                Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 70);
+                // -----------------------------------------------------------------------------------------------collistion
+                Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
                 Rectangle ballRectangle = new Rectangle((int)ballPos.X, (int)ballPos.Y, 24, 24);
                 Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
+                Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, 100, 100);
 
+                if (personRectangle.Intersects(trapRectangle) == true)
+                {
+                    personHit = true;
+                    sBarRec.Width -= 3;
+                }
+                else if (personRectangle.Intersects(trapRectangle) == false)
+                {
+
+                }
                 if (personRectangle.Intersects(enemyRectangle) == true)
                 {
                     hBarRec.Width -= 5;
@@ -349,7 +364,7 @@ namespace Project1
             }
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2 (40,40);
-            ptext = "" + pos.ToString() + "" + speed.ToString() + "" + ePos.ToString();
+            ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
             textPos = pos + new Vector2(5, 95);
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             //camera.Update(gameTime, this);
@@ -367,7 +382,8 @@ namespace Project1
             _spriteBatch.Draw(bGtile2, (bgPos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
             _spriteBatch.Draw(bGtile3, (bgPos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width + 720, 0), Color.White);
             _spriteBatch.Draw(ballTexture, (ballPos - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
-            if(speed.X == 0)
+            _spriteBatch.Draw(trap, trapPos - camPos * scroll_factor, new Rectangle(0, 0, 26, 26), (Color.White));
+            if (speed.X <= 0)
             {
                 totalframe = 20; 
                 _spriteBatch.Draw(pIdle, pos - camPos, new Rectangle(72 * frame, 0 , 72, 96), (Color.White));
