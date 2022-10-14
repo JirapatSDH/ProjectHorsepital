@@ -23,7 +23,17 @@ namespace Project1
             Room3,
             Room4,
             Room5,
+            //Room6,
             Room7,
+            //Room8,
+            LRoom1,
+            LRoom2,
+            LRoom3,
+            LRoom4,
+            LRoom5,
+            //LRoom6,
+            LRoom7,
+            //LRoom8,
             over
         }
         PenumbraComponent dylight;
@@ -37,6 +47,15 @@ namespace Project1
         private Texture2D room5_1;
         private Texture2D room5_2;
         private Texture2D room7;
+        private Texture2D Lroom1;
+        private Texture2D Lroom2_1;
+        private Texture2D Lroom2_2;
+        private Texture2D Lroom2_3;
+        private Texture2D Lroom3;
+        private Texture2D Lroom4;
+        private Texture2D Lroom5_1;
+        private Texture2D Lroom5_2;
+        private Texture2D Lroom7;
         private Texture2D menu;
         private Texture2D menuchar1;
         private Texture2D menuchar2;
@@ -227,6 +246,15 @@ namespace Project1
             room5_1 = base.Content.Load<Texture2D>("5-1D");
             room5_2 = base.Content.Load<Texture2D>("5-2D");
             room7 = base.Content.Load<Texture2D>("7D");
+            Lroom1 = Content.Load<Texture2D>("1L");
+            Lroom2_1 = Content.Load<Texture2D>("2-1L");
+            Lroom2_2 = Content.Load<Texture2D>("2-2L");
+            Lroom2_3 = Content.Load<Texture2D>("2-3L");
+            Lroom3 = Content.Load<Texture2D>("3L");
+            Lroom4 = Content.Load<Texture2D>("4L");
+            Lroom5_1 = Content.Load<Texture2D>("5-1L");
+            Lroom5_2 = Content.Load<Texture2D>("5-2L");
+            Lroom7 = Content.Load<Texture2D>("7L");
             ballTexture = Content.Load<Texture2D>("ball");
             ball2Texture = Content.Load<Texture2D>("ball");
             ball3Texture = Content.Load<Texture2D>("ball");
@@ -329,6 +357,42 @@ namespace Project1
                         dylight.AmbientColor = new Color(new Vector3(0.3f));
                         break;
                     }
+                case Screenstate.LRoom1:
+                    {
+                        UpdateL_Room1();
+                        dylight.AmbientColor = new Color(new Vector3(0.3f));
+                        break;
+                    }
+                case Screenstate.LRoom2:
+                    {
+                        UpdateL_Room2();
+                        dylight.AmbientColor = new Color(new Vector3(0.2f));
+                        break;
+                    }
+                case Screenstate.LRoom3:
+                    {
+                        UpdateL_Room3();
+                        dylight.AmbientColor = new Color(new Vector3(0.2f));
+                        break;
+                    }
+                case Screenstate.LRoom4:
+                    {
+                        UpdateL_Room4();
+                        dylight.AmbientColor = new Color(new Vector3(0.3f));
+                        break;
+                    }
+                case Screenstate.LRoom5:
+                    {
+                        UpdateL_Room5();
+                        dylight.AmbientColor = new Color(new Vector3(0.2f));
+                        break;
+                    }
+                case Screenstate.LRoom7:
+                    {
+                        UpdateL_Room7();
+                        dylight.AmbientColor = new Color(new Vector3(0.3f));
+                        break;
+                    }
                 case Screenstate.over:
                     {
                         UpdateOver();
@@ -385,6 +449,36 @@ namespace Project1
                 case Screenstate.Room7:
                     {
                         DrawRoom7();
+                        break;
+                    }
+                case Screenstate.LRoom1:
+                    {
+                        DrawL_Room1();
+                        break;
+                    }
+                case Screenstate.LRoom2:
+                    {
+                        DrawL_Room2();
+                        break;
+                    }
+                case Screenstate.LRoom3:
+                    {
+                        DrawL_Room3();
+                        break;
+                    }
+                case Screenstate.LRoom4:
+                    {
+                        DrawL_Room4();
+                        break;
+                    }
+                case Screenstate.LRoom5:
+                    {
+                        DrawL_Room5();
+                        break;
+                    }
+                case Screenstate.LRoom7:
+                    {
+                        DrawL_Room7();
                         break;
                     }
                 case Screenstate.over:
@@ -536,6 +630,10 @@ namespace Project1
             if (Keyboard.GetState().IsKeyDown(Keys.O) == true)
             {
                 mCurrentScreen = Screenstate.Room2;
+            }
+            if(Keyboard.GetState().IsKeyDown(Keys.D0) == true)
+            {
+                mCurrentScreen = Screenstate.LRoom1;
             }
             UpdateFrame(elapsed);
         }
@@ -1377,6 +1475,968 @@ namespace Project1
             light.Position = pos - camPos + new Vector2(40, 40);
 
         }
+
+        void UpdateL_Room1()
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.P) == true)
+            {
+                mCurrentScreen = Screenstate.Title;
+            }
+            if (personHit2 == true)
+            {
+                mCurrentScreen = Screenstate.LRoom2;
+                pos.X = 48;
+            }
+            ProcessInput();
+            KeyboardState ks = Keyboard.GetState();
+            KeyboardState old_ks = Keyboard.GetState();
+            {
+                if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
+                {
+                    hBarRec.Width -= 5;
+                }
+
+                if (ks.IsKeyDown(Keys.W))
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                    pos.Y = pos.Y - speed.Y;
+                    if (pos.Y <= 210)
+                    {
+                        pos.Y = 210;
+                    }
+                    speed.X = 3;
+                    direction = 3;
+                    UpdateFrame(elapsed);
+                }
+                if (ks.IsKeyDown(Keys.S))
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                    pos.Y = pos.Y + speed.Y;
+                    if (pos.Y >= 280)
+                    {
+                        pos.Y = 280;
+                    }
+                    speed.X = 3;
+                    direction = 0;
+                    UpdateFrame(elapsed);
+                }
+                if (ks.IsKeyDown(Keys.A) && pos.X > 30)
+                {
+                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                    {
+                        speed.X = 6;
+                        sBarRec.Width -= 3;
+                    }
+                    else
+                    {
+                        speed.X = 3;
+                    }
+                    pos.X = pos.X - speed.X;
+                    direction = 1;
+
+                    UpdateFrame(elapsed);
+                }
+                else
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                }
+                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
+                {
+                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                    {
+                        speed.X = 6;
+                        sBarRec.Width -= 3;
+                    }
+                    else
+                    {
+                        speed.X = 3;
+                    }
+                    pos.X = pos.X + speed.X;
+
+                    direction = 2;
+                    UpdateFrame(elapsed);
+                }
+                else
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                }
+                if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
+                {
+                    speed.X = 0;
+                    UpdateFrame(elapsed);
+                }
+            }
+            Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
+            Rectangle ballRectangle = new Rectangle((int)ballPos.X, (int)ballPos.Y, 24, 24);
+            if (personRectangle.Intersects(ballRectangle) == true)
+            {
+
+                toRoom_2 = "F To Enter";
+                {
+                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    {
+                        toRoom_2 = "Enter room ?";
+                        personHit2 = true;
+                    }
+                }
+            }
+            else if (personRectangle.Intersects(ballRectangle) == false)
+            {
+                personHit2 = false;
+                toRoom_2 = "Check";
+            }
+            light2.Position = uiPos - camPos + new Vector2(65, -370);
+            eLight.Position = ePos - camPos + new Vector2(40, 40);
+            light.Position = pos - camPos + new Vector2(40, 40);
+
+        }
+        void UpdateL_Room2()
+        {
+
+            if (personHit2 == true)
+            {
+                mCurrentScreen = Screenstate.LRoom1;
+                spotLight.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLight2.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLight3.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLight4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                pos.X = 580;
+            }
+
+            if (personHit == true)
+            {
+                mCurrentScreen = Screenstate.LRoom3;
+                pos.X = 200;
+            }
+
+            if (personHit3 == true)
+            {
+                mCurrentScreen = Screenstate.LRoom4;
+                pos.X = 500;
+            }
+
+            if (personHit4 == true)
+            {
+                mCurrentScreen = Screenstate.LRoom7;
+                pos.X = 350;
+            }
+
+            if (hBarRec.Width <= 0)
+            {
+                mCurrentScreen = Screenstate.over;
+            }
+            ProcessInput();
+            KeyboardState ks = Keyboard.GetState();
+            KeyboardState old_ks = Keyboard.GetState();
+            {
+                if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
+                {
+                    hBarRec.Width -= 5;
+                }
+
+                if (ks.IsKeyDown(Keys.W))
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                    pos.Y = pos.Y - speed.Y;
+                    if (pos.Y <= 210)
+                    {
+                        pos.Y = 210;
+                    }
+                    speed.X = 3;
+                    direction = 3;
+                    UpdateFrame(elapsed);
+                }
+                if (ks.IsKeyDown(Keys.S))
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                    pos.Y = pos.Y + speed.Y;
+                    if (pos.Y >= 280)
+                    {
+                        pos.Y = 280;
+                    }
+                    speed.X = 3;
+                    direction = 0;
+                    UpdateFrame(elapsed);
+                }
+                if (ks.IsKeyDown(Keys.A) && pos.X > 30)
+                {
+                    if (pos.X <= bLine.X && camPos.X > 0)
+                    {
+                        fLine -= new Vector2(3, 0);
+                        bLine -= new Vector2(3, 0);
+                        camPos -= new Vector2(3, 0);
+                        uiPos -= new Vector2(3, 0);
+                    }
+                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                    {
+                        speed.X = 6;
+                        fLine -= new Vector2(6, 0);
+                        bLine -= new Vector2(6, 0);
+                        camPos -= new Vector2(6, 0);
+                        uiPos -= new Vector2(6, 0);
+                        sBarRec.Width -= 3;
+                    }
+                    else
+                    {
+                        speed.X = 3;
+                    }
+                    pos.X = pos.X - speed.X;
+                    direction = 1;
+
+                    UpdateFrame(elapsed);
+                }
+                else
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                }
+                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 3 - 25)
+                {
+                    if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width * 2)
+                    {
+                        fLine += new Vector2(3, 0);
+                        bLine += new Vector2(3, 0);
+                        camPos += new Vector2(3, 0);
+                        uiPos += new Vector2(3, 0);
+                    }
+                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                    {
+                        speed.X = 6;
+                        fLine += new Vector2(6, 0);
+                        bLine += new Vector2(6, 0);
+                        camPos += new Vector2(6, 0);
+                        uiPos += new Vector2(6, 0);
+                        sBarRec.Width -= 3;
+                    }
+                    else
+                    {
+                        speed.X = 3;
+                    }
+                    pos.X = pos.X + speed.X;
+
+                    direction = 2;
+                    UpdateFrame(elapsed);
+                }
+                else
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                }
+                if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
+                {
+                    speed.X = 0;
+                    UpdateFrame(elapsed);
+                }
+                // -----------------------------------------------------------------------------------------------collistion
+                Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
+                Rectangle ballRectangle = new Rectangle((int)ballPos2_1.X, (int)ballPos2_1.Y, 24, 24);
+                Rectangle ball2_3Rectangle = new Rectangle((int)ballPos2_3.X, (int)ballPos2_3.Y, 24, 24);
+                Rectangle ball2_4Rectangle = new Rectangle((int)ballPos2_4.X, (int)ballPos2_4.Y, 24, 24);
+                Rectangle ball2_7Rectangle = new Rectangle((int)ballPos2_7.X, (int)ballPos2_7.Y, 24, 24);
+                Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
+                Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, 100, 100);
+
+                if (personRectangle.Intersects(trapRectangle) == true)
+                {
+                    sBarRec.Width -= 3;
+                }
+                else if (personRectangle.Intersects(trapRectangle) == false)
+                {
+
+                }
+                if (personRectangle.Intersects(enemyRectangle) == true)
+                {
+                    hBarRec.Width -= 5;
+                }
+                else if (personRectangle.Intersects(enemyRectangle) == false)
+                {
+                    UpdateEnemy(elapsed);
+                }
+
+                if (personRectangle.Intersects(ballRectangle) == true)
+                {
+
+                    backRoom2_1 = "F To Enter";
+                    {
+                        if (ks.IsKeyDown(Keys.F)) //Intereact object
+                        {
+                            backRoom2_1 = "Enter room ?";
+                            personHit2 = true;
+                        }
+                    }
+                }
+                else if (personRectangle.Intersects(ballRectangle) == false)
+                {
+                    personHit2 = false;
+                    backRoom2_1 = "Check";
+                }
+                if (personRectangle.Intersects(ball2_3Rectangle) == true)
+                {
+                    toRoom_3 = "F To Enter";
+                    if (ks.IsKeyDown(Keys.F)) //Tnteract object
+                    {
+                        toRoom_3 = "Enter room ?";
+                        personHit = true;
+                    }
+                }
+                else if (personRectangle.Intersects(ball2_3Rectangle) == false)
+                {
+                    personHit = false;
+                    toRoom_3 = "Check";
+                }
+                if (personRectangle.Intersects(ball2_4Rectangle) == true)
+                {
+                    toRoom_4 = "F To Enter";
+                    if (ks.IsKeyDown(Keys.F)) //Tnteract object
+                    {
+                        toRoom_4 = "Enter room ?";
+                        personHit3 = true;
+                    }
+                }
+                else if (personRectangle.Intersects(ball2_4Rectangle) == false)
+                {
+                    personHit3 = false;
+                    toRoom_4 = "Check";
+                }
+                if (personRectangle.Intersects(ball2_7Rectangle) == true)
+                {
+                    toRoom_7 = "F To Enter";
+                    if (ks.IsKeyDown(Keys.F)) //Tnteract object
+                    {
+                        toRoom_7 = "Enter room ?";
+                        personHit4 = true;
+                    }
+                }
+                else if (personRectangle.Intersects(ball2_7Rectangle) == false)
+                {
+                    personHit4 = false;
+                    toRoom_7 = "Check";
+                }
+
+                old_ks = ks;
+            }
+            eLight.Position = ePos - camPos + new Vector2(40, 40);
+            light.Position = pos - camPos + new Vector2(40, 40);
+            ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
+            textPos = pos + new Vector2(5, 95);
+            light2.Position = uiPos - camPos + new Vector2(65, -370);
+        }
+        void UpdateL_Room3()
+        {
+
+            if (personHit == true)
+            {
+                mCurrentScreen = Screenstate.LRoom2;
+                pos.X = 1675;
+            }
+
+            ProcessInput();
+            KeyboardState ks = Keyboard.GetState();
+            KeyboardState old_ks = Keyboard.GetState();
+            {
+                if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
+                {
+                    hBarRec.Width -= 5;
+                }
+
+                if (ks.IsKeyDown(Keys.W))
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                    pos.Y = pos.Y - speed.Y;
+                    if (pos.Y <= 210)
+                    {
+                        pos.Y = 210;
+                    }
+                    speed.X = 3;
+                    direction = 3;
+                    UpdateFrame(elapsed);
+                }
+                if (ks.IsKeyDown(Keys.S))
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                    pos.Y = pos.Y + speed.Y;
+                    if (pos.Y >= 280)
+                    {
+                        pos.Y = 280;
+                    }
+                    speed.X = 3;
+                    direction = 0;
+                    UpdateFrame(elapsed);
+                }
+                if (ks.IsKeyDown(Keys.A) && pos.X > 30)
+                {
+                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                    {
+                        speed.X = 6;
+                        sBarRec.Width -= 3;
+                    }
+                    else
+                    {
+                        speed.X = 3;
+                    }
+                    pos.X = pos.X - speed.X;
+                    direction = 1;
+
+                    UpdateFrame(elapsed);
+                }
+                else
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                }
+                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
+                {
+                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                    {
+                        speed.X = 6;
+                        sBarRec.Width -= 3;
+                    }
+                    else
+                    {
+                        speed.X = 3;
+                    }
+                    pos.X = pos.X + speed.X;
+
+                    direction = 2;
+                    UpdateFrame(elapsed);
+                }
+                else
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                }
+                if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
+                {
+                    speed.X = 0;
+                    UpdateFrame(elapsed);
+                }
+            }
+            Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
+            Rectangle ballRectangle = new Rectangle((int)ballPos3_2.X, (int)ballPos3_2.Y, 24, 24);
+            if (personRectangle.Intersects(ballRectangle) == true)
+            {
+                backRoom3_2 = "F To Enter";
+                {
+                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    {
+                        backRoom3_2 = "Enter room ?";
+                        personHit = true;
+                    }
+                }
+            }
+            else if (personRectangle.Intersects(ballRectangle) == false)
+            {
+                personHit = false;
+                backRoom3_2 = "Check";
+            }
+            light2.Position = uiPos - camPos + new Vector2(65, -370);
+            eLight.Position = ePos - camPos + new Vector2(40, 40);
+            light.Position = pos - camPos + new Vector2(40, 40);
+
+        }
+        void UpdateL_Room4()
+        {
+
+            if (personHit == true)
+            {
+                mCurrentScreen = Screenstate.LRoom2;
+                pos.X = 880;
+            }
+
+            if (personHit2 == true)
+            {
+                mCurrentScreen = Screenstate.LRoom5;
+                pos.X = 100;
+            }
+
+            ProcessInput();
+            KeyboardState ks = Keyboard.GetState();
+            KeyboardState old_ks = Keyboard.GetState();
+            {
+                if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
+                {
+                    hBarRec.Width -= 5;
+                }
+
+                if (ks.IsKeyDown(Keys.W))
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                    pos.Y = pos.Y - speed.Y;
+                    if (pos.Y <= 210)
+                    {
+                        pos.Y = 210;
+                    }
+                    speed.X = 3;
+                    direction = 3;
+                    UpdateFrame(elapsed);
+                }
+                if (ks.IsKeyDown(Keys.S))
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                    pos.Y = pos.Y + speed.Y;
+                    if (pos.Y >= 280)
+                    {
+                        pos.Y = 280;
+                    }
+                    speed.X = 3;
+                    direction = 0;
+                    UpdateFrame(elapsed);
+                }
+                if (ks.IsKeyDown(Keys.A) && pos.X > 30)
+                {
+                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                    {
+                        speed.X = 6;
+                        sBarRec.Width -= 3;
+                    }
+                    else
+                    {
+                        speed.X = 3;
+                    }
+                    pos.X = pos.X - speed.X;
+                    direction = 1;
+
+                    UpdateFrame(elapsed);
+                }
+                else
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                }
+                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
+                {
+                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                    {
+                        speed.X = 6;
+                        sBarRec.Width -= 3;
+                    }
+                    else
+                    {
+                        speed.X = 3;
+                    }
+                    pos.X = pos.X + speed.X;
+
+                    direction = 2;
+                    UpdateFrame(elapsed);
+                }
+                else
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                }
+                if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
+                {
+                    speed.X = 0;
+                    UpdateFrame(elapsed);
+                }
+            }
+            Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
+            Rectangle ballRectangle = new Rectangle((int)ballPos4_2.X, (int)ballPos4_2.Y, 24, 24);
+            Rectangle ball2Rectangle = new Rectangle((int)ballPos4_5.X, (int)ballPos4_5.Y, 24, 24);
+            if (personRectangle.Intersects(ballRectangle) == true)
+            {
+                backRoom4_2 = "F To Enter";
+                {
+                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    {
+                        backRoom4_2 = "Enter room ?";
+                        personHit = true;
+                    }
+                }
+            }
+            else if (personRectangle.Intersects(ballRectangle) == false)
+            {
+                personHit = false;
+                backRoom4_2 = "Check";
+            }
+            if (personRectangle.Intersects(ball2Rectangle) == true)
+            {
+                toRoom_5 = "F To Enter";
+                {
+                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    {
+                        toRoom_5 = "Enter room ?";
+                        personHit2 = true;
+                    }
+                }
+            }
+            else if (personRectangle.Intersects(ball2Rectangle) == false)
+            {
+                personHit = false;
+                toRoom_5 = "Check";
+            }
+            light2.Position = uiPos - camPos + new Vector2(65, -370);
+            eLight.Position = ePos - camPos + new Vector2(40, 40);
+            light.Position = pos - camPos + new Vector2(40, 40);
+
+        }
+        void UpdateL_Room5()
+        {
+            if (personHit2 == true)
+            {
+                mCurrentScreen = Screenstate.LRoom1;
+                spotLight.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLight2.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLight3.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLight4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                pos.X = 580;
+            }
+
+            if (hBarRec.Width <= 0)
+            {
+                mCurrentScreen = Screenstate.over;
+            }
+            ProcessInput();
+            KeyboardState ks = Keyboard.GetState();
+            KeyboardState old_ks = Keyboard.GetState();
+            {
+                if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
+                {
+                    hBarRec.Width -= 5;
+                }
+
+                if (ks.IsKeyDown(Keys.W))
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                    pos.Y = pos.Y - speed.Y;
+                    if (pos.Y <= 210)
+                    {
+                        pos.Y = 210;
+                    }
+                    speed.X = 3;
+                    direction = 3;
+                    UpdateFrame(elapsed);
+                }
+                if (ks.IsKeyDown(Keys.S))
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                    pos.Y = pos.Y + speed.Y;
+                    if (pos.Y >= 280)
+                    {
+                        pos.Y = 280;
+                    }
+                    speed.X = 3;
+                    direction = 0;
+                    UpdateFrame(elapsed);
+                }
+                if (ks.IsKeyDown(Keys.A) && pos.X > 30)
+                {
+                    if (pos.X <= bLine.X && camPos.X > 0)
+                    {
+                        fLine -= new Vector2(3, 0);
+                        bLine -= new Vector2(3, 0);
+                        camPos -= new Vector2(3, 0);
+                        uiPos -= new Vector2(3, 0);
+                    }
+                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                    {
+                        speed.X = 6;
+                        fLine -= new Vector2(6, 0);
+                        bLine -= new Vector2(6, 0);
+                        camPos -= new Vector2(6, 0);
+                        uiPos -= new Vector2(6, 0);
+                        sBarRec.Width -= 3;
+                    }
+                    else
+                    {
+                        speed.X = 3;
+                    }
+                    pos.X = pos.X - speed.X;
+                    direction = 1;
+
+                    UpdateFrame(elapsed);
+                }
+                else
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                }
+                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 2 - 25)
+                {
+                    if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width)
+                    {
+                        fLine += new Vector2(3, 0);
+                        bLine += new Vector2(3, 0);
+                        camPos += new Vector2(3, 0);
+                        uiPos += new Vector2(3, 0);
+                    }
+                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                    {
+                        speed.X = 6;
+                        fLine += new Vector2(6, 0);
+                        bLine += new Vector2(6, 0);
+                        camPos += new Vector2(6, 0);
+                        uiPos += new Vector2(6, 0);
+                        sBarRec.Width -= 3;
+                    }
+                    else
+                    {
+                        speed.X = 3;
+                    }
+                    pos.X = pos.X + speed.X;
+
+                    direction = 2;
+                    UpdateFrame(elapsed);
+                }
+                else
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                }
+                if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
+                {
+                    speed.X = 0;
+                    UpdateFrame(elapsed);
+                }
+                // -----------------------------------------------------------------------------------------------collistion
+                Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
+                Rectangle ballRectangle = new Rectangle((int)ballPos2_1.X, (int)ballPos2_1.Y, 24, 24);
+                Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
+                Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, 100, 100);
+
+                if (personRectangle.Intersects(trapRectangle) == true)
+                {
+                    sBarRec.Width -= 3;
+                }
+                else if (personRectangle.Intersects(trapRectangle) == false)
+                {
+
+                }
+                if (personRectangle.Intersects(enemyRectangle) == true)
+                {
+                    hBarRec.Width -= 5;
+                }
+                else if (personRectangle.Intersects(enemyRectangle) == false)
+                {
+                    UpdateEnemy(elapsed);
+                }
+
+                if (personRectangle.Intersects(ballRectangle) == true)
+                {
+
+                    backRoom2_1 = "F To Enter";
+                    {
+                        if (ks.IsKeyDown(Keys.F)) //Intereact object
+                        {
+                            backRoom2_1 = "Enter room ?";
+                            personHit2 = true;
+                        }
+                    }
+                }
+                else if (personRectangle.Intersects(ballRectangle) == false)
+                {
+                    personHit2 = false;
+                    backRoom2_1 = "Check";
+                }
+
+                old_ks = ks;
+            }
+            eLight.Position = ePos - camPos + new Vector2(40, 40);
+            light.Position = pos - camPos + new Vector2(40, 40);
+            ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
+            textPos = pos + new Vector2(5, 95);
+            light2.Position = uiPos - camPos + new Vector2(65, -370);
+        }
+        void UpdateL_Room7()
+        {
+
+            if (personHit == true)
+            {
+                mCurrentScreen = Screenstate.LRoom2;
+                pos.X = 200;
+            }
+
+            ProcessInput();
+            KeyboardState ks = Keyboard.GetState();
+            KeyboardState old_ks = Keyboard.GetState();
+            {
+                if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
+                {
+                    hBarRec.Width -= 5;
+                }
+
+                if (ks.IsKeyDown(Keys.W))
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                    pos.Y = pos.Y - speed.Y;
+                    if (pos.Y <= 210)
+                    {
+                        pos.Y = 210;
+                    }
+                    speed.X = 3;
+                    direction = 3;
+                    UpdateFrame(elapsed);
+                }
+                if (ks.IsKeyDown(Keys.S))
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                    pos.Y = pos.Y + speed.Y;
+                    if (pos.Y >= 280)
+                    {
+                        pos.Y = 280;
+                    }
+                    speed.X = 3;
+                    direction = 0;
+                    UpdateFrame(elapsed);
+                }
+                if (ks.IsKeyDown(Keys.A) && pos.X > 30)
+                {
+                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                    {
+                        speed.X = 6;
+                        sBarRec.Width -= 3;
+                    }
+                    else
+                    {
+                        speed.X = 3;
+                    }
+                    pos.X = pos.X - speed.X;
+                    direction = 1;
+
+                    UpdateFrame(elapsed);
+                }
+                else
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                }
+                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
+                {
+                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                    {
+                        speed.X = 6;
+                        sBarRec.Width -= 3;
+                    }
+                    else
+                    {
+                        speed.X = 3;
+                    }
+                    pos.X = pos.X + speed.X;
+
+                    direction = 2;
+                    UpdateFrame(elapsed);
+                }
+                else
+                {
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                }
+                if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
+                {
+                    speed.X = 0;
+                    UpdateFrame(elapsed);
+                }
+            }
+            Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
+            Rectangle ballRectangle = new Rectangle((int)ballPos7_2.X, (int)ballPos7_2.Y, 24, 24);
+            if (personRectangle.Intersects(ballRectangle) == true)
+            {
+                backRoom7_2 = "F To Enter";
+                {
+                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    {
+                        backRoom7_2 = "Enter room ?";
+                        personHit = true;
+                    }
+                }
+            }
+            else if (personRectangle.Intersects(ballRectangle) == false)
+            {
+                personHit = false;
+                backRoom7_2 = "Check";
+            }
+            light2.Position = uiPos - camPos + new Vector2(65, -370);
+            eLight.Position = ePos - camPos + new Vector2(40, 40);
+            light.Position = pos - camPos + new Vector2(40, 40);
+
+        }
+
         void DrawRoom1()
         {
             _spriteBatch.Draw(room1, (bg2Pos - camPos) * scroll_factor, Color.White);
@@ -1532,6 +2592,171 @@ namespace Project1
         void DrawRoom7()
         {
             _spriteBatch.Draw(room7, Vector2.Zero, Color.White);
+            if (speed.X <= 0)
+            {
+                totalframe = 20;
+                _spriteBatch.Draw(pIdle, pos, new Rectangle(72 * frame, 0, 72, 96), (Color.White));
+            }
+            else
+            {
+                if (totalframe > 4)
+                {
+                    frame = 0;
+                }
+                totalframe = 4;
+                _spriteBatch.Draw(farmer, pos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
+            }
+            _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
+            _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
+            _spriteBatch.Draw(ballTexture, ballPos7_2, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.DrawString(deBugFont, backRoom7_2, (ballPos7_2 - new Vector2(0, 80)), (Color.White));
+        }
+
+        void DrawL_Room1()
+        {
+            _spriteBatch.Draw(Lroom1, (bg2Pos - camPos) * scroll_factor, Color.White);
+            if (speed.X <= 0)
+            {
+                totalframe = 20;
+                _spriteBatch.Draw(pIdle, pos - camPos, new Rectangle(72 * frame, 0, 72, 96), (Color.White));
+            }
+            else
+            {
+                if (totalframe > 4)
+                {
+                    frame = 0;
+                }
+                totalframe = 4;
+                _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
+            }
+            _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
+            _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
+            _spriteBatch.Draw(ballTexture, ballPos, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.DrawString(deBugFont, toRoom_2, (ballPos - new Vector2(0, 20)), (Color.White));
+        }
+        void DrawL_Room2()
+        {
+            _spriteBatch.Draw(Lroom2_1, (bg2Pos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(Lroom2_2, (bg2Pos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
+            _spriteBatch.Draw(Lroom2_3, (bg2Pos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width + 720, 0), Color.White);
+            _spriteBatch.Draw(ballTexture, (ballPos2_1 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.Draw(ball2Texture, (ballPos2_3 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.Draw(ball3Texture, (ballPos2_4 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.Draw(ball3Texture, (ballPos2_7 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.Draw(trap, trapPos - camPos * scroll_factor, new Rectangle(0, 0, 26, 26), (Color.White));
+            if (speed.X <= 0)
+            {
+                totalframe = 20;
+                _spriteBatch.Draw(pIdle, pos - camPos, new Rectangle(72 * frame, 0, 72, 96), (Color.White));
+            }
+            else
+            {
+                if (totalframe > 4)
+                {
+                    frame = 0;
+                }
+                totalframe = 4;
+                _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
+            }
+            _spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
+            _spriteBatch.DrawString(deBugFont, backRoom2_1, (ballPos2_1 - new Vector2(0, 20) - camPos) * scroll_factor, (Color.White));
+            _spriteBatch.DrawString(deBugFont, toRoom_3, (ballPos2_3 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
+            _spriteBatch.DrawString(deBugFont, toRoom_4, (ballPos2_4 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
+            _spriteBatch.DrawString(deBugFont, toRoom_7, (ballPos2_7 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
+            _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
+            _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
+            _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
+            //SpotLight
+            spotLight.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
+            spotLight2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
+            spotLight3.Position = (new Vector2(1557, 30) - camPos) * scroll_factor;
+            spotLight4.Position = (new Vector2(163, 30) - camPos) * scroll_factor;
+        }
+        void DrawL_Room3()
+        {
+            _spriteBatch.Draw(Lroom3, Vector2.Zero, Color.White);
+            if (speed.X <= 0)
+            {
+                totalframe = 20;
+                _spriteBatch.Draw(pIdle, pos, new Rectangle(72 * frame, 0, 72, 96), (Color.White));
+            }
+            else
+            {
+                if (totalframe > 4)
+                {
+                    frame = 0;
+                }
+                totalframe = 4;
+                _spriteBatch.Draw(farmer, pos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
+            }
+            _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
+            _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
+            _spriteBatch.Draw(ballTexture, ballPos3_2, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.DrawString(deBugFont, backRoom3_2, (ballPos3_2 - new Vector2(0, 80)), (Color.White));
+        }
+        void DrawL_Room4()
+        {
+            _spriteBatch.Draw(Lroom4, Vector2.Zero, Color.White);
+            if (speed.X <= 0)
+            {
+                totalframe = 20;
+                _spriteBatch.Draw(pIdle, pos, new Rectangle(72 * frame, 0, 72, 96), (Color.White));
+            }
+            else
+            {
+                if (totalframe > 4)
+                {
+                    frame = 0;
+                }
+                totalframe = 4;
+                _spriteBatch.Draw(farmer, pos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
+            }
+            _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
+            _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
+            _spriteBatch.Draw(ballTexture, ballPos4_2, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.Draw(ball2Texture, ballPos4_5, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.DrawString(deBugFont, backRoom4_2, (ballPos4_2 - new Vector2(0, 80)), (Color.White));
+            _spriteBatch.DrawString(deBugFont, toRoom_5, (ballPos4_5 - new Vector2(0, 80)), (Color.White));
+        }
+        void DrawL_Room5()
+        {
+            _spriteBatch.Draw(Lroom5_1, (bg5Pos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(Lroom5_2, (bg5Pos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
+            //_spriteBatch.Draw(ballTexture, (ballPos2_1 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
+            if (speed.X <= 0)
+            {
+                totalframe = 20;
+                _spriteBatch.Draw(pIdle, pos - camPos, new Rectangle(72 * frame, 0, 72, 96), (Color.White));
+            }
+            else
+            {
+                if (totalframe > 4)
+                {
+                    frame = 0;
+                }
+                totalframe = 4;
+                _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
+            }
+            //_spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
+            //_spriteBatch.DrawString(deBugFont, backRoom2_1, (ballPos2_1 - new Vector2(0, 20) - camPos) * scroll_factor, (Color.White));
+            //_spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
+            //_spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            //_spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
+            //_spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
+            //SpotLight
+            spotLight.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
+            spotLight2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
+            spotLight3.Position = (new Vector2(1557, 30) - camPos) * scroll_factor;
+            spotLight4.Position = (new Vector2(163, 30) - camPos) * scroll_factor;
+        }
+        void DrawL_Room7()
+        {
+            _spriteBatch.Draw(Lroom7, Vector2.Zero, Color.White);
             if (speed.X <= 0)
             {
                 totalframe = 20;
