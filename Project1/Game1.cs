@@ -581,6 +581,10 @@ namespace Project1
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
+                if (pos.X >= 1700)
+                {
+                    ePos.X = ePos.X - eSpeed.X - 16;
+                }
                 // -----------------------------------------------------------------------------------------------collistion
                 Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
                 Rectangle ballRectangle = new Rectangle((int)ballPos.X, (int)ballPos.Y, 24, 24);
@@ -598,6 +602,7 @@ namespace Project1
                 if (personRectangle.Intersects(enemyRectangle) == true)
                 {
                     hBarRec.Width -= 5;
+                    ePos.X = pos.X;
                 }
                 else if (personRectangle.Intersects(enemyRectangle) == false)
                 {
