@@ -159,6 +159,7 @@ namespace Project1
             ShadowType = ShadowType.Illuminated
         };
         //-------------------------------------------------------------enemy-----------------------------------------------------------------------
+        bool isAlive = true;
         int eframe;
         int etotalframe;
         int eframepersec;
@@ -186,7 +187,8 @@ namespace Project1
 
             dylight = new PenumbraComponent(this);
             //add Light
-            dylight.Lights.Add(light);
+            
+                    dylight.Lights.Add(light);
             dylight.Lights.Add(light2);
             dylight.Lights.Add(spotLight);
             dylight.Lights.Add(spotLight2);
@@ -810,10 +812,6 @@ namespace Project1
             KeyboardState ks = Keyboard.GetState();
             KeyboardState old_ks = Keyboard.GetState();
             {
-                if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
-                {
-                    hBarRec.Width -= 5;
-                }
 
                 if (ks.IsKeyDown(Keys.W))
                 {
