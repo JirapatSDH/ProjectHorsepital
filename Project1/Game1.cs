@@ -195,6 +195,7 @@ namespace Project1
             ShadowType = ShadowType.Illuminated
         };
         //-------------------------------------------------------------enemy-----------------------------------------------------------------------
+        bool isAlive = true;
         int eframe;
         int etotalframe;
         int eframepersec;
@@ -222,7 +223,8 @@ namespace Project1
 
             dylight = new PenumbraComponent(this);
             //add Light
-            dylight.Lights.Add(light);
+            
+                    dylight.Lights.Add(light);
             dylight.Lights.Add(light2);
             dylight.Lights.Add(spotLight);
             dylight.Lights.Add(spotLight2);
@@ -874,6 +876,10 @@ namespace Project1
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
+                if (pos.X >= 1700)
+                {
+                    ePos.X = ePos.X - eSpeed.X - 16;
+                }
                 // -----------------------------------------------------------------------------------------------collistion
                 Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
                 Rectangle ballRectangle = new Rectangle((int)ballPos2_1.X, (int)ballPos2_1.Y, 24, 24);
@@ -894,6 +900,7 @@ namespace Project1
                 if (personRectangle.Intersects(enemyRectangle) == true)
                 {
                     hBarRec.Width -= 5;
+                    ePos.X = pos.X;
                 }
                 else if (personRectangle.Intersects(enemyRectangle) == false)
                 {
@@ -981,10 +988,6 @@ namespace Project1
             KeyboardState ks = Keyboard.GetState();
             KeyboardState old_ks = Keyboard.GetState();
             {
-                if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
-                {
-                    hBarRec.Width -= 5;
-                }
 
                 if (ks.IsKeyDown(Keys.W))
                 {
