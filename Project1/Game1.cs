@@ -146,7 +146,7 @@ namespace Project1
         Light light2 = new Spotlight
         {
             Color = Color.White,
-            Scale = new Vector2(510f),
+            Scale = new Vector2(0f),
             Radius = 100,
             CastsShadows = false,
             Rotation = MathHelper.Pi - MathHelper.PiOver2 * 1f,
@@ -216,7 +216,7 @@ namespace Project1
 
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferredBackBufferWidth = 720;
-            _graphics.PreferredBackBufferHeight = 380;
+            _graphics.PreferredBackBufferHeight = 480;
             _graphics.ApplyChanges();   
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -224,7 +224,7 @@ namespace Project1
             dylight = new PenumbraComponent(this);
             //add Light
             
-                    dylight.Lights.Add(light);
+            dylight.Lights.Add(light);
             dylight.Lights.Add(light2);
             dylight.Lights.Add(spotLight);
             dylight.Lights.Add(spotLight2);
@@ -329,7 +329,7 @@ namespace Project1
             ballPos2_7 = new Vector2(250, 200);
             ballPos7_2 = new Vector2(310, 200);
             ballPos8 = new Vector2(25, 250);
-            uiPos = new Vector2(0, 0);
+            uiPos = new Vector2(0, 400);
             uiPos5 = new Vector2(0, 0);
             ePos = new Vector2(1850,170);
             trapPos = new Vector2(900, 340);
@@ -1104,6 +1104,10 @@ namespace Project1
             {
                 mCurrentScreen = Screenstate.Room2;
                 pos.X = 880;
+                camPos.X = 780;
+                uiPos.X = 780;
+                fLine.X = pos.X + rad;
+                bLine.X = pos.X - rad;
             }
 
             if(personHit2 == true)
@@ -1111,6 +1115,7 @@ namespace Project1
                 mCurrentScreen = Screenstate.Room5;
                 pos.X = 100;
                 camPos.X = 0;
+                uiPos.X = 0;
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
@@ -2524,7 +2529,7 @@ namespace Project1
                 Rectangle ballRectangle = new Rectangle((int)ballPos5_4.X, (int)ballPos5_4.Y, 24, 24);
                 Rectangle ball2Rectangle = new Rectangle((int)ballPos5_6.X, (int)ballPos5_6.Y, 24, 24);
                 Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
-                Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, 100, 100);
+                Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, -20, 50);
 
                 if (personRectangle.Intersects(trapRectangle) == true)
                 {
