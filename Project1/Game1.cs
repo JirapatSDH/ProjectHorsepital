@@ -155,7 +155,7 @@ namespace Project1
         };
         Light light = new PointLight
         {
-            Scale = new Vector2(250f), 
+            Scale = new Vector2(200f), 
             ShadowType = ShadowType.Illuminated 
         };
         Light spotLight = new Spotlight
@@ -217,6 +217,7 @@ namespace Project1
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferredBackBufferWidth = 720;
             _graphics.PreferredBackBufferHeight = 480;
+            _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();   
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
