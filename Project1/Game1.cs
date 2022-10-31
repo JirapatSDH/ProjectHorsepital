@@ -84,6 +84,7 @@ namespace Project1
         public Vector2 pos;
         public Vector2 bg2Pos = Vector2.Zero;
         public Vector2 bg5Pos = Vector2.Zero;
+        public Vector2 bg8Pos = Vector2.Zero;
         public Vector2 ballPos = new Vector2(0,0);
         public Vector2 ballPos2_1 = new Vector2(0, 0);
         public Vector2 ballPos2_3 = new Vector2(0, 0);
@@ -100,7 +101,6 @@ namespace Project1
         public Vector2 ballPos8_1 = new Vector2(0, 0);
         public Vector2 textPos;
         public Vector2 uiPos;
-        public Vector2 uiPos5;
         public Vector2 sbarPos = new Vector2(73,12);
 
         Vector2 camPos = Vector2.Zero;
@@ -318,7 +318,7 @@ namespace Project1
 
             pos = new Vector2(150, 270);
             ballPos = new Vector2(650, 250);
-            ballPos2_1 = new Vector2(20, 255);
+            ballPos2_1 = new Vector2(20, 250);
             ballPos2_3 = new Vector2(1730, 200);
             ballPos3_2 = new Vector2(250, 200);
             ballPos2_4 = new Vector2(930, 200);
@@ -330,7 +330,7 @@ namespace Project1
             ballPos2_7 = new Vector2(250, 200);
             ballPos7_2 = new Vector2(310, 200);
             ballPos8 = new Vector2(25, 250);
-            uiPos = new Vector2(0, 400);
+            uiPos = new Vector2(0, 0);
             uiPos5 = new Vector2(0, 0);
             ePos = new Vector2(1850,170);
             trapPos = new Vector2(900, 340);
@@ -696,7 +696,7 @@ namespace Project1
             }
             if (Keyboard.GetState().IsKeyDown(Keys.E) == true)
             {
-                mCurrentScreen = Screenstate.LRoom1;
+                mCurrentScreen = Screenstate.LRoom2;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D2) == true)
             {
@@ -704,7 +704,7 @@ namespace Project1
             }
             if(Keyboard.GetState().IsKeyDown(Keys.Q) == true)
             {
-                mCurrentScreen = Screenstate.LRoom2;
+                mCurrentScreen = Screenstate.LRoom1;
             }
             if(Keyboard.GetState().IsKeyDown(Keys.D5) == true)
             {
@@ -837,7 +837,7 @@ namespace Project1
                         sBarRec.Width = 163;
                     }
                 }
-                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 3 - 25)
+                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 3 - 110)
                 {
                     if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width * 2)
                     {
@@ -1105,10 +1105,6 @@ namespace Project1
             {
                 mCurrentScreen = Screenstate.Room2;
                 pos.X = 880;
-                camPos.X = 780;
-                uiPos.X = 780;
-                fLine.X = pos.X + rad;
-                bLine.X = pos.X - rad;
             }
 
             if(personHit2 == true)
@@ -1116,7 +1112,6 @@ namespace Project1
                 mCurrentScreen = Screenstate.Room5;
                 pos.X = 100;
                 camPos.X = 0;
-                uiPos.X = 0;
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
@@ -1267,7 +1262,7 @@ namespace Project1
             if(personHit2 == true)
             {
                 mCurrentScreen = Screenstate.Room6;
-                pos.X = 300;
+                pos.X = 400;
             }
 
             if (hBarRec.Width <= 0)
@@ -1350,7 +1345,7 @@ namespace Project1
                         sBarRec.Width = 163;
                     }
                 }
-                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 2 - 25)
+                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 2 - 100)
                 {
                     if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width)
                     {
@@ -1727,7 +1722,11 @@ namespace Project1
             if(personHit == true)
             {
                 mCurrentScreen = Screenstate.LRoom8;
-                pos.X = 2025;
+                pos.X = 2015;
+                camPos.X = 1450;
+                uiPos = new Vector2((int)camPos.X, (int)camPos.Y);
+                fLine.X = pos.X + rad;
+                bLine.X = pos.X - rad;
             }
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
@@ -1977,7 +1976,7 @@ namespace Project1
                         sBarRec.Width = 163;
                     }
                 }
-                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 3 - 25)
+                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 3 - 110)
                 {
                     if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width * 2)
                     {
@@ -2245,6 +2244,10 @@ namespace Project1
             {
                 mCurrentScreen = Screenstate.LRoom2;
                 pos.X = 880;
+                camPos.X = 725;
+                uiPos = new Vector2((int)camPos.X, (int)camPos.Y);
+                fLine.X = pos.X + rad;
+                bLine.X = pos.X - rad;
             }
 
             if (personHit2 == true)
@@ -2252,6 +2255,7 @@ namespace Project1
                 mCurrentScreen = Screenstate.LRoom5;
                 pos.X = 100;
                 camPos.X = 0;
+                uiPos = new Vector2((int)camPos.X, (int)camPos.Y);
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
@@ -2402,7 +2406,7 @@ namespace Project1
             if (personHit2 == true)
             {
                 mCurrentScreen = Screenstate.LRoom6;
-                pos.X = 300;
+                pos.X = 400;
             }
 
             if (hBarRec.Width <= 0)
@@ -2849,15 +2853,15 @@ namespace Project1
         }
         void UpdateL_Room8()
         {
-            if (personHit2 == true)
+            /*if (personHit2 == true)
             {
                 mCurrentScreen = Screenstate.LRoom1;
                 spotLight.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 spotLight2.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 spotLight3.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 spotLight4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
-                pos.X = 580;
-            }
+                pos.X = 50;
+            }*/
 
             if (hBarRec.Width <= 0)
             {
@@ -2939,7 +2943,7 @@ namespace Project1
                         sBarRec.Width = 163;
                     }
                 }
-                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 3 - 25)
+                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 3 - 110)
                 {
                     if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width * 2)
                     {
@@ -2981,28 +2985,28 @@ namespace Project1
                 }
                 // -----------------------------------------------------------------------------------------------collistion
                 Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
-                Rectangle ballRectangle = new Rectangle((int)ballPos2_1.X, (int)ballPos2_1.Y, 24, 24);
-                Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
-                Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, 100, 100);
+                //Rectangle ballRectangle = new Rectangle((int)ballPos8_1.X, (int)ballPos8_1.Y, 24, 24);
+                //Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
+                //Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, 100, 100);
 
-                if (personRectangle.Intersects(trapRectangle) == true)
+                /*if (personRectangle.Intersects(trapRectangle) == true)
                 {
                     sBarRec.Width -= 3;
                 }
                 else if (personRectangle.Intersects(trapRectangle) == false)
                 {
 
-                }
-                if (personRectangle.Intersects(enemyRectangle) == true)
+                }*/
+                /*if (personRectangle.Intersects(enemyRectangle) == true)
                 {
                     hBarRec.Width -= 5;
                 }
                 else if (personRectangle.Intersects(enemyRectangle) == false)
                 {
                     UpdateEnemy(elapsed);
-                }
+                }*/
 
-                if (personRectangle.Intersects(ballRectangle) == true)
+                /*if (personRectangle.Intersects(ballRectangle) == true)
                 {
 
                     backRoom8_1 = "F To Enter";
@@ -3018,7 +3022,7 @@ namespace Project1
                 {
                     personHit2 = false;
                     backRoom8_1 = "Check";
-                }
+                }*/
                 
                 old_ks = ks;
             }
@@ -3152,8 +3156,8 @@ namespace Project1
         }
         void DrawRoom5()
         {
-            _spriteBatch.Draw(room5_1, (bg5Pos - camPos) * scroll_factor, Color.White);
-            _spriteBatch.Draw(room5_2, (bg5Pos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
+            _spriteBatch.Draw(room5_1, (bg2Pos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(room5_2, (bg2Pos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
             _spriteBatch.Draw(ballTexture, (ballPos5_4 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.Draw(ball2Texture, (ballPos5_6 - camPos) * scroll_factor, new Rectangle(0,24,0,0), (Color.White));
             if (speed.X <= 0)
@@ -3423,10 +3427,10 @@ namespace Project1
         }
         void DrawL_Room8()
         {
-            _spriteBatch.Draw(Lroom8_1, (bg2Pos - camPos) * scroll_factor, Color.White);
-            _spriteBatch.Draw(Lroom8_2, (bg2Pos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
-            _spriteBatch.Draw(Lroom8_3, (bg2Pos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width + 720, 0), Color.White);
-            //_spriteBatch.Draw(ballTexture, (ballPos2_1 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.Draw(Lroom8_1, (bg8Pos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(Lroom8_2, (bg8Pos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
+            _spriteBatch.Draw(Lroom8_3, (bg8Pos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width + 720, 0), Color.White);
+            _spriteBatch.Draw(ballTexture, (ballPos8_1 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
             //_spriteBatch.Draw(trap, trapPos - camPos * scroll_factor, new Rectangle(0, 0, 26, 26), (Color.White));
             if (speed.X <= 0)
             {
@@ -3443,6 +3447,7 @@ namespace Project1
                 _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             }
             //_spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
+            _spriteBatch.DrawString(deBugFont, backRoom8_1, (ballPos8_1 - new Vector2(0, 30) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
