@@ -146,7 +146,7 @@ namespace Project1
         Light light2 = new Spotlight
         {
             Color = Color.White,
-            Scale = new Vector2(510f),
+            Scale = new Vector2(0f),
             Radius = 100,
             CastsShadows = false,
             Rotation = MathHelper.Pi - MathHelper.PiOver2 * 1f,
@@ -155,7 +155,7 @@ namespace Project1
         };
         Light light = new PointLight
         {
-            Scale = new Vector2(250f), 
+            Scale = new Vector2(200f), 
             ShadowType = ShadowType.Illuminated 
         };
         Light spotLight = new Spotlight
@@ -216,7 +216,8 @@ namespace Project1
 
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferredBackBufferWidth = 720;
-            _graphics.PreferredBackBufferHeight = 380;
+            _graphics.PreferredBackBufferHeight = 480;
+            _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();   
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -328,9 +329,9 @@ namespace Project1
             ballPos6_5 = new Vector2(450, 200);
             ballPos2_7 = new Vector2(250, 200);
             ballPos7_2 = new Vector2(310, 200);
-            ballPos8 = new Vector2(20, 250);
-            ballPos8_1 = new Vector2(2070, 250);
+            ballPos8 = new Vector2(25, 250);
             uiPos = new Vector2(0, 0);
+            uiPos5 = new Vector2(0, 0);
             ePos = new Vector2(1850,170);
             trapPos = new Vector2(900, 340);
 
@@ -1104,10 +1105,6 @@ namespace Project1
             {
                 mCurrentScreen = Screenstate.Room2;
                 pos.X = 880;
-                camPos.X = 725;
-                uiPos = new Vector2((int)camPos.X , (int)camPos.Y);
-                fLine.X = pos.X + rad;
-                bLine.X = pos.X - rad;
             }
 
             if(personHit2 == true)
@@ -1115,7 +1112,6 @@ namespace Project1
                 mCurrentScreen = Screenstate.Room5;
                 pos.X = 100;
                 camPos.X = 0;
-                uiPos = new Vector2((int)camPos.X, (int)camPos.Y);
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
@@ -2538,7 +2534,7 @@ namespace Project1
                 Rectangle ballRectangle = new Rectangle((int)ballPos5_4.X, (int)ballPos5_4.Y, 24, 24);
                 Rectangle ball2Rectangle = new Rectangle((int)ballPos5_6.X, (int)ballPos5_6.Y, 24, 24);
                 Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
-                Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, 100, 100);
+                Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, -20, 50);
 
                 if (personRectangle.Intersects(trapRectangle) == true)
                 {
