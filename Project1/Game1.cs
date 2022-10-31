@@ -100,6 +100,9 @@ namespace Project1
         public Vector2 ballPos7_2 = new Vector2(0, 0);
         public Vector2 ballPos8 = new Vector2(0, 0);
         public Vector2 ballPos8_1 = new Vector2(0, 0);
+        public Vector2 puzzlePos1 = new Vector2(0, 0);
+        public Vector2 puzzlePos2 = new Vector2(0, 0);
+        public Vector2 puzzlePos3 = new Vector2(0, 0);
         public Vector2 textPos;
         public Vector2 uiPos;
         public Vector2 uiPos5;
@@ -127,6 +130,9 @@ namespace Project1
         private string toRoom_8;
         private string backRoom8_1;
         private string ptext;
+        private string puzzle1;
+        private string puzzle3;
+        private string puzzle2;
         public Rectangle hBarRec;
         public Rectangle sBarRec;
         public bool personHit;
@@ -257,7 +263,9 @@ namespace Project1
             toRoom_8 = "";
             backRoom8_1 = "";
             ptext = "";
-
+            puzzle1 = "";
+            puzzle2 = "";
+            puzzle3 = "";
             base.Initialize();
             dylight.Initialize();
         }
@@ -334,6 +342,9 @@ namespace Project1
             ballPos2_7 = new Vector2(250, 200);
             ballPos7_2 = new Vector2(310, 200);
             ballPos8 = new Vector2(25, 250);
+            puzzlePos1 = new Vector2(450, 250);
+            puzzlePos2 = new Vector2(260, 220);
+            puzzlePos3 = new Vector2(360, 240);
             uiPos = new Vector2(0, 400);
             uiPos5 = new Vector2(0, 0);
             ePos = new Vector2(1850, 170);
@@ -1404,6 +1415,7 @@ namespace Project1
                 Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
                 Rectangle ballRectangle = new Rectangle((int)ballPos5_4.X, (int)ballPos5_4.Y, 24, 24);
                 Rectangle ball2Rectangle = new Rectangle((int)ballPos5_6.X, (int)ballPos5_6.Y, 24, 24);
+                Rectangle puzzleRectangle = new Rectangle((int)puzzlePos2.X, (int)puzzlePos2.Y, 24, 24);
                 Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
                 Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, 100, 100);
 
@@ -1457,6 +1469,23 @@ namespace Project1
                 {
                     personHit2 = false;
                     toRoom_6 = "Check";
+                }
+                if (personRectangle.Intersects(puzzleRectangle) == true)
+                {
+
+                    puzzle2 = "F To Solve";
+                    {
+                        if (ks.IsKeyDown(Keys.F)) //Intereact object
+                        {
+                            puzzle2 = "Solving";
+                            personHit3 = true;
+                        }
+                    }
+                }
+                else if (personRectangle.Intersects(puzzleRectangle) == false)
+                {
+                    personHit3 = false;
+                    puzzle2 = "Check";
                 }
 
                 old_ks = ks;
@@ -1575,6 +1604,7 @@ namespace Project1
             }
             Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
             Rectangle ballRectangle = new Rectangle((int)ballPos6_5.X, (int)ballPos6_5.Y, 24, 24);
+            Rectangle puzzleRectangle = new Rectangle((int)puzzlePos3.X, (int)puzzlePos3.Y, 24, 24);
             if (personRectangle.Intersects(ballRectangle) == true)
             {
                 backRoom6_5 = "F To Enter";
@@ -1590,6 +1620,22 @@ namespace Project1
             {
                 personHit = false;
                 backRoom6_5 = "Check";
+            }
+            if (personRectangle.Intersects(puzzleRectangle) == true)
+            {
+                puzzle3 = "F To Solve";
+                {
+                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    {
+                        puzzle3 = "Solving";
+                        personHit2 = true;
+                    }
+                }
+            }
+            else if (personRectangle.Intersects(puzzleRectangle) == false)
+            {
+                personHit2 = false;
+                puzzle3 = "Check";
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -1702,6 +1748,7 @@ namespace Project1
             }
             Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
             Rectangle ballRectangle = new Rectangle((int)ballPos7_2.X, (int)ballPos7_2.Y, 24, 24);
+            Rectangle ballpuzzle = new Rectangle((int)puzzlePos1.X, (int)puzzlePos1.Y, 24, 24);
             if (personRectangle.Intersects(ballRectangle) == true)
             {
                 backRoom7_2 = "F To Enter";
@@ -1717,6 +1764,22 @@ namespace Project1
             {
                 personHit = false;
                 backRoom7_2 = "Check";
+            }
+            if (personRectangle.Intersects(ballpuzzle) == true)
+            {
+                puzzle1 = "F To Solve";
+                {
+                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    {
+                        puzzle1 = "Solving";
+                        personHit2 = true;
+                    }
+                }
+            }
+            else if (personRectangle.Intersects(ballpuzzle) == false)
+            {
+                personHit2 = false;
+                puzzle1 = "Check";
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -3157,6 +3220,7 @@ namespace Project1
             _spriteBatch.Draw(room5_2, (bg5Pos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
             _spriteBatch.Draw(ballTexture, (ballPos5_4 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.Draw(ball2Texture, (ballPos5_6 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.Draw(ball2Texture, (puzzlePos2 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
             if (speed.X <= 0)
             {
                 totalframe = 20;
@@ -3175,6 +3239,7 @@ namespace Project1
             _spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom5_4, (ballPos5_4 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_6, (ballPos5_6 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
+            _spriteBatch.DrawString(deBugFont, puzzle2, (puzzlePos2 - new Vector2(0, 50) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
@@ -3207,7 +3272,9 @@ namespace Project1
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(ballTexture, ballPos6_5, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.Draw(ballTexture, puzzlePos3, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom6_5, (ballPos6_5 - new Vector2(0, 80)), (Color.White));
+            _spriteBatch.DrawString(deBugFont, puzzle3, (puzzlePos3 - new Vector2(20, 50)), (Color.White));
         }
         void DrawRoom7()
         {
@@ -3230,7 +3297,9 @@ namespace Project1
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(ballTexture, ballPos7_2, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.Draw(ballTexture, puzzlePos1, new Rectangle(0, 0, 24, 24), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom7_2, (ballPos7_2 - new Vector2(0, 80)), (Color.White));
+            _spriteBatch.DrawString(deBugFont, puzzle1, (puzzlePos1 - new Vector2(20, 50)), (Color.White));
         }
 
         void DrawL_Room1()

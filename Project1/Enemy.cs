@@ -22,7 +22,6 @@ namespace Project1
         Vector2 escroll_factor = new Vector2(1.0f, 1);
         int eneframe;
         Vector2 playPos;
-        Light enLight;
         float enerotate = 0f;
 
         bool right;
