@@ -263,12 +263,12 @@ namespace Project1
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             room2_1 = base.Content.Load<Texture2D>("2-1D");
-            room2_2 = base.Content.Load<Texture2D>("2-2D");
-            room2_3 = base.Content.Load<Texture2D>("2-3D");
-            room3 = base.Content.Load<Texture2D>("3D");
+            room2_2 = base.Content.Load<Texture2D>("2-2 D fix");
+            room2_3 = base.Content.Load<Texture2D>("2-3 D fix");
+            room3 = base.Content.Load<Texture2D>("3 D fix");
             room4 = base.Content.Load<Texture2D>("4D");
             room5_1 = base.Content.Load<Texture2D>("5-1D");
-            room5_2 = base.Content.Load<Texture2D>("5-2D");
+            room5_2 = base.Content.Load<Texture2D>("5-2 D fix");
             room6 = base.Content.Load<Texture2D>("6D");
             room7 = base.Content.Load<Texture2D>("7D");
             Lroom1 = Content.Load<Texture2D>("1L");
@@ -721,7 +721,7 @@ namespace Project1
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) == true)
             {
-                mCurrentScreen = Screenstate.Title;
+                Exit();
             }
             UpdateFrame(elapsed);
         }
