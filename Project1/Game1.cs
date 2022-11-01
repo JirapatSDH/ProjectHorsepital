@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 using Penumbra;
 using System;
@@ -10,6 +11,7 @@ using System.Transactions;
 using SharpDX.MediaFoundation;
 using System.Security.Cryptography.Xml;
 using SharpDX.XAudio2;
+using Microsoft.Xna.Framework.Media;
 
 namespace Project1
 {
@@ -142,6 +144,24 @@ namespace Project1
         float totalelapsed;
         float elapsed;
 
+        SoundEffect bgm;
+        SoundEffectInstance instance;
+
+        SoundEffect walk;
+        SoundEffectInstance w_instance;
+        AudioListener w_listener;
+        AudioEmitter w_emitter;
+
+        SoundEffect run;
+        SoundEffectInstance r_instance;
+        AudioListener r_listener;
+        AudioEmitter r_emitter;
+
+        SoundEffect door;
+        SoundEffectInstance d_instance;
+        AudioListener d_listener;
+        AudioEmitter d_emitter;
+
         //--------------------------------------------------------------------------Set Light---------------------------------------------
         Light light2 = new Spotlight
         {
@@ -217,7 +237,7 @@ namespace Project1
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferredBackBufferWidth = 720;
             _graphics.PreferredBackBufferHeight = 480;
-            _graphics.IsFullScreen = true;
+            //_graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -304,6 +324,28 @@ namespace Project1
             overMenu = Content.Load<Texture2D>("Gameover_bg");
             overGlitch = Content.Load<Texture2D>("Game over_glitch");
 
+            bgm = Content.Load<SoundEffect>("BGM");
+            instance = bgm.CreateInstance();
+            instance.IsLooped = true;
+            instance.Play();
+
+            walk = Content.Load<SoundEffect>("Walk1");
+            w_instance = walk.CreateInstance();
+            w_instance.IsLooped = true;
+            w_listener = new AudioListener();   w_emitter = new AudioEmitter();
+            w_instance.Apply3D(w_listener, w_emitter);
+
+            run = Content.Load<SoundEffect>("Run1");
+            r_instance = run.CreateInstance();
+            r_instance.IsLooped = true;
+            r_listener = new AudioListener(); r_emitter = new AudioEmitter();
+            r_instance.Apply3D(r_listener, r_emitter);
+
+            door = Content.Load<SoundEffect>("door");
+            d_instance = door.CreateInstance();
+            d_listener = new AudioListener();   d_emitter = new AudioEmitter();
+            d_instance.Apply3D(d_listener, d_emitter);
+
             frame = 0;
             totalframe = 4;
             framepersec = 6;
@@ -388,7 +430,7 @@ namespace Project1
                 case Screenstate.Room6:
                     {
                         UpdateRoom6();
-                        dylight.AmbientColor = new Color(new Vector3(0.2f));
+                        dylight.AmbientColor = new Color(new Vector3(0.3f));
                         break;
                     }
                 case Screenstate.Room7:
@@ -573,6 +615,7 @@ namespace Project1
             KeyboardState ks = Keyboard.GetState();
             KeyboardState old_ks = Keyboard.GetState();
             {
+                
                 if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
                 {
                     hBarRec.Width -= 5;
@@ -580,6 +623,8 @@ namespace Project1
 
                 if (ks.IsKeyDown(Keys.W))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -596,6 +641,8 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.S))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -612,13 +659,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X - speed.X;
@@ -636,13 +688,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X + speed.X;
@@ -660,6 +717,8 @@ namespace Project1
                 }
                 if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
                 {
+                    w_instance.Stop();
+                    r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
@@ -675,6 +734,7 @@ namespace Project1
                     {
                         toRoom_2 = "Enter room ?";
                         personHit2 = true;
+                        d_instance.Play();
                     }
                 }
             }
@@ -719,6 +779,7 @@ namespace Project1
         }
         void UpdateOver()
         {
+            w_instance.Stop();
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) == true)
             {
                 Exit();
@@ -771,6 +832,8 @@ namespace Project1
 
                 if (ks.IsKeyDown(Keys.W))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -787,6 +850,8 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.S))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -803,8 +868,11 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                 {
+                    w_instance.Play();
+
                     if (pos.X <= bLine.X && camPos.X > 0)
                     {
+                        r_instance.Stop();
                         fLine -= new Vector2(3, 0);
                         bLine -= new Vector2(3, 0);
                         camPos -= new Vector2(3, 0);
@@ -813,6 +881,8 @@ namespace Project1
 
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         fLine -= new Vector2(6, 0);
                         bLine -= new Vector2(6, 0);
@@ -839,8 +909,11 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 3 - 25)
                 {
+                    w_instance.Play();
+
                     if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width * 2)
                     {
+                        r_instance.Stop();
                         fLine += new Vector2(3, 0);
                         bLine += new Vector2(3, 0);
                         camPos += new Vector2(3, 0);
@@ -848,6 +921,8 @@ namespace Project1
                     }
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         fLine += new Vector2(6, 0);
                         bLine += new Vector2(6, 0);
@@ -874,6 +949,8 @@ namespace Project1
                 }
                 if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
                 {
+                    w_instance.Stop();
+                    r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
@@ -917,6 +994,7 @@ namespace Project1
                         {
                             backRoom2_1 = "Enter room ?";
                             personHit2 = true;
+                            d_instance.Play();
                         }
                     }
                 }
@@ -932,6 +1010,7 @@ namespace Project1
                     {
                         toRoom_3 = "Enter room ?";
                         personHit = true;
+                        d_instance.Play();
                     }
                 }
                 else if (personRectangle.Intersects(ball2_3Rectangle) == false)
@@ -946,6 +1025,7 @@ namespace Project1
                     {
                         toRoom_4 = "Enter room ?";
                         personHit3 = true;
+                        d_instance.Play();
                     }
                 }
                 else if (personRectangle.Intersects(ball2_4Rectangle) == false)
@@ -960,6 +1040,7 @@ namespace Project1
                     {
                         toRoom_7 = "Enter room ?";
                         personHit4 = true;
+                        d_instance.Play();
                     }
                 }
                 else if (personRectangle.Intersects(ball2_7Rectangle) == false)
@@ -992,6 +1073,8 @@ namespace Project1
 
                 if (ks.IsKeyDown(Keys.W))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -1008,6 +1091,8 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.S))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -1024,13 +1109,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        r_instance.Play();
+                        w_instance.Stop();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X - speed.X;
@@ -1048,13 +1138,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X + speed.X;
@@ -1072,6 +1167,8 @@ namespace Project1
                 }
                 if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
                 {
+                    w_instance.Stop();
+                    r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
@@ -1086,6 +1183,7 @@ namespace Project1
                     {
                         backRoom3_2 = "Enter room ?";
                         personHit = true;
+                        d_instance.Play();
                     }
                 }
             }
@@ -1096,7 +1194,7 @@ namespace Project1
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
-            light.Position = pos - camPos + new Vector2(40, 40);
+            light.Position = pos - camPos + new Vector2(0, 0);
 
         }
         void UpdateRoom4()
@@ -1132,6 +1230,8 @@ namespace Project1
 
                 if (ks.IsKeyDown(Keys.W))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -1148,6 +1248,8 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.S))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -1164,13 +1266,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X - speed.X;
@@ -1188,13 +1295,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X + speed.X;
@@ -1212,6 +1324,8 @@ namespace Project1
                 }
                 if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
                 {
+                    w_instance.Stop();
+                    r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
@@ -1227,6 +1341,7 @@ namespace Project1
                     {
                         backRoom4_2 = "Enter room ?";
                         personHit = true;
+                        d_instance.Play();
                     }
                 }
             }
@@ -1243,6 +1358,7 @@ namespace Project1
                     {
                         toRoom_5 = "Enter room ?";
                         personHit2 = true;
+                        d_instance.Play();
                     }
                 }
             }
@@ -1261,13 +1377,13 @@ namespace Project1
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.Room4;
-                pos.X = 110;
+                pos.X = 240;
             }
 
             if (personHit2 == true)
             {
                 mCurrentScreen = Screenstate.Room6;
-                pos.X = 300;
+                pos.X = 400;
             }
 
             if (hBarRec.Width <= 0)
@@ -1285,6 +1401,8 @@ namespace Project1
 
                 if (ks.IsKeyDown(Keys.W))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -1301,6 +1419,8 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.S))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -1317,8 +1437,11 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                 {
+                    w_instance.Play();
+
                     if (pos.X <= bLine.X && camPos.X > 0)
                     {
+                        r_instance.Stop();
                         fLine -= new Vector2(3, 0);
                         bLine -= new Vector2(3, 0);
                         camPos -= new Vector2(3, 0);
@@ -1326,6 +1449,8 @@ namespace Project1
                     }
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         fLine -= new Vector2(6, 0);
                         bLine -= new Vector2(6, 0);
@@ -1352,8 +1477,11 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 2 - 25)
                 {
+                    w_instance.Play();
+
                     if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width)
                     {
+                        r_instance.Stop();
                         fLine += new Vector2(3, 0);
                         bLine += new Vector2(3, 0);
                         camPos += new Vector2(3, 0);
@@ -1361,6 +1489,8 @@ namespace Project1
                     }
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         fLine += new Vector2(6, 0);
                         bLine += new Vector2(6, 0);
@@ -1387,6 +1517,8 @@ namespace Project1
                 }
                 if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
                 {
+                    w_instance.Stop();
+                    r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
@@ -1423,6 +1555,7 @@ namespace Project1
                         {
                             backRoom5_4 = "Enter room ?";
                             personHit = true;
+                            d_instance.Play();
                         }
                     }
                 }
@@ -1440,6 +1573,7 @@ namespace Project1
                         {
                             toRoom_6 = "Enter room ?";
                             personHit2 = true;
+                            d_instance.Play();
                         }
                     }
                 }
@@ -1478,6 +1612,8 @@ namespace Project1
 
                 if (ks.IsKeyDown(Keys.W))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -1494,6 +1630,8 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.S))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -1510,13 +1648,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X - speed.X;
@@ -1534,13 +1677,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X + speed.X;
@@ -1558,6 +1706,8 @@ namespace Project1
                 }
                 if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
                 {
+                    w_instance.Stop();
+                    r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
@@ -1572,6 +1722,7 @@ namespace Project1
                     {
                         backRoom6_5 = "Enter room ?";
                         personHit = true;
+                        d_instance.Play();
                     }
                 }
             }
@@ -1605,6 +1756,8 @@ namespace Project1
 
                 if (ks.IsKeyDown(Keys.W))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -1621,6 +1774,8 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.S))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -1637,13 +1792,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X - speed.X;
@@ -1661,13 +1821,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X + speed.X;
@@ -1685,6 +1850,8 @@ namespace Project1
                 }
                 if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
                 {
+                    w_instance.Stop();
+                    r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
@@ -1699,6 +1866,7 @@ namespace Project1
                     {
                         backRoom7_2 = "Enter room ?";
                         personHit = true;
+                        d_instance.Play();
                     }
                 }
             }
@@ -1709,7 +1877,7 @@ namespace Project1
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
-            light.Position = pos - camPos + new Vector2(40, 40);
+            light.Position = pos - camPos + new Vector2(60, 40);
 
         }
 
@@ -1740,6 +1908,8 @@ namespace Project1
 
                 if (ks.IsKeyDown(Keys.W))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -1756,6 +1926,8 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.S))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -1772,13 +1944,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X - speed.X;
@@ -1796,13 +1973,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X + speed.X;
@@ -1820,6 +2002,8 @@ namespace Project1
                 }
                 if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
                 {
+                    w_instance.Stop();
+                    r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
@@ -1836,6 +2020,7 @@ namespace Project1
                     {
                         toRoom_2 = "Enter room ?";
                         personHit2 = true;
+                        d_instance.Play();
                     }
                 }
             }
@@ -1853,6 +2038,7 @@ namespace Project1
                     {
                         toRoom_8 = "Enter room ?";
                         personHit = true;
+                        d_instance.Play();
                     }
                 }
             }
@@ -1912,6 +2098,8 @@ namespace Project1
 
                 if (ks.IsKeyDown(Keys.W))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -1928,6 +2116,8 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.S))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -1944,8 +2134,11 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                 {
+                    w_instance.Play();
+
                     if (pos.X <= bLine.X && camPos.X > 0)
                     {
+                        r_instance.Stop();
                         fLine -= new Vector2(3, 0);
                         bLine -= new Vector2(3, 0);
                         camPos -= new Vector2(3, 0);
@@ -1953,6 +2146,8 @@ namespace Project1
                     }
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         fLine -= new Vector2(6, 0);
                         bLine -= new Vector2(6, 0);
@@ -1979,8 +2174,11 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 3 - 25)
                 {
+                    w_instance.Play();
+
                     if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width * 2)
                     {
+                        r_instance.Stop();
                         fLine += new Vector2(3, 0);
                         bLine += new Vector2(3, 0);
                         camPos += new Vector2(3, 0);
@@ -1988,6 +2186,8 @@ namespace Project1
                     }
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         fLine += new Vector2(6, 0);
                         bLine += new Vector2(6, 0);
@@ -2014,6 +2214,8 @@ namespace Project1
                 }
                 if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
                 {
+                    w_instance.Stop();
+                    r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
@@ -2052,6 +2254,7 @@ namespace Project1
                         {
                             backRoom2_1 = "Enter room ?";
                             personHit2 = true;
+                            d_instance.Play();
                         }
                     }
                 }
@@ -2067,6 +2270,7 @@ namespace Project1
                     {
                         toRoom_3 = "Enter room ?";
                         personHit = true;
+                        d_instance.Play();
                     }
                 }
                 else if (personRectangle.Intersects(ball2_3Rectangle) == false)
@@ -2081,6 +2285,7 @@ namespace Project1
                     {
                         toRoom_4 = "Enter room ?";
                         personHit3 = true;
+                        d_instance.Play();
                     }
                 }
                 else if (personRectangle.Intersects(ball2_4Rectangle) == false)
@@ -2095,6 +2300,7 @@ namespace Project1
                     {
                         toRoom_7 = "Enter room ?";
                         personHit4 = true;
+                        d_instance.Play();
                     }
                 }
                 else if (personRectangle.Intersects(ball2_7Rectangle) == false)
@@ -2131,6 +2337,8 @@ namespace Project1
 
                 if (ks.IsKeyDown(Keys.W))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -2147,6 +2355,8 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.S))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -2163,13 +2373,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X - speed.X;
@@ -2187,13 +2402,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X + speed.X;
@@ -2211,6 +2431,8 @@ namespace Project1
                 }
                 if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
                 {
+                    w_instance.Stop();
+                    r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
@@ -2225,6 +2447,7 @@ namespace Project1
                     {
                         backRoom3_2 = "Enter room ?";
                         personHit = true;
+                        d_instance.Play();
                     }
                 }
             }
@@ -2267,6 +2490,8 @@ namespace Project1
 
                 if (ks.IsKeyDown(Keys.W))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -2283,6 +2508,8 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.S))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -2299,13 +2526,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X - speed.X;
@@ -2323,13 +2555,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Play();
                         speed.X = 3;
                     }
                     pos.X = pos.X + speed.X;
@@ -2347,6 +2584,8 @@ namespace Project1
                 }
                 if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
                 {
+                    w_instance.Stop();
+                    r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
@@ -2362,6 +2601,7 @@ namespace Project1
                     {
                         backRoom4_2 = "Enter room ?";
                         personHit = true;
+                        d_instance.Play();
                     }
                 }
             }
@@ -2378,6 +2618,7 @@ namespace Project1
                     {
                         toRoom_5 = "Enter room ?";
                         personHit2 = true;
+                        d_instance.Play();
                     }
                 }
             }
@@ -2396,13 +2637,13 @@ namespace Project1
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.LRoom4;
-                pos.X = 110;
+                pos.X = 240;
             }
 
             if (personHit2 == true)
             {
                 mCurrentScreen = Screenstate.LRoom6;
-                pos.X = 300;
+                pos.X = 400;
             }
 
             if (hBarRec.Width <= 0)
@@ -2420,6 +2661,8 @@ namespace Project1
 
                 if (ks.IsKeyDown(Keys.W))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -2436,6 +2679,8 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.S))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -2452,8 +2697,11 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                 {
+                    w_instance.Play();
+
                     if (pos.X <= bLine.X && camPos.X > 0)
                     {
+                        r_instance.Stop();
                         fLine -= new Vector2(3, 0);
                         bLine -= new Vector2(3, 0);
                         camPos -= new Vector2(3, 0);
@@ -2461,6 +2709,8 @@ namespace Project1
                     }
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         fLine -= new Vector2(6, 0);
                         bLine -= new Vector2(6, 0);
@@ -2487,8 +2737,11 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 2 - 25)
                 {
+                    w_instance.Play();
+
                     if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width)
                     {
+                        r_instance.Stop();
                         fLine += new Vector2(3, 0);
                         bLine += new Vector2(3, 0);
                         camPos += new Vector2(3, 0);
@@ -2496,6 +2749,8 @@ namespace Project1
                     }
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         fLine += new Vector2(6, 0);
                         bLine += new Vector2(6, 0);
@@ -2522,6 +2777,8 @@ namespace Project1
                 }
                 if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
                 {
+                    w_instance.Stop();
+                    r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
@@ -2558,6 +2815,7 @@ namespace Project1
                         {
                             backRoom5_4 = "Enter room ?";
                             personHit = true;
+                            d_instance.Play();
                         }
                     }
                 }
@@ -2575,6 +2833,7 @@ namespace Project1
                         {
                             toRoom_6 = "Enter room ?";
                             personHit2 = true;
+                            d_instance.Play();
                         }
                     }
                 }
@@ -2613,6 +2872,8 @@ namespace Project1
 
                 if (ks.IsKeyDown(Keys.W))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -2629,6 +2890,8 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.S))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -2645,13 +2908,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X - speed.X;
@@ -2669,13 +2937,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X + speed.X;
@@ -2693,6 +2966,8 @@ namespace Project1
                 }
                 if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
                 {
+                    w_instance.Stop();
+                    r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
@@ -2707,6 +2982,7 @@ namespace Project1
                     {
                         backRoom6_5 = "Enter room ?";
                         personHit = true;
+                        d_instance.Play();
                     }
                 }
             }
@@ -2772,13 +3048,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X - speed.X;
@@ -2796,13 +3077,18 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
                 {
+                    w_instance.Play();
+
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         sBarRec.Width -= 3;
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X + speed.X;
@@ -2820,6 +3106,8 @@ namespace Project1
                 }
                 if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
                 {
+                    w_instance.Stop();
+                    r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
@@ -2834,6 +3122,7 @@ namespace Project1
                     {
                         backRoom7_2 = "Enter room ?";
                         personHit = true;
+                        d_instance.Play();
                     }
                 }
             }
@@ -2874,6 +3163,8 @@ namespace Project1
 
                 if (ks.IsKeyDown(Keys.W))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -2890,6 +3181,8 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.S))
                 {
+                    w_instance.Play();
+
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
@@ -2906,8 +3199,10 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                 {
+                    w_instance.Play();
                     if (pos.X <= bLine.X && camPos.X > 0)
                     {
+                        r_instance.Stop();
                         fLine -= new Vector2(3, 0);
                         bLine -= new Vector2(3, 0);
                         camPos -= new Vector2(3, 0);
@@ -2915,6 +3210,8 @@ namespace Project1
                     }
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         fLine -= new Vector2(6, 0);
                         bLine -= new Vector2(6, 0);
@@ -2941,8 +3238,11 @@ namespace Project1
                 }
                 if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 3 - 25)
                 {
+                    w_instance.Play();
+
                     if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width * 2)
                     {
+                        r_instance.Stop();
                         fLine += new Vector2(3, 0);
                         bLine += new Vector2(3, 0);
                         camPos += new Vector2(3, 0);
@@ -2950,6 +3250,8 @@ namespace Project1
                     }
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
+                        w_instance.Stop();
+                        r_instance.Play();
                         speed.X = 6;
                         fLine += new Vector2(6, 0);
                         bLine += new Vector2(6, 0);
@@ -2976,6 +3278,8 @@ namespace Project1
                 }
                 if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
                 {
+                    w_instance.Stop();
+                    r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
@@ -3011,6 +3315,7 @@ namespace Project1
                         {
                             backRoom8_1 = "Enter room ?";
                             personHit2 = true;
+                            d_instance.Play();
                         }
                     }
                 }

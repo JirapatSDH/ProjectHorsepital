@@ -373,6 +373,24 @@
 /processorParam:TextureFormat=Color
 /build:ball.png
 
+#begin BGM.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:BGM.wav
+
+#begin door.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:door.wav
+
+#begin door.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:door.wav
+
 #begin Game over_glitch.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -524,6 +542,12 @@
 /processorParam:TextureFormat=Compressed
 /build:MyFont.spritefont
 
+#begin Run1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Run1.wav
+
 #begin SanityBar.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -559,4 +583,10 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:UI_emty.png
+
+#begin Walk1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Walk1.wav
 
