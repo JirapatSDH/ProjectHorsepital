@@ -613,6 +613,18 @@
 /processorParam:TextureFormat=Color
 /build:MainMenu_bg.png
 
+#begin MainMenu_kaolad_Tile1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MainMenu_kaolad_Tile1.png
+
 #begin MainMenu_kaolad1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -781,6 +793,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:StaminaBar.png
+
+#begin startcutscene.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:startcutscene.png
 
 #begin talisman.png
 /importer:TextureImporter
