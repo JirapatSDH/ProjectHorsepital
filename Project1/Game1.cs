@@ -214,7 +214,7 @@ namespace Project1
             Scale = new Vector2(200f),
             ShadowType = ShadowType.Illuminated
         };
-        Light spotLight = new Spotlight
+        Light spotLightR2_1 = new Spotlight
         {
             Color = Color.YellowGreen,
             Scale = new Vector2(400),
@@ -223,7 +223,7 @@ namespace Project1
             ConeDecay = 1.5f,
             ShadowType = ShadowType.Illuminated
         };
-        Light spotLight2 = new Spotlight
+        Light spotLightR2_2 = new Spotlight
         {
             Color = Color.Yellow,
             Scale = new Vector2(400),
@@ -232,7 +232,7 @@ namespace Project1
             ConeDecay = 2.5f,
             ShadowType = ShadowType.Illuminated
         };
-        Light spotLight3 = new Spotlight
+        Light spotLightR2_3 = new Spotlight
         {
             Color = Color.YellowGreen,
             Scale = new Vector2(400),
@@ -241,7 +241,43 @@ namespace Project1
             ConeDecay = 1.5f,
             ShadowType = ShadowType.Illuminated
         };
-        Light spotLight4 = new Spotlight
+        Light spotLightR2_4 = new Spotlight
+        {
+            Color = Color.YellowGreen,
+            Scale = new Vector2(400),
+            Radius = 90,
+            Rotation = MathHelper.Pi - MathHelper.PiOver2 * 1f,
+            ConeDecay = 1.5f,
+            ShadowType = ShadowType.Illuminated
+        };
+        Light spotLightR3 = new Spotlight
+        {
+            Color = Color.Yellow,
+            Scale = new Vector2(400),
+            Radius = 90,
+            Rotation = MathHelper.Pi - MathHelper.PiOver2 * 1f,
+            ConeDecay = 1.5f,
+            ShadowType = ShadowType.Illuminated
+        };
+        Light spotLightR4 = new Spotlight
+        {
+            Color = Color.Yellow,
+            Scale = new Vector2(400),
+            Radius = 120,
+            Rotation = MathHelper.Pi - MathHelper.PiOver2 * 1f,
+            ConeDecay = 1.5f,
+            ShadowType = ShadowType.Illuminated
+        };
+        Light spotLightR6 = new Spotlight
+        {
+            Color = Color.Yellow,
+            Scale = new Vector2(400),
+            Radius = 90,
+            Rotation = MathHelper.Pi - MathHelper.PiOver2 * 1f,
+            ConeDecay = 1.5f,
+            ShadowType = ShadowType.Illuminated
+        };
+        Light spotLightR7 = new Spotlight
         {
             Color = Color.YellowGreen,
             Scale = new Vector2(400),
@@ -285,10 +321,10 @@ namespace Project1
 
             dylight.Lights.Add(light);
             dylight.Lights.Add(light2);
-            dylight.Lights.Add(spotLight);
-            dylight.Lights.Add(spotLight2);
-            dylight.Lights.Add(spotLight3);
-            dylight.Lights.Add(spotLight4);
+            dylight.Lights.Add(spotLightR2_1);
+            dylight.Lights.Add(spotLightR2_2);
+            dylight.Lights.Add(spotLightR2_3);
+            dylight.Lights.Add(spotLightR2_4);
             dylight.Lights.Add(eLight);
            
         }
@@ -686,13 +722,9 @@ namespace Project1
             dylight.Draw(gameTime);
             base.Draw(gameTime);
         }
+
         void UpdateRoom1()
         {
-            spotLight.Position = (new Vector2(-150, 0) - camPos) * scroll_factor;
-            spotLight2.Position = (new Vector2(350, -120) - camPos) * scroll_factor;
-            spotLight2.Color = Color.Red;
-            spotLight3.Position = (new Vector2(-150, 0) - camPos) * scroll_factor;
-            spotLight4.Position = (new Vector2(-150, 0) - camPos) * scroll_factor;
             if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
             {
                 mCurrentScreen = Screenstate.Title;
@@ -700,6 +732,10 @@ namespace Project1
             if (personHit2 == true)
             {
                 mCurrentScreen = Screenstate.Room2;
+                spotLightR2_1.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLightR2_2.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLightR2_3.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLightR2_4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 pos.X = 48;
             }
             ProcessInput();
@@ -902,29 +938,43 @@ namespace Project1
             if (personHit2 == true)
             {
                 mCurrentScreen = Screenstate.Room1;
-                spotLight.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
-                spotLight2.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
-                spotLight2.Color = Color.Yellow;
-                spotLight3.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
-                spotLight4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 pos.X = 580;
             }
 
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.Room3;
+                dylight.Lights.Remove(spotLightR2_1);
+                dylight.Lights.Remove(spotLightR2_2);
+                dylight.Lights.Remove(spotLightR2_3);
+                dylight.Lights.Remove(spotLightR2_4);
+                dylight.Lights.Add(spotLightR3);
+                spotLightR3.Position = new Vector2(480, 30);
                 pos.X = 200;
             }
 
             if (personHit3 == true)
             {
                 mCurrentScreen = Screenstate.Room4;
+                dylight.Lights.Remove(spotLightR2_1);
+                dylight.Lights.Remove(spotLightR2_2);
+                dylight.Lights.Remove(spotLightR2_3);
+                dylight.Lights.Remove(spotLightR2_4);
+                dylight.Lights.Add(spotLightR4);
+                spotLightR4.Position = new Vector2(360, 30);
                 pos.X = 500;
             }
 
             if (personHit4 == true)
             {
                 mCurrentScreen = Screenstate.Room7;
+                dylight.Lights.Remove(spotLightR2_1);
+                dylight.Lights.Remove(spotLightR2_2);
+                dylight.Lights.Remove(spotLightR2_3);
+                dylight.Lights.Remove(spotLightR2_4);
+                dylight.Lights.Add(spotLightR7);
+                spotLightR7.Position = new Vector2(350, 30);
+
                 pos.X = 350;
             }
             ProcessInput();
@@ -1177,6 +1227,11 @@ namespace Project1
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.Room2;
+                dylight.Lights.Add(spotLightR2_1);
+                dylight.Lights.Add(spotLightR2_2);
+                dylight.Lights.Add(spotLightR2_3);
+                dylight.Lights.Add(spotLightR2_4);
+                dylight.Lights.Remove(spotLightR3);
                 pos.X = 1675;
             }
 
@@ -1308,7 +1363,7 @@ namespace Project1
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
-            light.Position = pos - camPos + new Vector2(0, 0);
+            light.Position = pos - camPos + new Vector2(100, 40);
 
         }
         void UpdateRoom4()
@@ -1316,6 +1371,11 @@ namespace Project1
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.Room2;
+                dylight.Lights.Remove(spotLightR4);
+                dylight.Lights.Add(spotLightR2_1);
+                dylight.Lights.Add(spotLightR2_2);
+                dylight.Lights.Add(spotLightR2_3);
+                dylight.Lights.Add(spotLightR2_4);
                 pos.X = 880;
                 camPos.X = 780;
                 uiPos.X = 780;
@@ -1326,6 +1386,7 @@ namespace Project1
             if (personHit2 == true)
             {
                 mCurrentScreen = Screenstate.Room5;
+                dylight.Lights.Remove(spotLightR4);
                 pos.X = 100;
                 camPos.X = 0;
                 uiPos.X = 0;
@@ -1491,12 +1552,15 @@ namespace Project1
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.Room4;
+                dylight.Lights.Add(spotLightR4);
                 pos.X = 240;
             }
 
             if (personHit2 == true)
             {
                 mCurrentScreen = Screenstate.Room6;
+                dylight.Lights.Add(spotLightR6);
+                spotLightR6.Position = new Vector2(300, 30);
                 pos.X = 400;
             }
 
@@ -1726,6 +1790,7 @@ namespace Project1
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.Room5;
+                dylight.Lights.Remove(spotLightR6);
                 pos.X = 1170;
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
@@ -1889,6 +1954,11 @@ namespace Project1
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.Room2;
+                dylight.Lights.Remove(spotLightR7);
+                dylight.Lights.Add(spotLightR2_1);
+                dylight.Lights.Add(spotLightR2_2);
+                dylight.Lights.Add(spotLightR2_3);
+                dylight.Lights.Add(spotLightR2_4);
                 pos.X = 200;
             }
             if (personHit2 == true)
@@ -2045,7 +2115,7 @@ namespace Project1
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
-            light.Position = pos - camPos + new Vector2(60, 40);
+            light.Position = pos - camPos + new Vector2(60,40);
 
         }
 
@@ -2058,15 +2128,20 @@ namespace Project1
             if (personHit2 == true)
             {
                 mCurrentScreen = Screenstate.LRoom2;
+                mCurrentScreen = Screenstate.Room2;
+                spotLightR2_1.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLightR2_2.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLightR2_3.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLightR2_4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 pos.X = 48;
             }
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.LRoom8;
-                spotLight.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
-                spotLight2.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
-                spotLight3.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
-                spotLight4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLightR2_1.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLightR2_2.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLightR2_3.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLightR2_4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 pos.X = 2025;
                 camPos.X = 1450;
                 uiPos.X = 1450;
@@ -2203,7 +2278,7 @@ namespace Project1
             else if (personRectangle.Intersects(ballRectangle) == false)
             {
                 personHit2 = false;
-                //toRoom_2 = "Check";
+                toRoom_2 = "";
             }
             if (personRectangle.Intersects(ball2Rectangle) == true)
             {
@@ -2221,7 +2296,7 @@ namespace Project1
             else if (personRectangle.Intersects(ball2Rectangle) == false)
             {
                 personHit = false;
-                toRoom_8 = "Check";
+                toRoom_8 = "";
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -2234,28 +2309,46 @@ namespace Project1
             if (personHit2 == true)
             {
                 mCurrentScreen = Screenstate.LRoom1;
-                spotLight.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
-                spotLight2.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
-                spotLight3.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
-                spotLight4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLightR2_1.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLightR2_2.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLightR2_3.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLightR2_4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 pos.X = 580;
             }
 
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.LRoom3;
+                dylight.Lights.Remove(spotLightR2_1);
+                dylight.Lights.Remove(spotLightR2_2);
+                dylight.Lights.Remove(spotLightR2_3);
+                dylight.Lights.Remove(spotLightR2_4);
+                dylight.Lights.Add(spotLightR3);
+                spotLightR3.Position = new Vector2(480, 30);
                 pos.X = 200;
             }
 
             if (personHit3 == true)
             {
                 mCurrentScreen = Screenstate.LRoom4;
+                dylight.Lights.Remove(spotLightR2_1);
+                dylight.Lights.Remove(spotLightR2_2);
+                dylight.Lights.Remove(spotLightR2_3);
+                dylight.Lights.Remove(spotLightR2_4);
+                dylight.Lights.Add(spotLightR4);
+                spotLightR4.Position = new Vector2(360, 30);
                 pos.X = 500;
             }
 
             if (personHit4 == true)
             {
                 mCurrentScreen = Screenstate.LRoom7;
+                dylight.Lights.Remove(spotLightR2_1);
+                dylight.Lights.Remove(spotLightR2_2);
+                dylight.Lights.Remove(spotLightR2_3);
+                dylight.Lights.Remove(spotLightR2_4);
+                dylight.Lights.Add(spotLightR7);
+                spotLightR7.Position = new Vector2(350, 30);
                 pos.X = 350;
             }
 
@@ -2433,7 +2526,7 @@ namespace Project1
                 else if (personRectangle.Intersects(ballRectangle) == false)
                 {
                     personHit2 = false;
-                    //backRoom2_1 = "Check";
+                    backRoom2_1 = "";
                 }
                 if (personRectangle.Intersects(ball2_3Rectangle) == true)
                 {
@@ -2448,7 +2541,7 @@ namespace Project1
                 else if (personRectangle.Intersects(ball2_3Rectangle) == false)
                 {
                     personHit = false;
-                    //toRoom_3 = "Check";
+                    toRoom_3 = "";
                 }
                 if (personRectangle.Intersects(ball2_4Rectangle) == true)
                 {
@@ -2463,7 +2556,8 @@ namespace Project1
                 else if (personRectangle.Intersects(ball2_4Rectangle) == false)
                 {
                     personHit3 = false;
-                    //toRoom_4 = "Check";
+                    toRoom_4 = "";
+                      
                 }
                 if (personRectangle.Intersects(ball2_7Rectangle) == true)
                 {
@@ -2478,7 +2572,7 @@ namespace Project1
                 else if (personRectangle.Intersects(ball2_7Rectangle) == false)
                 {
                     personHit4 = false;
-                    //toRoom_7 = "Check";
+                    toRoom_7 = "";
                 }
 
                 old_ks = ks;
@@ -2495,6 +2589,11 @@ namespace Project1
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.LRoom2;
+                dylight.Lights.Add(spotLightR2_1);
+                dylight.Lights.Add(spotLightR2_2);
+                dylight.Lights.Add(spotLightR2_3);
+                dylight.Lights.Add(spotLightR2_4);
+                dylight.Lights.Remove(spotLightR3);
                 pos.X = 1675;
             }
 
@@ -2626,7 +2725,7 @@ namespace Project1
             else if (personRectangle.Intersects(ballRectangle) == false)
             {
                 personHit = false;
-                //backRoom3_2 = "Check";
+                backRoom3_2 = "";
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -2639,6 +2738,11 @@ namespace Project1
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.LRoom2;
+                dylight.Lights.Remove(spotLightR4);
+                dylight.Lights.Add(spotLightR2_1);
+                dylight.Lights.Add(spotLightR2_2);
+                dylight.Lights.Add(spotLightR2_3);
+                dylight.Lights.Add(spotLightR2_4);
                 pos.X = 880;
                 camPos.X = 780;
                 uiPos.X = 780;
@@ -2649,6 +2753,7 @@ namespace Project1
             if (personHit2 == true)
             {
                 mCurrentScreen = Screenstate.LRoom5;
+                dylight.Lights.Remove(spotLightR4);
                 pos.X = 100;
                 camPos.X = 0;
                 fLine.X = pos.X + rad;
@@ -2784,7 +2889,7 @@ namespace Project1
             else if (personRectangle.Intersects(ballRectangle) == false)
             {
                 personHit = false;
-                //backRoom4_2 = "Check";
+                backRoom4_2 = "";
             }
             if (personRectangle.Intersects(ball2Rectangle) == true)
             {
@@ -2801,7 +2906,7 @@ namespace Project1
             else if (personRectangle.Intersects(ball2Rectangle) == false)
             {
                 personHit2 = false;
-                //toRoom_5 = "Check";
+                toRoom_5 = "";
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -2813,12 +2918,15 @@ namespace Project1
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.LRoom4;
+                dylight.Lights.Add(spotLightR4);
                 pos.X = 240;
             }
 
             if (personHit2 == true)
             {
                 mCurrentScreen = Screenstate.LRoom6;
+                dylight.Lights.Add(spotLightR6);
+                spotLightR6.Position = new Vector2(300, 30);
                 pos.X = 400;
             }
    
@@ -2994,7 +3102,7 @@ namespace Project1
                 else if (personRectangle.Intersects(ballRectangle) == false)
                 {
                     personHit = false;
-                    //backRoom5_4 = "Check";
+                    backRoom5_4 = "";
                 }
                 if (personRectangle.Intersects(ball2Rectangle) == true)
                 {
@@ -3012,7 +3120,7 @@ namespace Project1
                 else if (personRectangle.Intersects(ball2Rectangle) == false)
                 {
                     personHit2 = false;
-                    //toRoom_6 = "Check";
+                    toRoom_6 = "";
                 }
 
                 old_ks = ks;
@@ -3028,6 +3136,7 @@ namespace Project1
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.LRoom5;
+                dylight.Lights.Remove(spotLightR6);
                 pos.X = 1170;
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
@@ -3161,7 +3270,7 @@ namespace Project1
             else if (personRectangle.Intersects(ballRectangle) == false)
             {
                 personHit = false;
-                //backRoom6_5 = "Check";
+                backRoom6_5 = "";
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -3174,6 +3283,11 @@ namespace Project1
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.LRoom2;
+                dylight.Lights.Remove(spotLightR7);
+                dylight.Lights.Add(spotLightR2_1);
+                dylight.Lights.Add(spotLightR2_2);
+                dylight.Lights.Add(spotLightR2_3);
+                dylight.Lights.Add(spotLightR2_4);
                 pos.X = 200;
             }
 
@@ -3301,7 +3415,7 @@ namespace Project1
             else if (personRectangle.Intersects(ballRectangle) == false)
             {
                 personHit = false;
-                //backRoom7_2 = "Check";
+                backRoom7_2 = "";
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -3310,15 +3424,10 @@ namespace Project1
         }
         void UpdateL_Room8()
         {
-            /*if (personHit2 == true)
+            if (personHit == true)
             {
-                mCurrentScreen = Screenstate.LRoom1;
-                spotLight.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
-                spotLight2.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
-                spotLight3.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
-                spotLight4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
-                pos.X = 580;
-            }*/
+                Exit();
+            }
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
@@ -3482,14 +3591,13 @@ namespace Project1
                         if (ks.IsKeyDown(Keys.F)) //Intereact object
                         {
                             //toEnd = "Enter room ?";
-                            personHit2 = true;
-                            d_instance.Play();
+                            Exit();
                         }
                     }
                 }
                 else if (personRectangle.Intersects(ballRectangle) == false)
                 {
-                    personHit2 = false;
+                    personHit = false;
                     toEnd = "Check";
                 }
 
@@ -3593,10 +3701,10 @@ namespace Project1
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             //SpotLight
-            spotLight.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
-            spotLight2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
-            spotLight3.Position = (new Vector2(1557, 30) - camPos) * scroll_factor;
-            spotLight4.Position = (new Vector2(163, 30) - camPos) * scroll_factor;
+            spotLightR2_1.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
+            spotLightR2_2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
+            spotLightR2_3.Position = (new Vector2(1557, 30) - camPos) * scroll_factor;
+            spotLightR2_4.Position = (new Vector2(163, 30) - camPos) * scroll_factor;
         }
         void DrawRoom3()
         {
@@ -3678,10 +3786,10 @@ namespace Project1
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             enemy.Draw(_spriteBatch,camPos,scroll_factor,eframe);
             //SpotLight
-            spotLight.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
-            spotLight2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
-            spotLight3.Position = (new Vector2(1557, 30) - camPos) * scroll_factor;
-            spotLight4.Position = (new Vector2(163, 30) - camPos) * scroll_factor;
+            spotLightR2_1.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
+            spotLightR2_2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
+            spotLightR2_3.Position = (new Vector2(1557, 30) - camPos) * scroll_factor;
+            spotLightR2_4.Position = (new Vector2(163, 30) - camPos) * scroll_factor;
         }
         void DrawRoom6()
         {
@@ -3793,10 +3901,10 @@ namespace Project1
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             //SpotLight
-            spotLight.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
-            spotLight2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
-            spotLight3.Position = (new Vector2(1557, 30) - camPos) * scroll_factor;
-            spotLight4.Position = (new Vector2(163, 30) - camPos) * scroll_factor;
+            spotLightR2_1.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
+            spotLightR2_2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
+            spotLightR2_3.Position = (new Vector2(1557, 30) - camPos) * scroll_factor;
+            spotLightR2_4.Position = (new Vector2(163, 30) - camPos) * scroll_factor;
         }
         void DrawL_Room3()
         {
@@ -3874,10 +3982,10 @@ namespace Project1
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             //SpotLight
-            spotLight.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
-            spotLight2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
-            spotLight3.Position = (new Vector2(1557, 30) - camPos) * scroll_factor;
-            spotLight4.Position = (new Vector2(163, 30) - camPos) * scroll_factor;
+            spotLightR2_1.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
+            spotLightR2_2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
+            spotLightR2_3.Position = (new Vector2(1557, 30) - camPos) * scroll_factor;
+            spotLightR2_4.Position = (new Vector2(163, 30) - camPos) * scroll_factor;
         }
         void DrawL_Room6()
         {
@@ -3952,10 +4060,10 @@ namespace Project1
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             //SpotLight
-            spotLight.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
-            spotLight2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
-            spotLight3.Position = (new Vector2(1557, 30) - camPos) * scroll_factor;
-            spotLight4.Position = (new Vector2(163, 30) - camPos) * scroll_factor;
+            spotLightR2_1.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
+            spotLightR2_2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
+            spotLightR2_3.Position = (new Vector2(1557, 30) - camPos) * scroll_factor;
+            spotLightR2_4.Position = (new Vector2(163, 30) - camPos) * scroll_factor;
         }
 
         void DrawPipePuzz()
