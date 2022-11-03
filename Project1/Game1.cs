@@ -12,6 +12,8 @@ using SharpDX.MediaFoundation;
 using System.Security.Cryptography.Xml;
 using SharpDX.XAudio2;
 using SharpDX.Direct2D1.Effects;
+using System.Diagnostics;
+using Application = System.Windows.Forms.Application;
 
 namespace Project1
 {
@@ -844,6 +846,11 @@ namespace Project1
         }
         void UpdateStartCutscene()
         {
+            if (startframe == 9)
+            {
+                wait(2000);
+                mCurrentScreen = Screenstate.Room1;
+            }
             if(Keyboard.GetState().IsKeyDown(Keys.Enter) == true)
             {
                 mCurrentScreen = Screenstate.Room1;
@@ -3942,6 +3949,28 @@ namespace Project1
             // TODO: Add your input handle here
 
 
+        }
+        public void wait(int milliseconds)
+        {
+            var timer1 = new System.Windows.Forms.Timer();
+            if (milliseconds == 0 || milliseconds < 0) return;
+
+            // Console.WriteLine("start wait timer");
+            timer1.Interval = milliseconds;
+            timer1.Enabled = true;
+            timer1.Start();
+
+            timer1.Tick += (s, e) =>
+            {
+                timer1.Enabled = false;
+                timer1.Stop();
+                // Console.WriteLine("stop wait timer");
+            };
+
+            while (timer1.Enabled)
+            {
+                Application.DoEvents();
+            }
         }
     }
 }
