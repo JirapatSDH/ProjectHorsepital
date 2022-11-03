@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
@@ -23,6 +23,7 @@ namespace Project1
         enum Screenstate
         {
             Title,
+            startcutscene,
             Room1,
             Room2,
             Room3,
@@ -68,7 +69,9 @@ namespace Project1
         private Texture2D menu;
         private Texture2D menuchar1;
         private Texture2D menuchar2;
+        private Texture2D menuCharGlitch;
         private Texture2D menuGlitch;
+        private Texture2D start_cut1;
         private Texture2D overGlitch;
         private Texture2D overMenu;
         private Texture2D ballTexture;
@@ -100,7 +103,7 @@ namespace Project1
         public Vector2 ballPos6_5 = new Vector2(0, 0);
         public Vector2 ballPos7_2 = new Vector2(0, 0);
         public Vector2 ballPos8 = new Vector2(0, 0);
-        public Vector2 ballPos8_1 = new Vector2(0, 0);
+        public Vector2 ballPos8_End = new Vector2(0, 0);
         public Vector2 puzzlePos1 = new Vector2(0, 0);
         public Vector2 puzzlePos2 = new Vector2(0, 0);
         public Vector2 puzzlePos3 = new Vector2(0, 0);
@@ -129,7 +132,7 @@ namespace Project1
         private string toRoom_7;
         private string backRoom7_2;
         private string toRoom_8;
-        private string backRoom8_1;
+        private string toEnd;
         private string ptext;
         private string puzzle1;
         private string puzzle3;
@@ -143,6 +146,18 @@ namespace Project1
         Vector2 speed = new Vector2(3, 3);
         int direction = 0;
         int rad = 50;
+
+        int bgframe;
+        int bgtotalframe;
+        int bgframepersec;
+        float bgtimeperframe;
+        float bgtotalelapsed;
+
+        int startframe;
+        int starttotalframe;
+        float startframepersec;
+        float starttimeperframe;
+        float starttotalelapsed;
 
         int frame;
         int totalframe;
@@ -241,8 +256,8 @@ namespace Project1
 
         public Game1()
         {
-
             _graphics = new GraphicsDeviceManager(this);
+            _graphics.GraphicsProfile = GraphicsProfile.HiDef;
             _graphics.PreferredBackBufferWidth = 720;
             _graphics.PreferredBackBufferHeight = 480;
             //_graphics.IsFullScreen = true;
@@ -280,7 +295,7 @@ namespace Project1
             toRoom_7 = "";
             backRoom7_2 = "";
             toRoom_8 = "";
-            backRoom8_1 = "";
+            toEnd = "";
             ptext = "";
             puzzle1 = "";
             puzzle2 = "";
@@ -330,7 +345,9 @@ namespace Project1
             menu = Content.Load<Texture2D>("MainMenu_bg");
             menuchar1 = Content.Load<Texture2D>("MainMenu_kaolad1");
             menuchar2 = Content.Load<Texture2D>("MainMenu_kaolad2");
+            menuCharGlitch = Content.Load<Texture2D>("MainMenu_kaolad_Tile1");
             menuGlitch = Content.Load<Texture2D>("Horspital_glitch");
+            start_cut1 = Content.Load<Texture2D>("startcutscene");
             overMenu = Content.Load<Texture2D>("Gameover_bg");
             overGlitch = Content.Load<Texture2D>("Game over_glitch");
             enemy = new Enemy(Content.Load<Texture2D>("Ghost_walk"), new Vector2(1471,352),440);
@@ -356,6 +373,18 @@ namespace Project1
             d_instance = door.CreateInstance();
             d_listener = new AudioListener();   d_emitter = new AudioEmitter();
             d_instance.Apply3D(d_listener, d_emitter);
+
+            startframe = 0;
+            starttotalframe = 10;
+            startframepersec = 0.5f;
+            starttimeperframe = (float)1 / startframepersec;
+            starttotalelapsed = 0;
+
+            bgframe = 0;
+            bgtotalframe = 11;
+            bgframepersec = 4;
+            bgtimeperframe = (float)1 / bgframepersec;
+            bgtotalelapsed = 0;
 
             frame = 0;
             totalframe = 4;
@@ -383,6 +412,7 @@ namespace Project1
             ballPos2_7 = new Vector2(250, 200);
             ballPos7_2 = new Vector2(310, 200);
             ballPos8 = new Vector2(25, 250);
+            ballPos8_End = new Vector2(20, 250);
             puzzlePos1 = new Vector2(450, 250);
             puzzlePos2 = new Vector2(260, 220);
             puzzlePos3 = new Vector2(360, 240);
@@ -409,6 +439,12 @@ namespace Project1
                 case Screenstate.Title:
                     {
                         UpdateTitle();
+                        dylight.AmbientColor = new Color(new Vector3(0.7f));
+                        break;
+                    }
+                case Screenstate.startcutscene:
+                    {
+                        UpdateStartCutscene();
                         dylight.AmbientColor = new Color(new Vector3(0.7f));
                         break;
                     }
@@ -534,6 +570,11 @@ namespace Project1
                         DrawMenu();
                         break;
                     }
+                case Screenstate.startcutscene:
+                    {
+                        DrawStartcutscene();
+                        break;
+                    }
                 case Screenstate.Room1:
                     {
                         DrawRoom1();
@@ -621,7 +662,7 @@ namespace Project1
         }
         void UpdateRoom1()
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.P) == true)
+            if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
             {
                 mCurrentScreen = Screenstate.Title;
             }
@@ -751,7 +792,7 @@ namespace Project1
                 {
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
-                        toRoom_2 = "Enter room ?";
+                        //toRoom_2 = "Enter room ?";
                         personHit2 = true;
                         d_instance.Play();
                     }
@@ -760,7 +801,7 @@ namespace Project1
             else if (personRectangle.Intersects(ballRectangle) == false)
             {
                 personHit2 = false;
-                toRoom_2 = "Check";
+                toRoom_2 = "";
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -769,7 +810,11 @@ namespace Project1
         }
         void UpdateTitle()
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Enter) == true)
+            if(Keyboard.GetState().IsKeyDown(Keys.Space) == true)
+            {
+                mCurrentScreen = Screenstate.startcutscene;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.D1) == true)
             {
                 mCurrentScreen = Screenstate.Room1;
             }
@@ -781,7 +826,7 @@ namespace Project1
             {
                 mCurrentScreen = Screenstate.Room2;
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Q) == true)
+            if (Keyboard.GetState().IsKeyDown(Keys.R) == true)
             {
                 mCurrentScreen = Screenstate.LRoom2;
             }
@@ -789,12 +834,22 @@ namespace Project1
             {
                 mCurrentScreen = Screenstate.Room5;
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.R) == true)
+            if (Keyboard.GetState().IsKeyDown(Keys.T) == true)
             {
                 mCurrentScreen = Screenstate.LRoom5;
             }
 
             UpdateFrame(elapsed);
+            UpdateMenuFrame(elapsed);
+        }
+        void UpdateStartCutscene()
+        {
+            if(Keyboard.GetState().IsKeyDown(Keys.Enter) == true)
+            {
+                mCurrentScreen = Screenstate.Room1;
+            }
+
+            UpdateStartCutFrame(elapsed);
         }
         void UpdateOver()
         {
@@ -1010,7 +1065,7 @@ namespace Project1
                     {
                         if (ks.IsKeyDown(Keys.F)) //Intereact object
                         {
-                            backRoom2_1 = "Enter room ?";
+                            //backRoom2_1 = "Enter room ?";
                             personHit2 = true;
                             d_instance.Play();
                         }
@@ -1019,14 +1074,14 @@ namespace Project1
                 else if (personRectangle.Intersects(ballRectangle) == false)
                 {
                     personHit2 = false;
-                    backRoom2_1 = "Check";
+                    backRoom2_1 = "";
                 }
                 if (personRectangle.Intersects(ball2_3Rectangle) == true)
                 {
                     toRoom_3 = "F To Enter";
                     if (ks.IsKeyDown(Keys.F)) //Tnteract object
                     {
-                        toRoom_3 = "Enter room ?";
+                        //toRoom_3 = "Enter room ?";
                         personHit = true;
                         d_instance.Play();
                     }
@@ -1034,14 +1089,14 @@ namespace Project1
                 else if (personRectangle.Intersects(ball2_3Rectangle) == false)
                 {
                     personHit = false;
-                    toRoom_3 = "Check";
+                    toRoom_3 = "";
                 }
                 if (personRectangle.Intersects(ball2_4Rectangle) == true)
                 {
                     toRoom_4 = "F To Enter";
                     if (ks.IsKeyDown(Keys.F)) //Tnteract object
                     {
-                        toRoom_4 = "Enter room ?";
+                        //toRoom_4 = "Enter room ?";
                         personHit3 = true;
                         d_instance.Play();
                     }
@@ -1049,14 +1104,14 @@ namespace Project1
                 else if (personRectangle.Intersects(ball2_4Rectangle) == false)
                 {
                     personHit3 = false;
-                    toRoom_4 = "Check";
+                    toRoom_4 = "";
                 }
                 if (personRectangle.Intersects(ball2_7Rectangle) == true)
                 {
                     toRoom_7 = "F To Enter";
                     if (ks.IsKeyDown(Keys.F)) //Tnteract object
                     {
-                        toRoom_7 = "Enter room ?";
+                        //toRoom_7 = "Enter room ?";
                         personHit4 = true;
                         d_instance.Play();
                     }
@@ -1064,7 +1119,7 @@ namespace Project1
                 else if (personRectangle.Intersects(ball2_7Rectangle) == false)
                 {
                     personHit4 = false;
-                    toRoom_7 = "Check";
+                    toRoom_7 = "";
                 }
 
                 old_ks = ks;
@@ -1203,7 +1258,7 @@ namespace Project1
                 {
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
-                        backRoom3_2 = "Enter room ?";
+                        //backRoom3_2 = "Enter room ?";
                         personHit = true;
                         d_instance.Play();
                     }
@@ -1212,7 +1267,7 @@ namespace Project1
             else if (personRectangle.Intersects(ballRectangle) == false)
             {
                 personHit = false;
-                backRoom3_2 = "Check";
+                backRoom3_2 = "";
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -1361,7 +1416,7 @@ namespace Project1
                 {
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
-                        backRoom4_2 = "Enter room ?";
+                        //backRoom4_2 = "Enter room ?";
                         personHit = true;
                         d_instance.Play();
                     }
@@ -1370,7 +1425,7 @@ namespace Project1
             else if (personRectangle.Intersects(ballRectangle) == false)
             {
                 personHit = false;
-                backRoom4_2 = "Check";
+                backRoom4_2 = "";
             }
             if (personRectangle.Intersects(ball2Rectangle) == true)
             {
@@ -1378,7 +1433,7 @@ namespace Project1
                 {
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
-                        toRoom_5 = "Enter room ?";
+                        //toRoom_5 = "Enter room ?";
                         personHit2 = true;
                         d_instance.Play();
                     }
@@ -1387,7 +1442,7 @@ namespace Project1
             else if (personRectangle.Intersects(ball2Rectangle) == false)
             {
                 personHit2 = false;
-                toRoom_5 = "Check";
+                toRoom_5 = "";
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -1573,7 +1628,7 @@ namespace Project1
                     {
                         if (ks.IsKeyDown(Keys.F)) //Intereact object
                         {
-                            backRoom5_4 = "Enter room ?";
+                            //backRoom5_4 = "Enter room ?";
                             personHit = true;
                             d_instance.Play();
                         }
@@ -1582,7 +1637,7 @@ namespace Project1
                 else if (personRectangle.Intersects(ballRectangle) == false)
                 {
                     personHit = false;
-                    backRoom5_4 = "Check";
+                    backRoom5_4 = "";
                 }
                 if (personRectangle.Intersects(ball2Rectangle) == true)
                 {
@@ -1591,7 +1646,7 @@ namespace Project1
                     {
                         if (ks.IsKeyDown(Keys.F)) //Intereact object
                         {
-                            toRoom_6 = "Enter room ?";
+                            //toRoom_6 = "Enter room ?";
                             personHit2 = true;
                             d_instance.Play();
                         }
@@ -1600,7 +1655,7 @@ namespace Project1
                 else if (personRectangle.Intersects(ball2Rectangle) == false)
                 {
                     personHit2 = false;
-                    toRoom_6 = "Check";
+                    toRoom_6 = "";
                 }
                 if (personRectangle.Intersects(puzzleRectangle) == true)
                 {
@@ -1759,7 +1814,7 @@ namespace Project1
                 {
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
-                        backRoom6_5 = "Enter room ?";
+                        //backRoom6_5 = "Enter room ?";
                         personHit = true;
                         d_instance.Play();
                     }
@@ -1768,7 +1823,7 @@ namespace Project1
             else if (personRectangle.Intersects(ballRectangle) == false)
             {
                 personHit = false;
-                backRoom6_5 = "Check";
+                backRoom6_5 = "";
             }
             if (personRectangle.Intersects(puzzleRectangle) == true)
             {
@@ -1920,7 +1975,7 @@ namespace Project1
                 {
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
-                        backRoom7_2 = "Enter room ?";
+                        //backRoom7_2 = "Enter room ?";
                         personHit = true;
                         d_instance.Play();
                     }
@@ -1929,7 +1984,7 @@ namespace Project1
             else if (personRectangle.Intersects(ballRectangle) == false)
             {
                 personHit = false;
-                backRoom7_2 = "Check";
+                backRoom7_2 = "";
             }
             if (personRectangle.Intersects(ballpuzzle) == true)
             {
@@ -1955,7 +2010,7 @@ namespace Project1
 
         void UpdateL_Room1()
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.P) == true)
+            if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
             {
                 mCurrentScreen = Screenstate.Title;
             }
@@ -1967,7 +2022,15 @@ namespace Project1
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.LRoom8;
+                spotLight.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLight2.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLight3.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                spotLight4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 pos.X = 2025;
+                camPos.X = 1450;
+                uiPos.X = 1450;
+                fLine.X = pos.X + rad;
+                bLine.X = pos.X - rad;
             }
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
@@ -2090,7 +2153,7 @@ namespace Project1
                 {
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
-                        toRoom_2 = "Enter room ?";
+                        //toRoom_2 = "Enter room ?";
                         personHit2 = true;
                         d_instance.Play();
                     }
@@ -2099,7 +2162,7 @@ namespace Project1
             else if (personRectangle.Intersects(ballRectangle) == false)
             {
                 personHit2 = false;
-                toRoom_2 = "Check";
+                //toRoom_2 = "Check";
             }
             if (personRectangle.Intersects(ball2Rectangle) == true)
             {
@@ -2108,7 +2171,7 @@ namespace Project1
                 {
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
-                        toRoom_8 = "Enter room ?";
+                        //toRoom_8 = "Enter room ?";
                         personHit = true;
                         d_instance.Play();
                     }
@@ -2320,7 +2383,7 @@ namespace Project1
                     {
                         if (ks.IsKeyDown(Keys.F)) //Intereact object
                         {
-                            backRoom2_1 = "Enter room ?";
+                            //backRoom2_1 = "Enter room ?";
                             personHit2 = true;
                             d_instance.Play();
                         }
@@ -2329,14 +2392,14 @@ namespace Project1
                 else if (personRectangle.Intersects(ballRectangle) == false)
                 {
                     personHit2 = false;
-                    backRoom2_1 = "Check";
+                    //backRoom2_1 = "Check";
                 }
                 if (personRectangle.Intersects(ball2_3Rectangle) == true)
                 {
                     toRoom_3 = "F To Enter";
                     if (ks.IsKeyDown(Keys.F)) //Tnteract object
                     {
-                        toRoom_3 = "Enter room ?";
+                        //toRoom_3 = "Enter room ?";
                         personHit = true;
                         d_instance.Play();
                     }
@@ -2344,14 +2407,14 @@ namespace Project1
                 else if (personRectangle.Intersects(ball2_3Rectangle) == false)
                 {
                     personHit = false;
-                    toRoom_3 = "Check";
+                    //toRoom_3 = "Check";
                 }
                 if (personRectangle.Intersects(ball2_4Rectangle) == true)
                 {
                     toRoom_4 = "F To Enter";
                     if (ks.IsKeyDown(Keys.F)) //Tnteract object
                     {
-                        toRoom_4 = "Enter room ?";
+                        //toRoom_4 = "Enter room ?";
                         personHit3 = true;
                         d_instance.Play();
                     }
@@ -2359,14 +2422,14 @@ namespace Project1
                 else if (personRectangle.Intersects(ball2_4Rectangle) == false)
                 {
                     personHit3 = false;
-                    toRoom_4 = "Check";
+                    //toRoom_4 = "Check";
                 }
                 if (personRectangle.Intersects(ball2_7Rectangle) == true)
                 {
                     toRoom_7 = "F To Enter";
                     if (ks.IsKeyDown(Keys.F)) //Tnteract object
                     {
-                        toRoom_7 = "Enter room ?";
+                        //toRoom_7 = "Enter room ?";
                         personHit4 = true;
                         d_instance.Play();
                     }
@@ -2374,7 +2437,7 @@ namespace Project1
                 else if (personRectangle.Intersects(ball2_7Rectangle) == false)
                 {
                     personHit4 = false;
-                    toRoom_7 = "Check";
+                    //toRoom_7 = "Check";
                 }
 
                 old_ks = ks;
@@ -2513,7 +2576,7 @@ namespace Project1
                 {
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
-                        backRoom3_2 = "Enter room ?";
+                        //backRoom3_2 = "Enter room ?";
                         personHit = true;
                         d_instance.Play();
                     }
@@ -2522,7 +2585,7 @@ namespace Project1
             else if (personRectangle.Intersects(ballRectangle) == false)
             {
                 personHit = false;
-                backRoom3_2 = "Check";
+                //backRoom3_2 = "Check";
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -2536,6 +2599,10 @@ namespace Project1
             {
                 mCurrentScreen = Screenstate.LRoom2;
                 pos.X = 880;
+                camPos.X = 780;
+                uiPos.X = 780;
+                fLine.X = pos.X + rad;
+                bLine.X = pos.X - rad;
             }
 
             if (personHit2 == true)
@@ -2667,7 +2734,7 @@ namespace Project1
                 {
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
-                        backRoom4_2 = "Enter room ?";
+                        //backRoom4_2 = "Enter room ?";
                         personHit = true;
                         d_instance.Play();
                     }
@@ -2676,7 +2743,7 @@ namespace Project1
             else if (personRectangle.Intersects(ballRectangle) == false)
             {
                 personHit = false;
-                backRoom4_2 = "Check";
+                //backRoom4_2 = "Check";
             }
             if (personRectangle.Intersects(ball2Rectangle) == true)
             {
@@ -2684,7 +2751,7 @@ namespace Project1
                 {
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
-                        toRoom_5 = "Enter room ?";
+                        //toRoom_5 = "Enter room ?";
                         personHit2 = true;
                         d_instance.Play();
                     }
@@ -2693,7 +2760,7 @@ namespace Project1
             else if (personRectangle.Intersects(ball2Rectangle) == false)
             {
                 personHit2 = false;
-                toRoom_5 = "Check";
+                //toRoom_5 = "Check";
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -2877,7 +2944,7 @@ namespace Project1
                     {
                         if (ks.IsKeyDown(Keys.F)) //Intereact object
                         {
-                            backRoom5_4 = "Enter room ?";
+                            //backRoom5_4 = "Enter room ?";
                             personHit = true;
                             d_instance.Play();
                         }
@@ -2886,7 +2953,7 @@ namespace Project1
                 else if (personRectangle.Intersects(ballRectangle) == false)
                 {
                     personHit = false;
-                    backRoom5_4 = "Check";
+                    //backRoom5_4 = "Check";
                 }
                 if (personRectangle.Intersects(ball2Rectangle) == true)
                 {
@@ -2895,7 +2962,7 @@ namespace Project1
                     {
                         if (ks.IsKeyDown(Keys.F)) //Intereact object
                         {
-                            toRoom_6 = "Enter room ?";
+                            //toRoom_6 = "Enter room ?";
                             personHit2 = true;
                             d_instance.Play();
                         }
@@ -2904,7 +2971,7 @@ namespace Project1
                 else if (personRectangle.Intersects(ball2Rectangle) == false)
                 {
                     personHit2 = false;
-                    toRoom_6 = "Check";
+                    //toRoom_6 = "Check";
                 }
 
                 old_ks = ks;
@@ -3044,7 +3111,7 @@ namespace Project1
                 {
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
-                        backRoom6_5 = "Enter room ?";
+                        //backRoom6_5 = "Enter room ?";
                         personHit = true;
                         d_instance.Play();
                     }
@@ -3053,7 +3120,7 @@ namespace Project1
             else if (personRectangle.Intersects(ballRectangle) == false)
             {
                 personHit = false;
-                backRoom6_5 = "Check";
+                //backRoom6_5 = "Check";
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -3184,7 +3251,7 @@ namespace Project1
                 {
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
-                        backRoom7_2 = "Enter room ?";
+                        //backRoom7_2 = "Enter room ?";
                         personHit = true;
                         d_instance.Play();
                     }
@@ -3193,7 +3260,7 @@ namespace Project1
             else if (personRectangle.Intersects(ballRectangle) == false)
             {
                 personHit = false;
-                backRoom7_2 = "Check";
+                //backRoom7_2 = "Check";
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -3202,7 +3269,7 @@ namespace Project1
         }
         void UpdateL_Room8()
         {
-            if (personHit2 == true)
+            /*if (personHit2 == true)
             {
                 mCurrentScreen = Screenstate.LRoom1;
                 spotLight.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
@@ -3210,7 +3277,7 @@ namespace Project1
                 spotLight3.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 spotLight4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 pos.X = 580;
-            }
+            }*/
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
@@ -3296,7 +3363,7 @@ namespace Project1
                         sBarRec.Width = 163;
                     }
                 }
-                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 3 - 25)
+                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 3 - 100)
                 {
                     w_instance.Play();
 
@@ -3345,7 +3412,7 @@ namespace Project1
                 }
                 // -----------------------------------------------------------------------------------------------collistion
                 Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
-                Rectangle ballRectangle = new Rectangle((int)ballPos2_1.X, (int)ballPos2_1.Y, 24, 24);
+                Rectangle ballRectangle = new Rectangle((int)ballPos8_End.X, (int)ballPos8_End.Y, 24, 24);
                 Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
                 Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, 100, 100);
 
@@ -3369,11 +3436,11 @@ namespace Project1
                 if (personRectangle.Intersects(ballRectangle) == true)
                 {
 
-                    backRoom8_1 = "F To Enter";
+                    toEnd = "F To Enter";
                     {
                         if (ks.IsKeyDown(Keys.F)) //Intereact object
                         {
-                            backRoom8_1 = "Enter room ?";
+                            //toEnd = "Enter room ?";
                             personHit2 = true;
                             d_instance.Play();
                         }
@@ -3382,7 +3449,7 @@ namespace Project1
                 else if (personRectangle.Intersects(ballRectangle) == false)
                 {
                     personHit2 = false;
-                    backRoom8_1 = "Check";
+                    toEnd = "Check";
                 }
 
                 old_ks = ks;
@@ -3420,8 +3487,13 @@ namespace Project1
         void DrawMenu()
         {
             _spriteBatch.Draw(menu, bg2Pos, Color.White);
-            _spriteBatch.Draw(menuchar1, bg2Pos, Color.White);
+            //_spriteBatch.Draw(menuchar1, bg2Pos, Color.White);
+            _spriteBatch.Draw(menuCharGlitch, Vector2.Zero, new Rectangle(720 * bgframe, 0, 720, 480), Color.White);
             _spriteBatch.Draw(menuGlitch, new Vector2(30, 50), new Rectangle(722 * frame, 0, 722, 482), Color.White);
+        }
+        void DrawStartcutscene()
+        {
+            _spriteBatch.Draw(start_cut1, Vector2.Zero, new Rectangle(720 * startframe, 0, 720, 480),Color.White);
         }
         void DrawOver()
         {
@@ -3801,7 +3873,7 @@ namespace Project1
             _spriteBatch.Draw(Lroom8_1, (bg2Pos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(Lroom8_2, (bg2Pos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
             _spriteBatch.Draw(Lroom8_3, (bg2Pos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width + 720, 0), Color.White);
-            //_spriteBatch.Draw(ballTexture, (ballPos2_1 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.Draw(ballTexture, (ballPos8_End - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
             //_spriteBatch.Draw(trap, trapPos - camPos * scroll_factor, new Rectangle(0, 0, 26, 26), (Color.White));
             if (speed.X <= 0)
             {
@@ -3829,6 +3901,24 @@ namespace Project1
             spotLight4.Position = (new Vector2(163, 30) - camPos) * scroll_factor;
         }
 
+        void UpdateMenuFrame(float elapsed)
+        {
+            bgtotalelapsed += elapsed;
+            if (bgtotalelapsed > bgtimeperframe)
+            {
+                bgframe = (bgframe + 1) % bgtotalframe;
+                bgtotalelapsed -= bgtimeperframe;
+            }
+        }
+        void UpdateStartCutFrame(float elapsed)
+        {
+            starttotalelapsed += elapsed;
+            if (starttotalelapsed > starttimeperframe)
+            {
+                startframe = (startframe + 1) % starttotalframe;
+                starttotalelapsed -= starttimeperframe;
+            }
+        }
         void UpdateFrame(float elapsed)
         {
             totalelapsed += elapsed;
