@@ -373,6 +373,12 @@
 /processorParam:TextureFormat=Color
 /build:ball.png
 
+#begin BGM.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:BGM.wav
+
 #begin cutscene.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -456,6 +462,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:cutscene6.png
+
+#begin door.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:door.wav
 
 #begin Game over_glitch.png
 /importer:TextureImporter
@@ -715,6 +727,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Puzzle1-Line4.png
+
+#begin Run1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Run1.wav
 
 #begin sanity_pill.png
 /importer:TextureImporter
