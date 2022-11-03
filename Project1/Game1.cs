@@ -42,6 +42,7 @@ namespace Project1
             LRoom7,
             LRoom8,
             PipePuzz,
+            PassPuzz,
             over
         }
         PenumbraComponent dylight;
@@ -191,12 +192,14 @@ namespace Project1
         Pipeboard pipeboard;
         int playerScore = 0;
 
-        Vector2 gameBoardDisplayOrigin = new Vector2(70, 89);
+        Vector2 gameBoardDisplayOrigin = new Vector2(270, 89);
         bool isClear = false;
 
         Rectangle EmptyPiece = new Rectangle(1, 247, 40, 40);
         const float MinTimeSinceLastInput = 0.25f;
         float timeSinceLastInput = 0.0f;
+
+        int passNum = 1;
     /// -----------------------------------------------------------------------------<PuzzlePipe>
     //--------------------------------------------------------------------------Set Light---------------------------------------------
     Light light2 = new Spotlight
@@ -294,6 +297,7 @@ namespace Project1
         int eframepersec;
         float etimeperframe;
         float etotalelapsed;
+
         public Light eLight { get; } = new PointLight
         {
             Color = new Color(255, 0, 0),
@@ -402,7 +406,7 @@ namespace Project1
             overMenu = Content.Load<Texture2D>("Gameover_bg");
             overGlitch = Content.Load<Texture2D>("Game over_glitch");
             playingPieces = Content.Load<Texture2D>("0669_02_03");
-            enemy = new Enemy(Content.Load<Texture2D>("Ghost_walk"), new Vector2(1471,352),440);
+            enemy = new Enemy(Content.Load<Texture2D>("Ghost_walk"), new Vector2(1261,352),440);
 
             bgm = Content.Load<SoundEffect>("BGM");
             instance = bgm.CreateInstance();
@@ -597,9 +601,16 @@ namespace Project1
                         break;
                     }
                     case Screenstate.PipePuzz:
-                    timeSinceLastInput +=(float)gameTime.ElapsedGameTime.TotalSeconds;
-                    UpdatePipePuzz();
-                    break;
+                    {
+                        timeSinceLastInput += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                        UpdatePipePuzz();
+                        break;
+                    }
+                    case Screenstate.PassPuzz:
+                    {
+                        UpdatePassPuzz();
+                        break;
+                    }
 
             }
             if (hBarRec.Width <= 0)
@@ -715,6 +726,11 @@ namespace Project1
                 case Screenstate.PipePuzz:
                     {
                         DrawPipePuzz();
+                        break;
+                    }
+                case Screenstate.PassPuzz:
+                    {
+                        DrawPassPuzz();
                         break;
                     }
             }
@@ -1563,8 +1579,16 @@ namespace Project1
                 spotLightR6.Position = new Vector2(300, 30);
                 pos.X = 400;
             }
+            if (personHit3 == true)
+            {
+               
+            }
+            bool hit = Enemy.isHit;
+            if (hit == true)
+            {
+                hBarRec.Width -= 5;
+            }
 
-            
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             KeyboardState old_ks = Keyboard.GetState();
@@ -1775,7 +1799,6 @@ namespace Project1
                     personHit3 = false;
                     puzzle2 = "Check";
                 }
-
                 old_ks = ks;
             }
             enemy.Update(pos);
@@ -3625,6 +3648,15 @@ namespace Project1
             pipeboard.GenerateNewPieces(true);
 
         }
+        void UpdatePassPuzz()
+        {
+            Mouse.GetState(Window);
+           if (passNum == 1)
+            {
+
+            }
+
+        }
 
         void DrawRoom1()
         {
@@ -3837,7 +3869,7 @@ namespace Project1
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(ballTexture, ballPos7_2, new Rectangle(0, 24, 0, 0), (Color.White));
-            _spriteBatch.Draw(ballTexture, puzzlePos1, new Rectangle(0, 0, 24, 24), (Color.White));
+            _spriteBatch.Draw(ballTexture, puzzlePos1, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom7_2, (ballPos7_2 - new Vector2(0, 80)), (Color.White));
             _spriteBatch.DrawString(deBugFont, puzzle1, (puzzlePos1 - new Vector2(20, 50)), (Color.White));
         }
@@ -4082,6 +4114,10 @@ namespace Project1
                     }
                 }
         }
+        void DrawPassPuzz()
+        {
+           
+        }
 
         void UpdateMenuFrame(float elapsed)
         {
@@ -4177,12 +4213,10 @@ namespace Project1
         {
             int x = ((mouseState.X - (int)gameBoardDisplayOrigin.X) / PipePiece.PieceWidth);
             int y = ((mouseState.Y - (int)gameBoardDisplayOrigin.Y) / PipePiece.PieceHeight);
-            Debug.Write(mouseState.X.ToString() + "///////////////////");
             if ((x >= 0) && (x < Pipeboard.GameBoardWidth) && (y >= 0) & (y < Pipeboard.GameBoardHeight))
             {
                 if (mouseState.LeftButton == ButtonState.Pressed)
                 {
-                    Debug.Write("click");
                     pipeboard.RotatePiece(x, y, false);
                     timeSinceLastInput = 0.0f;
                 }
