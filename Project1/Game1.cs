@@ -3696,6 +3696,7 @@ namespace Project1
         }
         void UpdatePassPuzz()
         {
+            ///-------------------------------------------------------------------- passWord is 5432--------------------------------------------------
             KeyboardState ks = Keyboard.GetState();
             if (ks.IsKeyUp(Keys.Q)&& old_ks.IsKeyDown(Keys.Q))
             {
@@ -3736,6 +3737,11 @@ namespace Project1
                 pos = new Vector2(201, 253);
             }
 
+            if (ks.IsKeyUp(Keys.Back) && old_ks.IsKeyDown(Keys.Back))
+            {
+                mCurrentScreen = Screenstate.Room5;
+                pos = new Vector2(201, 253);
+            }
             old_ks = ks;
         }
 
