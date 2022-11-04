@@ -114,6 +114,10 @@ namespace Project1
         public Vector2 puzzlePos1 = new Vector2(0, 0);
         public Vector2 puzzlePos2 = new Vector2(0, 0);
         public Vector2 puzzlePos3 = new Vector2(0, 0);
+        public Vector2 ballLockerR2_1 = new Vector2(0, 0);
+        public Vector2 ballLockerR2_2 = new Vector2(0, 0);
+        public Vector2 ballLockerR3 = new Vector2(0, 0);
+        public Vector2 ballLockerR5 = new Vector2(0, 0);
         public Vector2 textPos;
         public Vector2 uiPos;
         public Vector2 uiPos5;
@@ -144,12 +148,19 @@ namespace Project1
         private string puzzle1;
         private string puzzle3;
         private string puzzle2;
+        private string locker2_1;
+        private string locker2_2;
+        private string locker3;
+        private string locker5;
         public Rectangle hBarRec;
         public Rectangle sBarRec;
         public bool personHit;
         public bool personHit2;
         public bool personHit3;
         public bool personHit4;
+        public bool personHit5;
+        public bool personHit6;
+        public bool isHide;
         Vector2 speed = new Vector2(3, 3);
         int direction = 0;
         int rad = 50;
@@ -364,6 +375,10 @@ namespace Project1
             puzzle1 = "";
             puzzle2 = "";
             puzzle3 = "";
+            locker2_1 = "";
+            locker2_2 = "";
+            locker3 = "";
+            locker5 = "";
             base.Initialize();
             dylight.Initialize();
         }
@@ -417,6 +432,7 @@ namespace Project1
             overGlitch = Content.Load<Texture2D>("Game over_glitch");
             playingPieces = Content.Load<Texture2D>("0669_02_03");
             enemy = new Enemy(Content.Load<Texture2D>("Ghost_walk"), new Vector2(1261,352),440);
+            isHide = false;
 
             bgm = Content.Load<SoundEffect>("BGM");
             instance = bgm.CreateInstance();
@@ -488,6 +504,10 @@ namespace Project1
             puzzlePos1 = new Vector2(450, 250);
             puzzlePos2 = new Vector2(260, 220);
             puzzlePos3 = new Vector2(360, 240);
+            ballLockerR2_1 = new Vector2(775, 200);
+            ballLockerR2_2 = new Vector2(1890, 200);
+            ballLockerR3 = new Vector2(125, 200);
+            ballLockerR5 = new Vector2(1105, 200);
             uiPos = new Vector2(0, 400);
             uiPos5 = new Vector2(0, 0);
             ePos = new Vector2(1850, 170);
@@ -622,13 +642,13 @@ namespace Project1
                         dylight.AmbientColor = new Color(new Vector3(0.7f));
                         break;
                     }
-                    case Screenstate.PipePuzz:
+                case Screenstate.PipePuzz:
                     {
                         timeSinceLastInput += (float)gameTime.ElapsedGameTime.TotalSeconds;
                         UpdatePipePuzz();
                         break;
                     }
-                    case Screenstate.PassPuzz:
+                case Screenstate.PassPuzz:
                     {
                         UpdatePassPuzz();
                         break;
@@ -1036,149 +1056,184 @@ namespace Project1
 
                 pos.X = 350;
             }
+
+            if(personHit5 == true)
+            {
+                isHide = true;
+
+                if(Keyboard.GetState().IsKeyUp(Keys.F))
+                {
+                    isHide = false;
+                }
+            }
+            if (personHit6 == true)
+            {
+                isHide = true;
+
+                if (Keyboard.GetState().IsKeyUp(Keys.F))
+                {
+                    isHide = false;
+                }
+            }
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             KeyboardState old_ks = Keyboard.GetState();
             {
-                if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
+                if(isHide == false)
                 {
-                    hBarRec.Width -= 5;
-                }
-
-                if (ks.IsKeyDown(Keys.W))
-                {
-                    w_instance.Play();
-
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
+                    if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
                     {
-                        sBarRec.Width = 163;
-                    }
-                    pos.Y = pos.Y - speed.Y;
-                    if (pos.Y <= 210)
-                    {
-                        pos.Y = 210;
-                    }
-                    speed.X = 3;
-                    direction = 3;
-                    UpdateFrame(elapsed);
-                }
-                if (ks.IsKeyDown(Keys.S))
-                {
-                    w_instance.Play();
-
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
-                    pos.Y = pos.Y + speed.Y;
-                    if (pos.Y >= 280)
-                    {
-                        pos.Y = 280;
-                    }
-                    speed.X = 3;
-                    direction = 0;
-                    UpdateFrame(elapsed);
-                }
-                if (ks.IsKeyDown(Keys.A) && pos.X > 30)
-                {
-                    w_instance.Play();
-
-                    if (pos.X <= bLine.X && camPos.X > 0)
-                    {
-                        r_instance.Stop();
-                        fLine -= new Vector2(3, 0);
-                        bLine -= new Vector2(3, 0);
-                        camPos -= new Vector2(3, 0);
-                        uiPos -= new Vector2(3, 0);
+                        hBarRec.Width -= 5;
                     }
 
-                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                    if (ks.IsKeyDown(Keys.W))
                     {
-                        w_instance.Stop();
-                        r_instance.Play();
-                        speed.X = 6;
-                        fLine -= new Vector2(6, 0);
-                        bLine -= new Vector2(6, 0);
-                        camPos -= new Vector2(6, 0);
-                        uiPos -= new Vector2(6, 0);
-                        sBarRec.Width -= 3;
+                        w_instance.Play();
+
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
+                        pos.Y = pos.Y - speed.Y;
+                        if (pos.Y <= 210)
+                        {
+                            pos.Y = 210;
+                        }
+                        speed.X = 3;
+                        direction = 3;
+                        UpdateFrame(elapsed);
+                    }
+                    if (ks.IsKeyDown(Keys.S))
+                    {
+                        w_instance.Play();
+
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
+                        pos.Y = pos.Y + speed.Y;
+                        if (pos.Y >= 280)
+                        {
+                            pos.Y = 280;
+                        }
+                        speed.X = 3;
+                        direction = 0;
+                        UpdateFrame(elapsed);
+                    }
+                    if (ks.IsKeyDown(Keys.A) && pos.X > 30)
+                    {
+                        w_instance.Play();
+
+                        if (pos.X <= bLine.X && camPos.X > 0)
+                        {
+                            r_instance.Stop();
+                            fLine -= new Vector2(3, 0);
+                            bLine -= new Vector2(3, 0);
+                            camPos -= new Vector2(3, 0);
+                            uiPos -= new Vector2(3, 0);
+                        }
+
+                        if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                        {
+                            w_instance.Stop();
+                            r_instance.Play();
+                            speed.X = 6;
+                            fLine -= new Vector2(6, 0);
+                            bLine -= new Vector2(6, 0);
+                            camPos -= new Vector2(6, 0);
+                            uiPos -= new Vector2(6, 0);
+                            sBarRec.Width -= 3;
+                        }
+                        else
+                        {
+                            speed.X = 3;
+                        }
+                        pos.X = pos.X - speed.X;
+                        direction = 1;
+
+                        UpdateFrame(elapsed);
                     }
                     else
                     {
-                        speed.X = 3;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
                     }
-                    pos.X = pos.X - speed.X;
-                    direction = 1;
+                    if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 3 - 25)
+                    {
+                        w_instance.Play();
 
-                    UpdateFrame(elapsed);
-                }
-                else
-                {
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
-                }
-                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 3 - 25)
-                {
-                    w_instance.Play();
+                        if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width * 2)
+                        {
+                            r_instance.Stop();
+                            fLine += new Vector2(3, 0);
+                            bLine += new Vector2(3, 0);
+                            camPos += new Vector2(3, 0);
+                            uiPos += new Vector2(3, 0);
+                        }
+                        if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                        {
+                            w_instance.Stop();
+                            r_instance.Play();
+                            speed.X = 6;
+                            fLine += new Vector2(6, 0);
+                            bLine += new Vector2(6, 0);
+                            camPos += new Vector2(6, 0);
+                            uiPos += new Vector2(6, 0);
+                            sBarRec.Width -= 3;
+                        }
+                        else
+                        {
+                            speed.X = 3;
+                        }
+                        pos.X = pos.X + speed.X;
 
-                    if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width * 2)
-                    {
-                        r_instance.Stop();
-                        fLine += new Vector2(3, 0);
-                        bLine += new Vector2(3, 0);
-                        camPos += new Vector2(3, 0);
-                        uiPos += new Vector2(3, 0);
-                    }
-                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
-                    {
-                        w_instance.Stop();
-                        r_instance.Play();
-                        speed.X = 6;
-                        fLine += new Vector2(6, 0);
-                        bLine += new Vector2(6, 0);
-                        camPos += new Vector2(6, 0);
-                        uiPos += new Vector2(6, 0);
-                        sBarRec.Width -= 3;
+                        direction = 2;
+                        UpdateFrame(elapsed);
                     }
                     else
                     {
-                        speed.X = 3;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
                     }
-                    pos.X = pos.X + speed.X;
-
-                    direction = 2;
-                    UpdateFrame(elapsed);
+                    if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
+                    {
+                        w_instance.Stop();
+                        r_instance.Stop();
+                        speed.X = 0;
+                        UpdateFrame(elapsed);
+                    }
+                    if (pos.X >= 1700)
+                    {
+                        ePos.X = ePos.X - eSpeed.X - 16;
+                    }
                 }
                 else
                 {
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
-                }
-                if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
-                {
-                    w_instance.Stop();
-                    r_instance.Stop();
                     speed.X = 0;
-                    UpdateFrame(elapsed);
+
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
                 }
-                if (pos.X >= 1700)
-                {
-                    ePos.X = ePos.X - eSpeed.X - 16;
-                }
+                
                 // -----------------------------------------------------------------------------------------------collistion
                 Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
                 Rectangle ballRectangle = new Rectangle((int)ballPos2_1.X, (int)ballPos2_1.Y, 24, 24);
                 Rectangle ball2_3Rectangle = new Rectangle((int)ballPos2_3.X, (int)ballPos2_3.Y, 24, 24);
                 Rectangle ball2_4Rectangle = new Rectangle((int)ballPos2_4.X, (int)ballPos2_4.Y, 24, 24);
                 Rectangle ball2_7Rectangle = new Rectangle((int)ballPos2_7.X, (int)ballPos2_7.Y, 24, 24);
+                Rectangle LockerRec1 = new Rectangle((int)ballLockerR2_1.X, (int)ballLockerR2_1.Y, 24, 24);
+                Rectangle LockerRec2 = new Rectangle((int)ballLockerR2_2.X, (int)ballLockerR2_2.Y, 24, 24);
                 Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
                 Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, 10, 10);
 
@@ -1202,6 +1257,36 @@ namespace Project1
                     {
                         UpdateEnemy(elapsed);
                     }
+                }
+
+                if(personRectangle.Intersects(LockerRec1) == true)
+                {
+                    locker2_1 = "F to Hide";
+
+                    if(ks.IsKeyDown(Keys.F))
+                    {
+                        personHit5 = true;
+                    }
+                }
+                else if(personRectangle.Intersects(LockerRec1) == false)
+                {
+                    personHit5 = false;
+                    locker2_1 = "";
+                }
+
+                if (personRectangle.Intersects(LockerRec2) == true)
+                {
+                    locker2_2 = "F to Hide";
+
+                    if (ks.IsKeyDown(Keys.F))
+                    {
+                        personHit6 = true;
+                    }
+                }
+                else if(personRectangle.Intersects(LockerRec2) == false)
+                {
+                    personHit6 = false;
+                    locker2_2 = "";
                 }
 
                 if (personRectangle.Intersects(ballRectangle) == true)
@@ -1293,116 +1378,139 @@ namespace Project1
                 dylight.Lights.Remove(spotLightR3);
                 pos.X = 1675;
             }
+            if(personHit2 == true)
+            {
+                isHide = true;
+
+                if (Keyboard.GetState().IsKeyUp(Keys.F))
+                {
+                    isHide = false;
+                }
+            }
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             KeyboardState old_ks = Keyboard.GetState();
             {
-
-                if (ks.IsKeyDown(Keys.W))
+                if(isHide == false)
                 {
-                    w_instance.Play();
+                    if (ks.IsKeyDown(Keys.W))
+                    {
+                        w_instance.Play();
 
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
+                        pos.Y = pos.Y - speed.Y;
+                        if (pos.Y <= 210)
+                        {
+                            pos.Y = 210;
+                        }
+                        speed.X = 3;
+                        direction = 3;
+                        UpdateFrame(elapsed);
                     }
-                    pos.Y = pos.Y - speed.Y;
-                    if (pos.Y <= 210)
+                    if (ks.IsKeyDown(Keys.S))
                     {
-                        pos.Y = 210;
-                    }
-                    speed.X = 3;
-                    direction = 3;
-                    UpdateFrame(elapsed);
-                }
-                if (ks.IsKeyDown(Keys.S))
-                {
-                    w_instance.Play();
+                        w_instance.Play();
 
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
+                        pos.Y = pos.Y + speed.Y;
+                        if (pos.Y >= 280)
+                        {
+                            pos.Y = 280;
+                        }
+                        speed.X = 3;
+                        direction = 0;
+                        UpdateFrame(elapsed);
                     }
-                    pos.Y = pos.Y + speed.Y;
-                    if (pos.Y >= 280)
+                    if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                     {
-                        pos.Y = 280;
-                    }
-                    speed.X = 3;
-                    direction = 0;
-                    UpdateFrame(elapsed);
-                }
-                if (ks.IsKeyDown(Keys.A) && pos.X > 30)
-                {
-                    w_instance.Play();
+                        w_instance.Play();
 
-                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
-                    {
-                        r_instance.Play();
-                        w_instance.Stop();
-                        speed.X = 6;
-                        sBarRec.Width -= 3;
+                        if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                        {
+                            r_instance.Play();
+                            w_instance.Stop();
+                            speed.X = 6;
+                            sBarRec.Width -= 3;
+                        }
+                        else
+                        {
+                            r_instance.Stop();
+                            speed.X = 3;
+                        }
+                        pos.X = pos.X - speed.X;
+                        direction = 1;
+
+                        UpdateFrame(elapsed);
                     }
                     else
                     {
-                        r_instance.Stop();
-                        speed.X = 3;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
                     }
-                    pos.X = pos.X - speed.X;
-                    direction = 1;
-
-                    UpdateFrame(elapsed);
-                }
-                else
-                {
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
+                    if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
                     {
-                        sBarRec.Width = 163;
-                    }
-                }
-                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
-                {
-                    w_instance.Play();
+                        w_instance.Play();
 
-                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
-                    {
-                        w_instance.Stop();
-                        r_instance.Play();
-                        speed.X = 6;
-                        sBarRec.Width -= 3;
+                        if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                        {
+                            w_instance.Stop();
+                            r_instance.Play();
+                            speed.X = 6;
+                            sBarRec.Width -= 3;
+                        }
+                        else
+                        {
+                            r_instance.Stop();
+                            speed.X = 3;
+                        }
+                        pos.X = pos.X + speed.X;
+
+                        direction = 2;
+                        UpdateFrame(elapsed);
                     }
                     else
                     {
-                        r_instance.Stop();
-                        speed.X = 3;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
                     }
-                    pos.X = pos.X + speed.X;
-
-                    direction = 2;
-                    UpdateFrame(elapsed);
+                    if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
+                    {
+                        w_instance.Stop();
+                        r_instance.Stop();
+                        speed.X = 0;
+                        UpdateFrame(elapsed);
+                    }
                 }
+
                 else
                 {
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
-                }
-                if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
-                {
-                    w_instance.Stop();
-                    r_instance.Stop();
                     speed.X = 0;
-                    UpdateFrame(elapsed);
+
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
                 }
             }
             Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
             Rectangle ballRectangle = new Rectangle((int)ballPos3_2.X, (int)ballPos3_2.Y, 24, 24);
+            Rectangle LockerRec3 = new Rectangle((int)ballLockerR3.X, (int)ballLockerR3.Y, 24, 24);
             if (personRectangle.Intersects(ballRectangle) == true)
             {
                 backRoom3_2 = "F To Enter";
@@ -1420,6 +1528,21 @@ namespace Project1
                 personHit = false;
                 backRoom3_2 = "";
             }
+            if (personRectangle.Intersects(LockerRec3) == true)
+            {
+                locker3 = "F To Hide";
+                {
+                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    {
+                        personHit2 = true;
+                    }
+                }
+            }
+            else if(personRectangle.Intersects(LockerRec3) == false)
+            {
+                 personHit2 = false;
+                 locker3 = "";
+            }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(100, 40);
@@ -1435,7 +1558,7 @@ namespace Project1
                 dylight.Lights.Add(spotLightR2_2);
                 dylight.Lights.Add(spotLightR2_3);
                 dylight.Lights.Add(spotLightR2_4);
-                pos.X = 880;
+                pos.X = 870;
                 camPos.X = 780;
                 uiPos.X = 780;
                 fLine.X = pos.X + rad;
@@ -1622,9 +1745,20 @@ namespace Project1
                 spotLightR6.Position = new Vector2(300, 30);
                 pos.X = 400;
             }
-            if (personHit3 == true)
+
+            if(personHit3 == true)
             {
-               
+
+            }
+
+            if (personHit4 == true)
+            {
+                isHide = true;
+
+                if (Keyboard.GetState().IsKeyUp(Keys.F))
+                {
+                    isHide = false;
+                }
             }
             bool hit = Enemy.isHit;
             if (hit == true)
@@ -1636,138 +1770,153 @@ namespace Project1
             KeyboardState ks = Keyboard.GetState();
             KeyboardState old_ks = Keyboard.GetState();
             {
-                if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
+                if(isHide == false)
                 {
-                    hBarRec.Width -= 5;
-                }
+                    if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
+                    {
+                        hBarRec.Width -= 5;
+                    }
 
-                if (ks.IsKeyDown(Keys.W))
-                {
-                    w_instance.Play();
+                    if (ks.IsKeyDown(Keys.W))
+                    {
+                        w_instance.Play();
 
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
+                        pos.Y = pos.Y - speed.Y;
+                        if (pos.Y <= 210)
+                        {
+                            pos.Y = 210;
+                        }
+                        speed.X = 3;
+                        direction = 3;
+                        UpdateFrame(elapsed);
                     }
-                    pos.Y = pos.Y - speed.Y;
-                    if (pos.Y <= 210)
+                    if (ks.IsKeyDown(Keys.S))
                     {
-                        pos.Y = 210;
-                    }
-                    speed.X = 3;
-                    direction = 3;
-                    UpdateFrame(elapsed);
-                }
-                if (ks.IsKeyDown(Keys.S))
-                {
-                    w_instance.Play();
+                        w_instance.Play();
 
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
+                        pos.Y = pos.Y + speed.Y;
+                        if (pos.Y >= 280)
+                        {
+                            pos.Y = 280;
+                        }
+                        speed.X = 3;
+                        direction = 0;
+                        UpdateFrame(elapsed);
                     }
-                    pos.Y = pos.Y + speed.Y;
-                    if (pos.Y >= 280)
+                    if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                     {
-                        pos.Y = 280;
-                    }
-                    speed.X = 3;
-                    direction = 0;
-                    UpdateFrame(elapsed);
-                }
-                if (ks.IsKeyDown(Keys.A) && pos.X > 30)
-                {
-                    w_instance.Play();
+                        w_instance.Play();
 
-                    if (pos.X <= bLine.X && camPos.X > 0)
-                    {
-                        r_instance.Stop();
-                        fLine -= new Vector2(3, 0);
-                        bLine -= new Vector2(3, 0);
-                        camPos -= new Vector2(3, 0);
-                        uiPos -= new Vector2(3, 0);
-                    }
-                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
-                    {
-                        w_instance.Stop();
-                        r_instance.Play();
-                        speed.X = 6;
-                        fLine -= new Vector2(6, 0);
-                        bLine -= new Vector2(6, 0);
-                        camPos -= new Vector2(6, 0);
-                        uiPos -= new Vector2(6, 0);
-                        sBarRec.Width -= 3;
+                        if (pos.X <= bLine.X && camPos.X > 0)
+                        {
+                            r_instance.Stop();
+                            fLine -= new Vector2(3, 0);
+                            bLine -= new Vector2(3, 0);
+                            camPos -= new Vector2(3, 0);
+                            uiPos -= new Vector2(3, 0);
+                        }
+                        if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                        {
+                            w_instance.Stop();
+                            r_instance.Play();
+                            speed.X = 6;
+                            fLine -= new Vector2(6, 0);
+                            bLine -= new Vector2(6, 0);
+                            camPos -= new Vector2(6, 0);
+                            uiPos -= new Vector2(6, 0);
+                            sBarRec.Width -= 3;
+                        }
+                        else
+                        {
+                            speed.X = 3;
+                        }
+                        pos.X = pos.X - speed.X;
+                        direction = 1;
+
+                        UpdateFrame(elapsed);
                     }
                     else
                     {
-                        speed.X = 3;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
                     }
-                    pos.X = pos.X - speed.X;
-                    direction = 1;
+                    if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 2 - 25)
+                    {
+                        w_instance.Play();
 
-                    UpdateFrame(elapsed);
-                }
-                else
-                {
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
-                }
-                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 2 - 25)
-                {
-                    w_instance.Play();
+                        if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width)
+                        {
+                            r_instance.Stop();
+                            fLine += new Vector2(3, 0);
+                            bLine += new Vector2(3, 0);
+                            camPos += new Vector2(3, 0);
+                            uiPos += new Vector2(3, 0);
+                        }
+                        if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                        {
+                            w_instance.Stop();
+                            r_instance.Play();
+                            speed.X = 6;
+                            fLine += new Vector2(6, 0);
+                            bLine += new Vector2(6, 0);
+                            camPos += new Vector2(6, 0);
+                            uiPos += new Vector2(6, 0);
+                            sBarRec.Width -= 3;
+                        }
+                        else
+                        {
+                            speed.X = 3;
+                        }
+                        pos.X = pos.X + speed.X;
 
-                    if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width)
-                    {
-                        r_instance.Stop();
-                        fLine += new Vector2(3, 0);
-                        bLine += new Vector2(3, 0);
-                        camPos += new Vector2(3, 0);
-                        uiPos += new Vector2(3, 0);
-                    }
-                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
-                    {
-                        w_instance.Stop();
-                        r_instance.Play();
-                        speed.X = 6;
-                        fLine += new Vector2(6, 0);
-                        bLine += new Vector2(6, 0);
-                        camPos += new Vector2(6, 0);
-                        uiPos += new Vector2(6, 0);
-                        sBarRec.Width -= 3;
+                        direction = 2;
+                        UpdateFrame(elapsed);
                     }
                     else
                     {
-                        speed.X = 3;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
                     }
-                    pos.X = pos.X + speed.X;
-
-                    direction = 2;
-                    UpdateFrame(elapsed);
+                    if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
+                    {
+                        w_instance.Stop();
+                        r_instance.Stop();
+                        speed.X = 0;
+                        UpdateFrame(elapsed);
+                    }
                 }
                 else
                 {
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
-                }
-                if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
-                {
-                    w_instance.Stop();
-                    r_instance.Stop();
                     speed.X = 0;
-                    UpdateFrame(elapsed);
+
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
                 }
+
                 // -----------------------------------------------------------------------------------------------collistion
                 Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
                 Rectangle ballRectangle = new Rectangle((int)ballPos5_4.X, (int)ballPos5_4.Y, 24, 24);
                 Rectangle ball2Rectangle = new Rectangle((int)ballPos5_6.X, (int)ballPos5_6.Y, 24, 24);
+                Rectangle LockerRec5 = new Rectangle((int)ballLockerR5.X, (int)ballLockerR5.Y, 24, 24);
                 Rectangle puzzleRectangle = new Rectangle((int)puzzlePos2.X, (int)puzzlePos2.Y, 24, 24);
                 Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
                 Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, 100, 100);
@@ -1789,6 +1938,21 @@ namespace Project1
                     UpdateEnemy(elapsed);
                 }
 
+                if(personRectangle.Intersects(LockerRec5) == true)
+                {
+                    locker5 = "F To Hide";
+                    {
+                        if (ks.IsKeyDown(Keys.F)) //Intereact object
+                        {
+                            personHit4 = true;
+                        }
+                    }
+                }
+                else if (personRectangle.Intersects(LockerRec5) == false)
+                {
+                    personHit4 = false;
+                    locker5 = "";
+                }
                 if (personRectangle.Intersects(ballRectangle) == true)
                 {
 
@@ -2030,6 +2194,7 @@ namespace Project1
             if (personHit2 == true)
             {
                 mCurrentScreen = Screenstate.PipePuzz;
+                dylight.Lights.Remove(spotLightR7);
             }
 
             ProcessInput();
@@ -2417,144 +2582,179 @@ namespace Project1
                 pos.X = 350;
             }
 
+            if (personHit5 == true)
+            {
+                isHide = true;
+
+                if (Keyboard.GetState().IsKeyUp(Keys.F))
+                {
+                    isHide = false;
+                }
+            }
+            if (personHit6 == true)
+            {
+                isHide = true;
+
+                if (Keyboard.GetState().IsKeyUp(Keys.F))
+                {
+                    isHide = false;
+                }
+            }
+
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             KeyboardState old_ks = Keyboard.GetState();
             {
-                if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
+                if(isHide == false)
                 {
-                    hBarRec.Width -= 5;
-                }
+                    if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
+                    {
+                        hBarRec.Width -= 5;
+                    }
 
-                if (ks.IsKeyDown(Keys.W))
-                {
-                    w_instance.Play();
+                    if (ks.IsKeyDown(Keys.W))
+                    {
+                        w_instance.Play();
 
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
+                        pos.Y = pos.Y - speed.Y;
+                        if (pos.Y <= 210)
+                        {
+                            pos.Y = 210;
+                        }
+                        speed.X = 3;
+                        direction = 3;
+                        UpdateFrame(elapsed);
                     }
-                    pos.Y = pos.Y - speed.Y;
-                    if (pos.Y <= 210)
+                    if (ks.IsKeyDown(Keys.S))
                     {
-                        pos.Y = 210;
-                    }
-                    speed.X = 3;
-                    direction = 3;
-                    UpdateFrame(elapsed);
-                }
-                if (ks.IsKeyDown(Keys.S))
-                {
-                    w_instance.Play();
+                        w_instance.Play();
 
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
+                        pos.Y = pos.Y + speed.Y;
+                        if (pos.Y >= 280)
+                        {
+                            pos.Y = 280;
+                        }
+                        speed.X = 3;
+                        direction = 0;
+                        UpdateFrame(elapsed);
                     }
-                    pos.Y = pos.Y + speed.Y;
-                    if (pos.Y >= 280)
+                    if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                     {
-                        pos.Y = 280;
-                    }
-                    speed.X = 3;
-                    direction = 0;
-                    UpdateFrame(elapsed);
-                }
-                if (ks.IsKeyDown(Keys.A) && pos.X > 30)
-                {
-                    w_instance.Play();
+                        w_instance.Play();
 
-                    if (pos.X <= bLine.X && camPos.X > 0)
-                    {
-                        r_instance.Stop();
-                        fLine -= new Vector2(3, 0);
-                        bLine -= new Vector2(3, 0);
-                        camPos -= new Vector2(3, 0);
-                        uiPos -= new Vector2(3, 0);
-                    }
-                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
-                    {
-                        w_instance.Stop();
-                        r_instance.Play();
-                        speed.X = 6;
-                        fLine -= new Vector2(6, 0);
-                        bLine -= new Vector2(6, 0);
-                        camPos -= new Vector2(6, 0);
-                        uiPos -= new Vector2(6, 0);
-                        sBarRec.Width -= 3;
+                        if (pos.X <= bLine.X && camPos.X > 0)
+                        {
+                            r_instance.Stop();
+                            fLine -= new Vector2(3, 0);
+                            bLine -= new Vector2(3, 0);
+                            camPos -= new Vector2(3, 0);
+                            uiPos -= new Vector2(3, 0);
+                        }
+                        if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                        {
+                            w_instance.Stop();
+                            r_instance.Play();
+                            speed.X = 6;
+                            fLine -= new Vector2(6, 0);
+                            bLine -= new Vector2(6, 0);
+                            camPos -= new Vector2(6, 0);
+                            uiPos -= new Vector2(6, 0);
+                            sBarRec.Width -= 3;
+                        }
+                        else
+                        {
+                            speed.X = 3;
+                        }
+                        pos.X = pos.X - speed.X;
+                        direction = 1;
+
+                        UpdateFrame(elapsed);
                     }
                     else
                     {
-                        speed.X = 3;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
                     }
-                    pos.X = pos.X - speed.X;
-                    direction = 1;
+                    if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 3 - 25)
+                    {
+                        w_instance.Play();
 
-                    UpdateFrame(elapsed);
-                }
-                else
-                {
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
-                }
-                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 3 - 25)
-                {
-                    w_instance.Play();
+                        if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width * 2)
+                        {
+                            r_instance.Stop();
+                            fLine += new Vector2(3, 0);
+                            bLine += new Vector2(3, 0);
+                            camPos += new Vector2(3, 0);
+                            uiPos += new Vector2(3, 0);
+                        }
+                        if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                        {
+                            w_instance.Stop();
+                            r_instance.Play();
+                            speed.X = 6;
+                            fLine += new Vector2(6, 0);
+                            bLine += new Vector2(6, 0);
+                            camPos += new Vector2(6, 0);
+                            uiPos += new Vector2(6, 0);
+                            sBarRec.Width -= 3;
+                        }
+                        else
+                        {
+                            speed.X = 3;
+                        }
+                        pos.X = pos.X + speed.X;
 
-                    if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width * 2)
-                    {
-                        r_instance.Stop();
-                        fLine += new Vector2(3, 0);
-                        bLine += new Vector2(3, 0);
-                        camPos += new Vector2(3, 0);
-                        uiPos += new Vector2(3, 0);
-                    }
-                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
-                    {
-                        w_instance.Stop();
-                        r_instance.Play();
-                        speed.X = 6;
-                        fLine += new Vector2(6, 0);
-                        bLine += new Vector2(6, 0);
-                        camPos += new Vector2(6, 0);
-                        uiPos += new Vector2(6, 0);
-                        sBarRec.Width -= 3;
+                        direction = 2;
+                        UpdateFrame(elapsed);
                     }
                     else
                     {
-                        speed.X = 3;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
                     }
-                    pos.X = pos.X + speed.X;
-
-                    direction = 2;
-                    UpdateFrame(elapsed);
+                    if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
+                    {
+                        w_instance.Stop();
+                        r_instance.Stop();
+                        speed.X = 0;
+                        UpdateFrame(elapsed);
+                    }
                 }
                 else
                 {
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
-                }
-                if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
-                {
-                    w_instance.Stop();
-                    r_instance.Stop();
                     speed.X = 0;
-                    UpdateFrame(elapsed);
+
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
                 }
+
                 // -----------------------------------------------------------------------------------------------collistion
                 Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
                 Rectangle ballRectangle = new Rectangle((int)ballPos2_1.X, (int)ballPos2_1.Y, 24, 24);
                 Rectangle ball2_3Rectangle = new Rectangle((int)ballPos2_3.X, (int)ballPos2_3.Y, 24, 24);
                 Rectangle ball2_4Rectangle = new Rectangle((int)ballPos2_4.X, (int)ballPos2_4.Y, 24, 24);
                 Rectangle ball2_7Rectangle = new Rectangle((int)ballPos2_7.X, (int)ballPos2_7.Y, 24, 24);
+                Rectangle LockerRec1 = new Rectangle((int)ballLockerR2_1.X, (int)ballLockerR2_1.Y, 24, 24);
+                Rectangle LockerRec2 = new Rectangle((int)ballLockerR2_2.X, (int)ballLockerR2_2.Y, 24, 24);
                 Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
                 Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, 100, 100);
 
@@ -2573,6 +2773,36 @@ namespace Project1
                 else if (personRectangle.Intersects(enemyRectangle) == false)
                 {
                     UpdateEnemy(elapsed);
+                }
+
+                if (personRectangle.Intersects(LockerRec1) == true)
+                {
+                    locker2_1 = "F to Hide";
+
+                    if (ks.IsKeyDown(Keys.F))
+                    {
+                        personHit5 = true;
+                    }
+                }
+                else if (personRectangle.Intersects(LockerRec1) == false)
+                {
+                    personHit5 = false;
+                    locker2_1 = "";
+                }
+
+                if (personRectangle.Intersects(LockerRec2) == true)
+                {
+                    locker2_2 = "F to Hide";
+
+                    if (ks.IsKeyDown(Keys.F))
+                    {
+                        personHit6 = true;
+                    }
+                }
+                else if (personRectangle.Intersects(LockerRec2) == false)
+                {
+                    personHit6 = false;
+                    locker2_2 = "";
                 }
 
                 if (personRectangle.Intersects(ballRectangle) == true)
@@ -2661,120 +2891,144 @@ namespace Project1
                 dylight.Lights.Remove(spotLightR3);
                 pos.X = 1675;
             }
+            if (personHit2 == true)
+            {
+                isHide = true;
+
+                if (Keyboard.GetState().IsKeyUp(Keys.F))
+                {
+                    isHide = false;
+                }
+            }
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             KeyboardState old_ks = Keyboard.GetState();
             {
-                if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
+                if(isHide == false)
                 {
-                    hBarRec.Width -= 5;
-                }
-
-                if (ks.IsKeyDown(Keys.W))
-                {
-                    w_instance.Play();
-
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
+                    if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
                     {
-                        sBarRec.Width = 163;
+                        hBarRec.Width -= 5;
                     }
-                    pos.Y = pos.Y - speed.Y;
-                    if (pos.Y <= 210)
-                    {
-                        pos.Y = 210;
-                    }
-                    speed.X = 3;
-                    direction = 3;
-                    UpdateFrame(elapsed);
-                }
-                if (ks.IsKeyDown(Keys.S))
-                {
-                    w_instance.Play();
 
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
+                    if (ks.IsKeyDown(Keys.W))
                     {
-                        sBarRec.Width = 163;
-                    }
-                    pos.Y = pos.Y + speed.Y;
-                    if (pos.Y >= 280)
-                    {
-                        pos.Y = 280;
-                    }
-                    speed.X = 3;
-                    direction = 0;
-                    UpdateFrame(elapsed);
-                }
-                if (ks.IsKeyDown(Keys.A) && pos.X > 30)
-                {
-                    w_instance.Play();
+                        w_instance.Play();
 
-                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
+                        pos.Y = pos.Y - speed.Y;
+                        if (pos.Y <= 210)
+                        {
+                            pos.Y = 210;
+                        }
+                        speed.X = 3;
+                        direction = 3;
+                        UpdateFrame(elapsed);
+                    }
+                    if (ks.IsKeyDown(Keys.S))
                     {
-                        w_instance.Stop();
-                        r_instance.Play();
-                        speed.X = 6;
-                        sBarRec.Width -= 3;
+                        w_instance.Play();
+
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
+                        pos.Y = pos.Y + speed.Y;
+                        if (pos.Y >= 280)
+                        {
+                            pos.Y = 280;
+                        }
+                        speed.X = 3;
+                        direction = 0;
+                        UpdateFrame(elapsed);
+                    }
+                    if (ks.IsKeyDown(Keys.A) && pos.X > 30)
+                    {
+                        w_instance.Play();
+
+                        if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                        {
+                            w_instance.Stop();
+                            r_instance.Play();
+                            speed.X = 6;
+                            sBarRec.Width -= 3;
+                        }
+                        else
+                        {
+                            r_instance.Stop();
+                            speed.X = 3;
+                        }
+                        pos.X = pos.X - speed.X;
+                        direction = 1;
+
+                        UpdateFrame(elapsed);
                     }
                     else
                     {
-                        r_instance.Stop();
-                        speed.X = 3;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
                     }
-                    pos.X = pos.X - speed.X;
-                    direction = 1;
-
-                    UpdateFrame(elapsed);
-                }
-                else
-                {
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
+                    if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
                     {
-                        sBarRec.Width = 163;
-                    }
-                }
-                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width - 110)
-                {
-                    w_instance.Play();
+                        w_instance.Play();
 
-                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
-                    {
-                        w_instance.Stop();
-                        r_instance.Play();
-                        speed.X = 6;
-                        sBarRec.Width -= 3;
+                        if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                        {
+                            w_instance.Stop();
+                            r_instance.Play();
+                            speed.X = 6;
+                            sBarRec.Width -= 3;
+                        }
+                        else
+                        {
+                            r_instance.Stop();
+                            speed.X = 3;
+                        }
+                        pos.X = pos.X + speed.X;
+
+                        direction = 2;
+                        UpdateFrame(elapsed);
                     }
                     else
                     {
-                        r_instance.Stop();
-                        speed.X = 3;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
                     }
-                    pos.X = pos.X + speed.X;
-
-                    direction = 2;
-                    UpdateFrame(elapsed);
+                    if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
+                    {
+                        w_instance.Stop();
+                        r_instance.Stop();
+                        speed.X = 0;
+                        UpdateFrame(elapsed);
+                    }
                 }
                 else
                 {
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
-                }
-                if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
-                {
-                    w_instance.Stop();
-                    r_instance.Stop();
                     speed.X = 0;
-                    UpdateFrame(elapsed);
+
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
                 }
+
             }
             Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
             Rectangle ballRectangle = new Rectangle((int)ballPos3_2.X, (int)ballPos3_2.Y, 24, 24);
+            Rectangle LockerRec3 = new Rectangle((int)ballLockerR3.X, (int)ballLockerR3.Y, 24, 24);
             if (personRectangle.Intersects(ballRectangle) == true)
             {
                 backRoom3_2 = "F To Enter";
@@ -2792,6 +3046,21 @@ namespace Project1
                 personHit = false;
                 backRoom3_2 = "";
             }
+            if (personRectangle.Intersects(LockerRec3) == true)
+            {
+                locker3 = "F To Hide";
+                {
+                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    {
+                        personHit2 = true;
+                    }
+                }
+            }
+            else if (personRectangle.Intersects(LockerRec3) == false)
+            {
+                personHit2 = false;
+                locker3 = "";
+            }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(40, 40);
@@ -2808,7 +3077,7 @@ namespace Project1
                 dylight.Lights.Add(spotLightR2_2);
                 dylight.Lights.Add(spotLightR2_3);
                 dylight.Lights.Add(spotLightR2_4);
-                pos.X = 880;
+                pos.X = 870;
                 camPos.X = 780;
                 uiPos.X = 780;
                 fLine.X = pos.X + rad;
@@ -2994,143 +3263,168 @@ namespace Project1
                 spotLightR6.Position = new Vector2(300, 30);
                 pos.X = 400;
             }
-   
+
+            if (personHit4 == true)
+            {
+                isHide = true;
+
+                if (Keyboard.GetState().IsKeyUp(Keys.F))
+                {
+                    isHide = false;
+                }
+            }
+
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             KeyboardState old_ks = Keyboard.GetState();
             {
-                if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
+                if(isHide == false)
                 {
-                    hBarRec.Width -= 5;
-                }
+                    if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
+                    {
+                        hBarRec.Width -= 5;
+                    }
 
-                if (ks.IsKeyDown(Keys.W))
-                {
-                    w_instance.Play();
+                    if (ks.IsKeyDown(Keys.W))
+                    {
+                        w_instance.Play();
 
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
+                        pos.Y = pos.Y - speed.Y;
+                        if (pos.Y <= 210)
+                        {
+                            pos.Y = 210;
+                        }
+                        speed.X = 3;
+                        direction = 3;
+                        UpdateFrame(elapsed);
                     }
-                    pos.Y = pos.Y - speed.Y;
-                    if (pos.Y <= 210)
+                    if (ks.IsKeyDown(Keys.S))
                     {
-                        pos.Y = 210;
-                    }
-                    speed.X = 3;
-                    direction = 3;
-                    UpdateFrame(elapsed);
-                }
-                if (ks.IsKeyDown(Keys.S))
-                {
-                    w_instance.Play();
+                        w_instance.Play();
 
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
+                        pos.Y = pos.Y + speed.Y;
+                        if (pos.Y >= 280)
+                        {
+                            pos.Y = 280;
+                        }
+                        speed.X = 3;
+                        direction = 0;
+                        UpdateFrame(elapsed);
                     }
-                    pos.Y = pos.Y + speed.Y;
-                    if (pos.Y >= 280)
+                    if (ks.IsKeyDown(Keys.A) && pos.X > 30)
                     {
-                        pos.Y = 280;
-                    }
-                    speed.X = 3;
-                    direction = 0;
-                    UpdateFrame(elapsed);
-                }
-                if (ks.IsKeyDown(Keys.A) && pos.X > 30)
-                {
-                    w_instance.Play();
+                        w_instance.Play();
 
-                    if (pos.X <= bLine.X && camPos.X > 0)
-                    {
-                        r_instance.Stop();
-                        fLine -= new Vector2(3, 0);
-                        bLine -= new Vector2(3, 0);
-                        camPos -= new Vector2(3, 0);
-                        uiPos -= new Vector2(3, 0);
-                    }
-                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
-                    {
-                        w_instance.Stop();
-                        r_instance.Play();
-                        speed.X = 6;
-                        fLine -= new Vector2(6, 0);
-                        bLine -= new Vector2(6, 0);
-                        camPos -= new Vector2(6, 0);
-                        uiPos -= new Vector2(6, 0);
-                        sBarRec.Width -= 3;
+                        if (pos.X <= bLine.X && camPos.X > 0)
+                        {
+                            r_instance.Stop();
+                            fLine -= new Vector2(3, 0);
+                            bLine -= new Vector2(3, 0);
+                            camPos -= new Vector2(3, 0);
+                            uiPos -= new Vector2(3, 0);
+                        }
+                        if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                        {
+                            w_instance.Stop();
+                            r_instance.Play();
+                            speed.X = 6;
+                            fLine -= new Vector2(6, 0);
+                            bLine -= new Vector2(6, 0);
+                            camPos -= new Vector2(6, 0);
+                            uiPos -= new Vector2(6, 0);
+                            sBarRec.Width -= 3;
+                        }
+                        else
+                        {
+                            speed.X = 3;
+                        }
+                        pos.X = pos.X - speed.X;
+                        direction = 1;
+
+                        UpdateFrame(elapsed);
                     }
                     else
                     {
-                        speed.X = 3;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
                     }
-                    pos.X = pos.X - speed.X;
-                    direction = 1;
+                    if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 2 - 25)
+                    {
+                        w_instance.Play();
 
-                    UpdateFrame(elapsed);
-                }
-                else
-                {
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
-                }
-                if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 2 - 25)
-                {
-                    w_instance.Play();
+                        if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width)
+                        {
+                            r_instance.Stop();
+                            fLine += new Vector2(3, 0);
+                            bLine += new Vector2(3, 0);
+                            camPos += new Vector2(3, 0);
+                            uiPos += new Vector2(3, 0);
+                        }
+                        if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
+                        {
+                            w_instance.Stop();
+                            r_instance.Play();
+                            speed.X = 6;
+                            fLine += new Vector2(6, 0);
+                            bLine += new Vector2(6, 0);
+                            camPos += new Vector2(6, 0);
+                            uiPos += new Vector2(6, 0);
+                            sBarRec.Width -= 3;
+                        }
+                        else
+                        {
+                            speed.X = 3;
+                        }
+                        pos.X = pos.X + speed.X;
 
-                    if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width)
-                    {
-                        r_instance.Stop();
-                        fLine += new Vector2(3, 0);
-                        bLine += new Vector2(3, 0);
-                        camPos += new Vector2(3, 0);
-                        uiPos += new Vector2(3, 0);
-                    }
-                    if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
-                    {
-                        w_instance.Stop();
-                        r_instance.Play();
-                        speed.X = 6;
-                        fLine += new Vector2(6, 0);
-                        bLine += new Vector2(6, 0);
-                        camPos += new Vector2(6, 0);
-                        uiPos += new Vector2(6, 0);
-                        sBarRec.Width -= 3;
+                        direction = 2;
+                        UpdateFrame(elapsed);
                     }
                     else
                     {
-                        speed.X = 3;
+                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 163)
+                        {
+                            sBarRec.Width = 163;
+                        }
                     }
-                    pos.X = pos.X + speed.X;
-
-                    direction = 2;
-                    UpdateFrame(elapsed);
+                    if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
+                    {
+                        w_instance.Stop();
+                        r_instance.Stop();
+                        speed.X = 0;
+                        UpdateFrame(elapsed);
+                    }
                 }
                 else
                 {
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
-                }
-                if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
-                {
-                    w_instance.Stop();
-                    r_instance.Stop();
                     speed.X = 0;
-                    UpdateFrame(elapsed);
+
+                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
                 }
+
                 // -----------------------------------------------------------------------------------------------collistion
                 Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
                 Rectangle ballRectangle = new Rectangle((int)ballPos5_4.X, (int)ballPos5_4.Y, 24, 24);
                 Rectangle ball2Rectangle = new Rectangle((int)ballPos5_6.X, (int)ballPos5_6.Y, 24, 24);
+                Rectangle LockerRec5 = new Rectangle((int)ballLockerR5.X, (int)ballLockerR5.Y, 24, 24);
                 Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
                 Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, -20, 50);
 
@@ -3150,7 +3444,21 @@ namespace Project1
                 {
                     UpdateEnemy(elapsed);
                 }
-
+                if (personRectangle.Intersects(LockerRec5) == true)
+                {
+                    locker5 = "F To Hide";
+                    {
+                        if (ks.IsKeyDown(Keys.F)) //Intereact object
+                        {
+                            personHit4 = true;
+                        }
+                    }
+                }
+                else if (personRectangle.Intersects(LockerRec5) == false)
+                {
+                    personHit4 = false;
+                    locker5 = "";
+                }
                 if (personRectangle.Intersects(ballRectangle) == true)
                 {
 
@@ -3344,7 +3652,6 @@ namespace Project1
         }
         void UpdateL_Room7()
         {
-
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.LRoom2;
@@ -3750,21 +4057,28 @@ namespace Project1
             _spriteBatch.Draw(ball2Texture, (ballPos2_3 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.Draw(ball3Texture, (ballPos2_4 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.Draw(ball3Texture, (ballPos2_7 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.Draw(ballTexture, (ballLockerR2_1 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), Color.White);
+            _spriteBatch.Draw(ballTexture, (ballLockerR2_2 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), Color.White);
             _spriteBatch.Draw(trap, trapPos - camPos * scroll_factor, new Rectangle(0, 0, 26, 26), (Color.White));
-            if (speed.X <= 0)
+            if(isHide == false)
             {
-                totalframe = 20;
-                _spriteBatch.Draw(pIdle, pos - camPos, new Rectangle(72 * frame, 0, 72, 96), (Color.White));
-            }
-            else
-            {
-                if (totalframe > 4)
+                if (speed.X <= 0)
                 {
-                    frame = 0;
+                    totalframe = 20;
+                    _spriteBatch.Draw(pIdle, pos - camPos, new Rectangle(72 * frame, 0, 72, 96), (Color.White));
                 }
-                totalframe = 4;
-                _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
-            }if (isAlive == true)
+                else
+                {
+                    if (totalframe > 4)
+                    {
+                        frame = 0;
+                    }
+                    totalframe = 4;
+                    _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
+                }
+            
+            }
+            if (isAlive == true)
             {
                 _spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
             }   
@@ -3772,6 +4086,8 @@ namespace Project1
             _spriteBatch.DrawString(deBugFont, toRoom_3, (ballPos2_3 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_4, (ballPos2_4 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_7, (ballPos2_7 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
+            _spriteBatch.DrawString(deBugFont, locker2_1, (ballLockerR2_1 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
+            _spriteBatch.DrawString(deBugFont, locker2_2, (ballLockerR2_2 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
@@ -3785,24 +4101,29 @@ namespace Project1
         void DrawRoom3()
         {
             _spriteBatch.Draw(room3, Vector2.Zero, Color.White);
-            if (speed.X <= 0)
+            if(isHide == false)
             {
-                totalframe = 20;
-                _spriteBatch.Draw(pIdle, pos, new Rectangle(72 * frame, 0, 72, 96), (Color.White));
-            }
-            else
-            {
-                if (totalframe > 4)
+                if (speed.X <= 0)
                 {
-                    frame = 0;
+                    totalframe = 20;
+                    _spriteBatch.Draw(pIdle, pos, new Rectangle(72 * frame, 0, 72, 96), (Color.White));
                 }
-                totalframe = 4;
-                _spriteBatch.Draw(farmer, pos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
+                else
+                {
+                    if (totalframe > 4)
+                    {
+                        frame = 0;
+                    }
+                    totalframe = 4;
+                    _spriteBatch.Draw(farmer, pos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
+                }
             }
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(ballTexture, ballPos3_2, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.Draw(ballTexture, ballLockerR3, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.DrawString(deBugFont,locker3, (ballLockerR3 - new Vector2(0, 80)), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom3_2, (ballPos3_2 - new Vector2(0, 80)), (Color.White));
         }
         void DrawRoom4()
@@ -3837,25 +4158,30 @@ namespace Project1
             _spriteBatch.Draw(ballTexture, (ballPos5_4 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.Draw(ball2Texture, (ballPos5_6 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.Draw(ball2Texture, (puzzlePos2 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
-            if (speed.X <= 0)
+            _spriteBatch.Draw(ballTexture, (ballLockerR5 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
+            if(isHide == false)
             {
-                totalframe = 20;
-                _spriteBatch.Draw(pIdle, pos - camPos, new Rectangle(72 * frame, 0, 72, 96), (Color.White));
-            }
-            else
-            {
-                if (totalframe > 4)
+                if (speed.X <= 0)
                 {
-                    frame = 0;
+                    totalframe = 20;
+                    _spriteBatch.Draw(pIdle, pos - camPos, new Rectangle(72 * frame, 0, 72, 96), (Color.White));
                 }
-                totalframe = 4;
-                _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
+                else
+                {
+                    if (totalframe > 4)
+                    {
+                        frame = 0;
+                    }
+                    totalframe = 4;
+                    _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
+                }
             }
-            
+
             _spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom5_4, (ballPos5_4 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_6, (ballPos5_6 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, puzzle2, (puzzlePos2 - new Vector2(0, 50) - camPos) * scroll_factor, (Color.White));
+            _spriteBatch.DrawString(deBugFont, locker5, (ballLockerR5 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
@@ -3952,6 +4278,8 @@ namespace Project1
             _spriteBatch.Draw(ball2Texture, (ballPos2_3 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.Draw(ball3Texture, (ballPos2_4 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.Draw(ball3Texture, (ballPos2_7 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.Draw(ballTexture, (ballLockerR2_1 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), Color.White);
+            _spriteBatch.Draw(ballTexture, (ballLockerR2_2 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), Color.White);
             _spriteBatch.Draw(trap, trapPos - camPos * scroll_factor, new Rectangle(0, 0, 26, 26), (Color.White));
             if (speed.X <= 0)
             {
@@ -3972,6 +4300,8 @@ namespace Project1
             _spriteBatch.DrawString(deBugFont, toRoom_3, (ballPos2_3 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_4, (ballPos2_4 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_7, (ballPos2_7 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
+            _spriteBatch.DrawString(deBugFont, locker2_1, (ballLockerR2_1 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
+            _spriteBatch.DrawString(deBugFont, locker2_2, (ballLockerR2_2 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
@@ -4003,6 +4333,8 @@ namespace Project1
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(ballTexture, ballPos3_2, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.Draw(ballTexture, ballLockerR3, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.DrawString(deBugFont, locker3, (ballLockerR3 - new Vector2(0, 80)), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom3_2, (ballPos3_2 - new Vector2(0, 80)), (Color.White));
         }
         void DrawL_Room4()
@@ -4036,6 +4368,7 @@ namespace Project1
             _spriteBatch.Draw(Lroom5_2, (bg5Pos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
             _spriteBatch.Draw(ballTexture, (ballPos5_4 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.Draw(ball2Texture, (ballPos5_6 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.Draw(ballTexture, (ballLockerR5 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
             if (speed.X <= 0)
             {
                 totalframe = 20;
@@ -4053,6 +4386,7 @@ namespace Project1
             _spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom5_4, (ballPos5_4 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_6, (ballPos5_6 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
+            _spriteBatch.DrawString(deBugFont, locker5, (ballLockerR5 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
@@ -4249,11 +4583,12 @@ namespace Project1
 
                 if (LastPipe.X == Pipeboard.GameBoardWidth - 1)
                 {
-                    if (pipeboard.HasConnector(
-                        (int)LastPipe.X, (int)LastPipe.Y, "Right"))
+                    if (pipeboard.HasConnector((int)LastPipe.X, (int)LastPipe.Y, "Right"))
                     {
                         playerScore += DetermineScore(WaterChain.Count);
                         mCurrentScreen = Screenstate.LRoom7;
+                        dylight.Lights.Add(spotLightR7);
+
                         foreach (Vector2 ScoringSquare in WaterChain)
                         {
                             pipeboard.SetSquare((int)ScoringSquare.X,
