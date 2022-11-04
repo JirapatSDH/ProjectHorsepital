@@ -43,8 +43,10 @@ namespace Project1
             LRoom8,
             PipePuzz,
             PassPuzz,
+            endcutscene,
             over
         }
+
         PenumbraComponent dylight;
         private SpriteBatch _spriteBatch;
         private Texture2D room1;
@@ -78,6 +80,7 @@ namespace Project1
         private Texture2D start_cut1;
         private Texture2D overGlitch;
         private Texture2D overMenu;
+        private Texture2D end_cut;
         private Texture2D ballTexture;
         private Texture2D ball2Texture;
         private Texture2D ball3Texture;
@@ -162,6 +165,12 @@ namespace Project1
         float startframepersec;
         float starttimeperframe;
         float starttotalelapsed;
+
+        int endframe;
+        int endtotalframe;
+        float endframepersec;
+        float endtimeperframe;
+        float endtotalelapsed;
 
         int frame;
         int totalframe;
@@ -408,6 +417,7 @@ namespace Project1
             menuCharGlitch = Content.Load<Texture2D>("MainMenu_kaolad_Tile1");
             menuGlitch = Content.Load<Texture2D>("Horspital_glitch");
             start_cut1 = Content.Load<Texture2D>("startcutscene");
+            end_cut = Content.Load<Texture2D>("endcutscene");
             overMenu = Content.Load<Texture2D>("Gameover_bg");
             overGlitch = Content.Load<Texture2D>("Game over_glitch");
             playingPieces = Content.Load<Texture2D>("0669_02_03");
@@ -441,6 +451,12 @@ namespace Project1
             startframepersec = 0.5f;
             starttimeperframe = (float)1 / startframepersec;
             starttotalelapsed = 0;
+
+            endframe = 0;
+            endtotalframe = 5;
+            endframepersec = 0.8f;
+            endtimeperframe = (float)1 / endframepersec;
+            endtotalelapsed = 0;
 
             bgframe = 0;
             bgtotalframe = 11;
@@ -519,7 +535,7 @@ namespace Project1
                 case Screenstate.Room2:
                     {
                         UpdateRoom2();
-                        dylight.AmbientColor = new Color(new Vector3(0.2f));
+                        dylight.AmbientColor = new Color(new Vector3(0.3f));
                         break;
                     }
                 case Screenstate.Room3:
@@ -537,7 +553,7 @@ namespace Project1
                 case Screenstate.Room5:
                     {
                         UpdateRoom5();
-                        dylight.AmbientColor = new Color(new Vector3(0.2f));
+                        dylight.AmbientColor = new Color(new Vector3(0.3f));
                         break;
                     }
                 case Screenstate.Room6:
@@ -555,49 +571,55 @@ namespace Project1
                 case Screenstate.LRoom1:
                     {
                         UpdateL_Room1();
-                        dylight.AmbientColor = new Color(new Vector3(0.3f));
+                        dylight.AmbientColor = new Color(new Vector3(0.4f));
                         break;
                     }
                 case Screenstate.LRoom2:
                     {
                         UpdateL_Room2();
-                        dylight.AmbientColor = new Color(new Vector3(0.2f));
+                        dylight.AmbientColor = new Color(new Vector3(0.4f));
                         break;
                     }
                 case Screenstate.LRoom3:
                     {
                         UpdateL_Room3();
-                        dylight.AmbientColor = new Color(new Vector3(0.2f));
+                        dylight.AmbientColor = new Color(new Vector3(0.4f));
                         break;
                     }
                 case Screenstate.LRoom4:
                     {
                         UpdateL_Room4();
-                        dylight.AmbientColor = new Color(new Vector3(0.3f));
+                        dylight.AmbientColor = new Color(new Vector3(0.4f));
                         break;
                     }
                 case Screenstate.LRoom5:
                     {
                         UpdateL_Room5();
-                        dylight.AmbientColor = new Color(new Vector3(0.2f));
+                        dylight.AmbientColor = new Color(new Vector3(0.4f));
                         break;
                     }
                 case Screenstate.LRoom6:
                     {
                         UpdateL_Room6();
-                        dylight.AmbientColor = new Color(new Vector3(0.2f));
+                        dylight.AmbientColor = new Color(new Vector3(0.4f));
                         break;
                     }
                 case Screenstate.LRoom7:
                     {
                         UpdateL_Room7();
-                        dylight.AmbientColor = new Color(new Vector3(0.3f));
+                        dylight.AmbientColor = new Color(new Vector3(0.4f));
                         break;
                     }
                 case Screenstate.LRoom8:
                     {
                         UpdateL_Room8();
-                        dylight.AmbientColor = new Color(new Vector3(0.2f));
+                        dylight.AmbientColor = new Color(new Vector3(0.4f));
+                        break;
+                    }
+                case Screenstate.endcutscene:
+                    {
+                        UpdateEndCutscene();
+                        dylight.AmbientColor = new Color(new Vector3(0.7f));
                         break;
                     }
                 case Screenstate.over:
@@ -724,6 +746,11 @@ namespace Project1
                         DrawL_Room8();
                         break;
                     }
+                case Screenstate.endcutscene:
+                    {
+                        DrawEndcutscene();
+                        break;
+                    }
                 case Screenstate.over:
                     {
                         DrawOver();
@@ -758,7 +785,7 @@ namespace Project1
                 spotLightR2_2.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 spotLightR2_3.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 spotLightR2_4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
-                pos.X = 48;
+                pos.X = 50;
             }
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
@@ -925,7 +952,7 @@ namespace Project1
             }
             if (Keyboard.GetState().IsKeyDown(Keys.T) == true)
             {
-                mCurrentScreen = Screenstate.LRoom5;
+                //mCurrentScreen = Screenstate.LRoom5;
             }
 
             UpdateFrame(elapsed);
@@ -944,6 +971,22 @@ namespace Project1
             }
 
             UpdateStartCutFrame(elapsed);
+        }
+        void UpdateEndCutscene()
+        {
+            dylight.Lights.Remove(spotLightR2_1);
+            dylight.Lights.Remove(spotLightR2_2);
+            dylight.Lights.Remove(spotLightR2_3);
+            dylight.Lights.Remove(spotLightR2_4);
+            dylight.Lights.Remove(light);
+
+            if (endframe == 4)
+            {
+                wait(2000);
+                Exit();
+            }
+
+            UpdateEndCutFrame(elapsed);
         }
         void UpdateOver()
         {
@@ -2157,12 +2200,11 @@ namespace Project1
             if (personHit2 == true)
             {
                 mCurrentScreen = Screenstate.LRoom2;
-                mCurrentScreen = Screenstate.Room2;
                 spotLightR2_1.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 spotLightR2_2.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 spotLightR2_3.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 spotLightR2_4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
-                pos.X = 48;
+                pos.X = 50;
             }
             if (personHit == true)
             {
@@ -3448,14 +3490,14 @@ namespace Project1
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
-            light.Position = pos - camPos + new Vector2(40, 40);
+            light.Position = pos - camPos + new Vector2(60, 40);
 
         }
         void UpdateL_Room8()
         {
-            if (personHit == true)
+            if(personHit == true)
             {
-                Exit();
+                mCurrentScreen = Screenstate.endcutscene;
             }
 
             ProcessInput();
@@ -3614,14 +3656,12 @@ namespace Project1
 
                 if (personRectangle.Intersects(ballRectangle) == true)
                 {
+                    toEnd = "F to Enter";
 
-                    toEnd = "F To Enter";
+                    if(Keyboard.GetState().IsKeyDown(Keys.F))
                     {
-                        if (ks.IsKeyDown(Keys.F)) //Intereact object
-                        {
-                            //toEnd = "Enter room ?";
-                            Exit();
-                        }
+                        personHit = true;
+                        d_instance.Play();
                     }
                 }
                 else if (personRectangle.Intersects(ballRectangle) == false)
@@ -3732,6 +3772,10 @@ namespace Project1
         void DrawStartcutscene()
         {
             _spriteBatch.Draw(start_cut1, Vector2.Zero, new Rectangle(720 * startframe, 0, 720, 480),Color.White);
+        }
+        void DrawEndcutscene()
+        {
+            _spriteBatch.Draw(end_cut, Vector2.Zero, new Rectangle(720 * endframe, 0, 720, 480), Color.White);
         }
         void DrawOver()
         {
@@ -4129,6 +4173,7 @@ namespace Project1
             }
             //_spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
+            _spriteBatch.DrawString(deBugFont, toEnd, (ballPos8_End - new Vector2(0, 40) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
@@ -4195,6 +4240,15 @@ namespace Project1
             {
                 startframe = (startframe + 1) % starttotalframe;
                 starttotalelapsed -= starttimeperframe;
+            }
+        }
+        void UpdateEndCutFrame(float elapsed)
+        {
+            endtotalelapsed += elapsed;
+            if (endtotalelapsed > endtimeperframe)
+            {
+                endframe = (endframe + 1) % endtotalframe;
+                endtotalelapsed -= endtimeperframe;
             }
         }
         void UpdateFrame(float elapsed)
