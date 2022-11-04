@@ -199,7 +199,12 @@ namespace Project1
         const float MinTimeSinceLastInput = 0.25f;
         float timeSinceLastInput = 0.0f;
 
-        int passNum = 1;
+        int passNum1 = 2;
+        int passNum2 = 4;
+        int passNum3 = 3;
+        int passNum4 = 2;
+        KeyboardState old_ks;
+        Texture2D passTexture;
     /// -----------------------------------------------------------------------------<PuzzlePipe>
     //--------------------------------------------------------------------------Set Light---------------------------------------------
     Light light2 = new Spotlight
@@ -407,6 +412,7 @@ namespace Project1
             overGlitch = Content.Load<Texture2D>("Game over_glitch");
             playingPieces = Content.Load<Texture2D>("0669_02_03");
             enemy = new Enemy(Content.Load<Texture2D>("Ghost_walk"), new Vector2(1261,352),440);
+            passTexture = Content.Load<Texture2D>("passPuzzle");
 
             bgm = Content.Load<SoundEffect>("BGM");
             instance = bgm.CreateInstance();
@@ -1579,10 +1585,11 @@ namespace Project1
                 spotLightR6.Position = new Vector2(300, 30);
                 pos.X = 400;
             }
-            if (personHit3 == true)
+            if (personHit3 == true && isClear == false)
             {
-               
+                mCurrentScreen = Screenstate.PassPuzz;
             }
+
             bool hit = Enemy.isHit;
             if (hit == true)
             {
@@ -1799,7 +1806,6 @@ namespace Project1
                     personHit3 = false;
                     puzzle2 = "Check";
                 }
-                old_ks = ks;
             }
             enemy.Update(pos);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -3650,12 +3656,47 @@ namespace Project1
         }
         void UpdatePassPuzz()
         {
-            Mouse.GetState(Window);
-           if (passNum == 1)
+            KeyboardState ks = Keyboard.GetState();
+            if (ks.IsKeyUp(Keys.Q)&& old_ks.IsKeyDown(Keys.Q))
             {
-
+                passNum1++;
+                if (passNum1>6)
+                {
+                    passNum1 = 1;
+                }
+            }
+            if (ks.IsKeyUp(Keys.W) && old_ks.IsKeyDown(Keys.W))
+            {
+                passNum2++;
+                if (passNum2 > 6)
+                {
+                    passNum2 = 1;
+                }
+            }
+            if (ks.IsKeyUp(Keys.E) && old_ks.IsKeyDown(Keys.E))
+            {
+                passNum3++;
+                if (passNum3 > 6)
+                {
+                    passNum3 = 1;
+                }
+            }
+            if (ks.IsKeyUp(Keys.R) && old_ks.IsKeyDown(Keys.R))
+            {
+                passNum4++;
+                if (passNum4 > 6)
+                {
+                    passNum4 = 1;
+                }
+            }
+            if(passNum1 == 4 && passNum2 == 3 && passNum3 == 2 && passNum4 == 1)
+            {
+                mCurrentScreen = Screenstate.Room5;
+                isClear = true;
+                pos = new Vector2(201, 253);
             }
 
+            old_ks = ks;
         }
 
         void DrawRoom1()
@@ -4116,7 +4157,26 @@ namespace Project1
         }
         void DrawPassPuzz()
         {
-           
+            _spriteBatch.Draw(passTexture, new Vector2(30, 64), new Rectangle(80 * passNum1, 0, 80, 288), Color.White);
+            if (passNum1 == 6)
+            {
+                _spriteBatch.Draw(passTexture, new Vector2(30, 64), new Rectangle(0 * passNum1, 0, 80, 288), Color.White);
+            }
+            _spriteBatch.Draw(passTexture, new Vector2(143, 64), new Rectangle(80 * passNum2, 0, 80, 288), Color.White);
+            if (passNum2 == 6)
+            {
+                _spriteBatch.Draw(passTexture, new Vector2 (143, 64), new Rectangle(0 * passNum2, 0, 80, 288), Color.White);
+            }
+            _spriteBatch.Draw(passTexture, new Vector2(256, 64), new Rectangle(80 * passNum3, 0, 80, 288), Color.White);
+            if (passNum3 == 6)
+            {
+                _spriteBatch.Draw(passTexture, new Vector2(256, 64), new Rectangle(0 * passNum3, 0, 80, 288), Color.White);
+            }
+            _spriteBatch.Draw(passTexture, new Vector2(369, 64), new Rectangle(80 * passNum4, 0, 80, 288), Color.White);
+            if (passNum4 == 6)
+            {
+                _spriteBatch.Draw(passTexture, new Vector2(369, 64), new Rectangle(0 * passNum4, 0, 80, 288), Color.White);
+            }
         }
 
         void UpdateMenuFrame(float elapsed)
