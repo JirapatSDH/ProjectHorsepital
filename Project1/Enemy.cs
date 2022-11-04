@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using SharpDX.Direct3D9;
 using Penumbra;
 using Light = Penumbra.Light;
+using System.Diagnostics;
 
 namespace Project1
 {
@@ -23,6 +24,7 @@ namespace Project1
         int eneframe;
         Vector2 playPos;
         float enerotate = 0f;
+        public static bool isHit = false;
 
         bool right;
         float distance;
@@ -33,7 +35,7 @@ namespace Project1
             eneTexture = neweneTexture;
             enePos = newenePos;
             distance = newdistance;
-
+            enePos.Y -= 110;
             oldDistance = distance;
         }
         float playerDistance;
@@ -41,7 +43,7 @@ namespace Project1
         {
             playPos = newpos;
             enePos += velocity;
-            eneOrigin = new Vector2(eneTexture.Width / 2, eneTexture.Height / 2);
+            eneOrigin = Vector2.Zero;
             if (distance <= 0)
             {
                 right = true;
@@ -54,8 +56,8 @@ namespace Project1
             }
 
             if (right) distance += 1; else distance -= 1;
-            playerDistance = playPos.X - enePos.X - 500;
-            if(playerDistance >= -20 && playerDistance <= 20)
+            playerDistance = playPos.X - enePos.X;
+            if (playerDistance >= -20 && playerDistance <= 20)
             {
                 if (playerDistance < -1)
                     velocity.X = -1f;
@@ -63,6 +65,16 @@ namespace Project1
                     velocity.X = 1f;
                 else if (playerDistance == 0)
                     velocity.X = 0f;
+            }
+            Rectangle personRectangle = new Rectangle((int)playPos.X, (int)playPos.Y, 50, 120);
+            Rectangle enemyRectangle = new Rectangle((int)enePos.X, (int)enePos.Y, 60, 100);
+            if (personRectangle.Intersects(enemyRectangle) == true)
+            {
+                isHit = true;
+            }
+            else if (personRectangle.Intersects(enemyRectangle) == false)
+            {
+                isHit = false;
             }
         }
 

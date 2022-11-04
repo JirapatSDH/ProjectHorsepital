@@ -41,6 +41,8 @@ namespace Project1
             LRoom6,
             LRoom7,
             LRoom8,
+            PipePuzz,
+            PassPuzz,
             endcutscene,
             over
         }
@@ -194,9 +196,22 @@ namespace Project1
         SoundEffectInstance d_instance;
         AudioListener d_listener;
         AudioEmitter d_emitter;
+        /// -----------------------------------------------------------------------------<PuzlePipe>
+        Texture2D playingPieces;
+        Pipeboard pipeboard;
+        int playerScore = 0;
 
-        //--------------------------------------------------------------------------Set Light---------------------------------------------
-        Light light2 = new Spotlight
+        Vector2 gameBoardDisplayOrigin = new Vector2(270, 89);
+        bool isClear = false;
+
+        Rectangle EmptyPiece = new Rectangle(1, 247, 40, 40);
+        const float MinTimeSinceLastInput = 0.25f;
+        float timeSinceLastInput = 0.0f;
+
+        int passNum = 1;
+    /// -----------------------------------------------------------------------------<PuzzlePipe>
+    //--------------------------------------------------------------------------Set Light---------------------------------------------
+    Light light2 = new Spotlight
         {
             Color = Color.White,
             Scale = new Vector2(0f),
@@ -291,6 +306,7 @@ namespace Project1
         int eframepersec;
         float etimeperframe;
         float etotalelapsed;
+
         public Light eLight { get; } = new PointLight
         {
             Color = new Color(255, 0, 0),
@@ -314,6 +330,7 @@ namespace Project1
 
             dylight = new PenumbraComponent(this);
             //add Light
+            pipeboard = new Pipeboard();
 
             dylight.Lights.Add(light);
             dylight.Lights.Add(light2);
@@ -398,7 +415,8 @@ namespace Project1
             end_cut = Content.Load<Texture2D>("endcutscene");
             overMenu = Content.Load<Texture2D>("Gameover_bg");
             overGlitch = Content.Load<Texture2D>("Game over_glitch");
-            enemy = new Enemy(Content.Load<Texture2D>("Ghost_walk"), new Vector2(1471,352),440);
+            playingPieces = Content.Load<Texture2D>("0669_02_03");
+            enemy = new Enemy(Content.Load<Texture2D>("Ghost_walk"), new Vector2(1261,352),440);
 
             bgm = Content.Load<SoundEffect>("BGM");
             instance = bgm.CreateInstance();
@@ -604,6 +622,18 @@ namespace Project1
                         dylight.AmbientColor = new Color(new Vector3(0.7f));
                         break;
                     }
+                    case Screenstate.PipePuzz:
+                    {
+                        timeSinceLastInput += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                        UpdatePipePuzz();
+                        break;
+                    }
+                    case Screenstate.PassPuzz:
+                    {
+                        UpdatePassPuzz();
+                        break;
+                    }
+
             }
             if (hBarRec.Width <= 0)
             {
@@ -718,6 +748,16 @@ namespace Project1
                 case Screenstate.over:
                     {
                         DrawOver();
+                        break;
+                    }
+                case Screenstate.PipePuzz:
+                    {
+                        DrawPipePuzz();
+                        break;
+                    }
+                case Screenstate.PassPuzz:
+                    {
+                        DrawPassPuzz();
                         break;
                     }
             }
@@ -1582,8 +1622,16 @@ namespace Project1
                 spotLightR6.Position = new Vector2(300, 30);
                 pos.X = 400;
             }
+            if (personHit3 == true)
+            {
+               
+            }
+            bool hit = Enemy.isHit;
+            if (hit == true)
+            {
+                hBarRec.Width -= 5;
+            }
 
-            
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             KeyboardState old_ks = Keyboard.GetState();
@@ -1794,7 +1842,6 @@ namespace Project1
                     personHit3 = false;
                     puzzle2 = "Check";
                 }
-
                 old_ks = ks;
             }
             enemy.Update(pos);
@@ -1979,6 +2026,10 @@ namespace Project1
                 dylight.Lights.Add(spotLightR2_3);
                 dylight.Lights.Add(spotLightR2_4);
                 pos.X = 200;
+            }
+            if (personHit2 == true)
+            {
+                mCurrentScreen = Screenstate.PipePuzz;
             }
 
             ProcessInput();
@@ -3621,6 +3672,31 @@ namespace Project1
             textPos = pos + new Vector2(5, 95);
             light2.Position = uiPos - camPos + new Vector2(65, -370);
         }
+        void UpdatePipePuzz()
+        {
+            if (timeSinceLastInput >= MinTimeSinceLastInput)
+            {
+                HandleMouseInput(Mouse.GetState(Window));
+            }
+            pipeboard.ResetWater();
+
+            for (int y = 0; y < Pipeboard.GameBoardHeight; y++)
+            {
+                CheckScoringChain(pipeboard.GetWaterChain(y));
+            }
+
+            pipeboard.GenerateNewPieces(true);
+
+        }
+        void UpdatePassPuzz()
+        {
+            Mouse.GetState(Window);
+           if (passNum == 1)
+            {
+
+            }
+
+        }
 
         void DrawRoom1()
         {
@@ -3837,7 +3913,7 @@ namespace Project1
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(ballTexture, ballPos7_2, new Rectangle(0, 24, 0, 0), (Color.White));
-            _spriteBatch.Draw(ballTexture, puzzlePos1, new Rectangle(0, 0, 24, 24), (Color.White));
+            _spriteBatch.Draw(ballTexture, puzzlePos1, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom7_2, (ballPos7_2 - new Vector2(0, 80)), (Color.White));
             _spriteBatch.DrawString(deBugFont, puzzle1, (puzzlePos1 - new Vector2(20, 50)), (Color.White));
         }
@@ -4067,6 +4143,27 @@ namespace Project1
             spotLightR2_4.Position = (new Vector2(163, 30) - camPos) * scroll_factor;
         }
 
+        void DrawPipePuzz()
+        {
+                for (int x = 0; x < Pipeboard.GameBoardWidth; x++)
+                {
+                    for (int y = 0; y < Pipeboard.GameBoardHeight; y++)
+                    {
+                        int pixelX = (int)gameBoardDisplayOrigin.X +
+                        (x * PipePiece.PieceWidth);
+                        int pixelY = (int)gameBoardDisplayOrigin.Y +
+                        (y * PipePiece.PieceHeight);
+
+                        _spriteBatch.Draw(playingPieces, new Rectangle(pixelX, pixelY, PipePiece.PieceWidth, PipePiece.PieceHeight), EmptyPiece, Color.White);
+                        _spriteBatch.Draw(playingPieces, new Rectangle(pixelX, pixelY, PipePiece.PieceWidth, PipePiece.PieceHeight), pipeboard.GetSourceRect(x, y), Color.Red);
+                    }
+                }
+        }
+        void DrawPassPuzz()
+        {
+           
+        }
+
         void UpdateMenuFrame(float elapsed)
         {
             bgtotalelapsed += elapsed;
@@ -4138,6 +4235,50 @@ namespace Project1
             while (timer1.Enabled)
             {
                 Application.DoEvents();
+            }
+        }
+        private int DetermineScore(int SquareCount)
+        {
+            return (int)((Math.Pow((SquareCount / 5), 2) + SquareCount) * 10);
+        }
+        private void CheckScoringChain(List<Vector2> WaterChain)
+        {
+            if (WaterChain.Count > 0)
+            {
+                Vector2 LastPipe = WaterChain[WaterChain.Count - 1];
+
+                if (LastPipe.X == Pipeboard.GameBoardWidth - 1)
+                {
+                    if (pipeboard.HasConnector(
+                        (int)LastPipe.X, (int)LastPipe.Y, "Right"))
+                    {
+                        playerScore += DetermineScore(WaterChain.Count);
+                        mCurrentScreen = Screenstate.LRoom7;
+                        foreach (Vector2 ScoringSquare in WaterChain)
+                        {
+                            pipeboard.SetSquare((int)ScoringSquare.X,
+                            (int)ScoringSquare.Y, "Empty");
+                        }
+                    }
+                }
+            }
+        }
+        private void HandleMouseInput(MouseState mouseState)
+        {
+            int x = ((mouseState.X - (int)gameBoardDisplayOrigin.X) / PipePiece.PieceWidth);
+            int y = ((mouseState.Y - (int)gameBoardDisplayOrigin.Y) / PipePiece.PieceHeight);
+            if ((x >= 0) && (x < Pipeboard.GameBoardWidth) && (y >= 0) & (y < Pipeboard.GameBoardHeight))
+            {
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    pipeboard.RotatePiece(x, y, false);
+                    timeSinceLastInput = 0.0f;
+                }
+                if (mouseState.RightButton == ButtonState.Pressed)
+                {
+                    pipeboard.RotatePiece(x, y, true);
+                    timeSinceLastInput = 0.0f;
+                }
             }
         }
     }
