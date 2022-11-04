@@ -204,6 +204,7 @@ namespace Project1
 
         Vector2 gameBoardDisplayOrigin = new Vector2(270, 89);
         bool isClear = false;
+        bool inRoom6 = false;
 
         Rectangle EmptyPiece = new Rectangle(1, 247, 40, 40);
         const float MinTimeSinceLastInput = 0.25f;
@@ -1816,17 +1817,8 @@ namespace Project1
                 Rectangle ballRectangle = new Rectangle((int)ballPos5_4.X, (int)ballPos5_4.Y, 24, 24);
                 Rectangle ball2Rectangle = new Rectangle((int)ballPos5_6.X, (int)ballPos5_6.Y, 24, 24);
                 Rectangle puzzleRectangle = new Rectangle((int)puzzlePos2.X, (int)puzzlePos2.Y, 24, 24);
-                Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
-                Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, 100, 100);
+                Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 0, 0);
 
-                if (personRectangle.Intersects(trapRectangle) == true)
-                {
-                    sBarRec.Width -= 3;
-                }
-                else if (personRectangle.Intersects(trapRectangle) == false)
-                {
-
-                }
                 if (personRectangle.Intersects(enemyRectangle) == true)
                 {
                     hBarRec.Width -= 5;
@@ -1906,6 +1898,11 @@ namespace Project1
                 pos.X = 1170;
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
+            }
+            if(personHit2 == true)
+            {
+                mCurrentScreen = Screenstate.PipePuzz;
+                inRoom6 = true;
             }
 
             ProcessInput();
@@ -3945,7 +3942,7 @@ namespace Project1
                 _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             }
             
-            _spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
+            _spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 0, 0), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom5_4, (ballPos5_4 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_6, (ballPos5_6 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, puzzle2, (puzzlePos2 - new Vector2(0, 50) - camPos) * scroll_factor, (Color.White));
@@ -4366,7 +4363,16 @@ namespace Project1
                         (int)LastPipe.X, (int)LastPipe.Y, "Right"))
                     {
                         playerScore += DetermineScore(WaterChain.Count);
-                        mCurrentScreen = Screenstate.LRoom7;
+                        if (inRoom6 == true)
+                        {
+                            mCurrentScreen = Screenstate.LRoom6;
+                        }
+                        else
+                        {
+                            mCurrentScreen = Screenstate.Room7;
+                            pos.X = 350;
+                            Debug.Write("Active");
+                        }
                         foreach (Vector2 ScoringSquare in WaterChain)
                         {
                             pipeboard.SetSquare((int)ScoringSquare.X,
