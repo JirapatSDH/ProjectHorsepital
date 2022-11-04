@@ -148,6 +148,7 @@ namespace Project1
         private string puzzle1;
         private string puzzle3;
         private string puzzle2;
+        private string tu1;
         private string locker2_1;
         private string locker2_2;
         private string locker3;
@@ -219,8 +220,21 @@ namespace Project1
         const float MinTimeSinceLastInput = 0.25f;
         float timeSinceLastInput = 0.0f;
 
-        int passNum = 1;
-    /// -----------------------------------------------------------------------------<PuzzlePipe>
+        int passNum1 = 2;
+        int passNum2 = 4;
+        int passNum3 = 3;
+        int passNum4 = 2;
+        KeyboardState old_ks;
+        Texture2D passTexture;
+        Texture2D passBackground;
+        /// -----------------------------------------------------------------------------<PuzzlePipe>
+        /// -------------------------------------------------------------------Item----------------------------
+        Texture2D tutorial;
+        Texture2D sPill;
+        Texture2D hPill;
+        Texture2D paperTu;
+        Vector2 paperPos;
+        public bool isRead;
     //--------------------------------------------------------------------------Set Light---------------------------------------------
     Light light2 = new Spotlight
         {
@@ -375,6 +389,7 @@ namespace Project1
             puzzle1 = "";
             puzzle2 = "";
             puzzle3 = "";
+            tu1 = "";
             locker2_1 = "";
             locker2_2 = "";
             locker3 = "";
@@ -432,6 +447,12 @@ namespace Project1
             overGlitch = Content.Load<Texture2D>("Game over_glitch");
             playingPieces = Content.Load<Texture2D>("0669_02_03");
             enemy = new Enemy(Content.Load<Texture2D>("Ghost_walk"), new Vector2(1261,352),440);
+            passTexture = Content.Load<Texture2D>("passPuzzle");
+            passBackground = Content.Load<Texture2D>("passPuzzle-BackGround");
+            sPill = Content.Load<Texture2D>("stamina_pill");
+            hPill = Content.Load<Texture2D>("sanity_pill");
+            tutorial = Content.Load<Texture2D>("Pong_thai");
+            paperTu = Content.Load<Texture2D>("Paper");
             isHide = false;
 
             bgm = Content.Load<SoundEffect>("BGM");
@@ -512,6 +533,7 @@ namespace Project1
             uiPos5 = new Vector2(0, 0);
             ePos = new Vector2(1850, 170);
             trapPos = new Vector2(900, 340);
+            paperPos = new Vector2(200, 320);
 
             fLine.X = pos.X + rad;
             bLine.X = pos.X - rad;
@@ -788,10 +810,10 @@ namespace Project1
 
         void UpdateRoom1()
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
+            /*if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
             {
                 mCurrentScreen = Screenstate.Title;
-            }
+            }*/
             if (personHit2 == true)
             {
                 mCurrentScreen = Screenstate.Room2;
@@ -801,6 +823,14 @@ namespace Project1
                 spotLightR2_4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 pos.X = 50;
             }
+            if (isRead == true)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
+                {
+                    isRead = false;
+                }
+            }
+            
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             KeyboardState old_ks = Keyboard.GetState();
@@ -915,6 +945,7 @@ namespace Project1
             }
             Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
             Rectangle ballRectangle = new Rectangle((int)ballPos.X, (int)ballPos.Y, 24, 24);
+            Rectangle paperRec = new Rectangle((int)paperPos.X, (int)paperPos.Y, 53, 41);
             if (personRectangle.Intersects(ballRectangle) == true)
             {
 
@@ -932,6 +963,21 @@ namespace Project1
             {
                 personHit2 = false;
                 toRoom_2 = "";
+            }
+            if (personRectangle.Intersects(paperRec) == true)
+            {
+                tu1 = "F to Read";
+                {
+                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    {
+                        isRead = true;
+                    }
+                }
+            }
+            else if (personRectangle.Intersects(paperRec) == false)
+            {
+                isRead = false;
+                tu1 = "";
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -1745,6 +1791,7 @@ namespace Project1
                 spotLightR6.Position = new Vector2(300, 30);
                 pos.X = 400;
             }
+            if (personHit3 == true && isClear == false)
 
             if(personHit3 == true)
             {
@@ -1753,6 +1800,9 @@ namespace Project1
 
             if (personHit4 == true)
             {
+                mCurrentScreen = Screenstate.PassPuzz;
+            }
+
                 isHide = true;
 
                 if (Keyboard.GetState().IsKeyUp(Keys.F))
@@ -2006,7 +2056,6 @@ namespace Project1
                     personHit3 = false;
                     puzzle2 = "Check";
                 }
-                old_ks = ks;
             }
             enemy.Update(pos);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -3997,17 +4046,59 @@ namespace Project1
         }
         void UpdatePassPuzz()
         {
-            Mouse.GetState(Window);
-           if (passNum == 1)
+            ///-------------------------------------------------------------------- passWord is 5432--------------------------------------------------
+            KeyboardState ks = Keyboard.GetState();
+            if (ks.IsKeyUp(Keys.Q)&& old_ks.IsKeyDown(Keys.Q))
             {
-
+                passNum1++;
+                if (passNum1>6)
+                {
+                    passNum1 = 1;
+                }
+            }
+            if (ks.IsKeyUp(Keys.W) && old_ks.IsKeyDown(Keys.W))
+            {
+                passNum2++;
+                if (passNum2 > 6)
+                {
+                    passNum2 = 1;
+                }
+            }
+            if (ks.IsKeyUp(Keys.E) && old_ks.IsKeyDown(Keys.E))
+            {
+                passNum3++;
+                if (passNum3 > 6)
+                {
+                    passNum3 = 1;
+                }
+            }
+            if (ks.IsKeyUp(Keys.R) && old_ks.IsKeyDown(Keys.R))
+            {
+                passNum4++;
+                if (passNum4 > 6)
+                {
+                    passNum4 = 1;
+                }
+            }
+            if(passNum1 == 4 && passNum2 == 3 && passNum3 == 2 && passNum4 == 1)
+            {
+                mCurrentScreen = Screenstate.Room5;
+                isClear = true;
+                pos = new Vector2(201, 253);
             }
 
+            if (ks.IsKeyDown(Keys.Back))
+            {
+                mCurrentScreen = Screenstate.Room5;
+                pos = new Vector2(201, 253);
+            }
+            old_ks = ks;
         }
 
         void DrawRoom1()
         {
             _spriteBatch.Draw(room1, (bg2Pos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(paperTu, paperPos, new Rectangle(319, 264, 53, 41), (Color.White));
             if (speed.X <= 0)
             {
                 totalframe = 20;
@@ -4027,6 +4118,11 @@ namespace Project1
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(ballTexture, ballPos, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_2, (ballPos - new Vector2(0, 20)), (Color.White));
+            _spriteBatch.DrawString(deBugFont, tu1, (paperPos - new Vector2(0, 20)), (Color.White));
+            if (isRead == true)
+            {
+                _spriteBatch.Draw(tutorial, Vector2.Zero, (Color.White));
+            }
         }
         void DrawMenu()
         {
@@ -4495,7 +4591,27 @@ namespace Project1
         }
         void DrawPassPuzz()
         {
-           
+            _spriteBatch.Draw(passBackground,new Vector2(100,30),Color.White);
+            _spriteBatch.Draw(passTexture, new Vector2(130, 94), new Rectangle(80 * passNum1, 0, 80, 288), Color.White);
+            if (passNum1 == 6)
+            {
+                _spriteBatch.Draw(passTexture, new Vector2(130, 94), new Rectangle(0 * passNum1, 0, 80, 288), Color.White);
+            }
+            _spriteBatch.Draw(passTexture, new Vector2(243, 94), new Rectangle(80 * passNum2, 0, 80, 288), Color.White);
+            if (passNum2 == 6)
+            {
+                _spriteBatch.Draw(passTexture, new Vector2 (243, 94), new Rectangle(0 * passNum2, 0, 80, 288), Color.White);
+            }
+            _spriteBatch.Draw(passTexture, new Vector2(356, 94), new Rectangle(80 * passNum3, 0, 80, 288), Color.White);
+            if (passNum3 == 6)
+            {
+                _spriteBatch.Draw(passTexture, new Vector2(356, 94), new Rectangle(0 * passNum3, 0, 80, 288), Color.White);
+            }
+            _spriteBatch.Draw(passTexture, new Vector2(469, 94), new Rectangle(80 * passNum4, 0, 80, 288), Color.White);
+            if (passNum4 == 6)
+            {
+                _spriteBatch.Draw(passTexture, new Vector2(469, 94), new Rectangle(0 * passNum4, 0, 80, 288), Color.White);
+            }
         }
 
         void UpdateMenuFrame(float elapsed)
