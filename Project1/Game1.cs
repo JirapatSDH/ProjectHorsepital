@@ -16,6 +16,8 @@ using System.Diagnostics;
 using Application = System.Windows.Forms.Application;
 using SharpDX.XInput;
 using System.Threading;
+using SharpDX.Direct2D1;
+using SpriteBatch = Microsoft.Xna.Framework.Graphics.SpriteBatch;
 
 namespace Project1
 {
@@ -251,6 +253,8 @@ namespace Project1
         /// -----------------------------------------------------------------------------<Item>
         Texture2D sPill;
         Texture2D hPill;
+        Texture2D keyNormal;
+        Texture2D keyStory;
 
         public static string sanityText;
         public static string staminaText;
@@ -258,11 +262,16 @@ namespace Project1
         public static int sanity = 0;
         public static int stamina = 0;
 
+        bool cKey1 = false;
+        bool cKey2 = false;
+
         Vector2 sanityPos;
         Vector2 staminaPos;
         Vector2 gotItemPos = new Vector2(0, 0);
         Vector2 textsanityPos;
         Vector2 textstaminaPos;
+        Vector2 key1Pos;
+        Vector2 key2Pos;
         //--------------------------------------------------------------------------Set Light---------------------------------------------
         Light light2 = new Spotlight
         {
@@ -371,6 +380,8 @@ namespace Project1
         Vector2 eSpeed = new Vector2(1, 1);
         private string tu3;
         private bool isRead2;
+        private bool isSearch2 = false;
+        private bool isSearch3;
 
         public Game1()
         {
@@ -493,6 +504,8 @@ namespace Project1
             hPill = Content.Load<Texture2D>("sanity_pill");
             note1 = Content.Load<Texture2D>("Diagnosis_paper");
             note2 = Content.Load<Texture2D>("NotePaperIsus");
+            keyNormal = Content.Load<Texture2D>("Key_normal");
+            keyStory = Content.Load<Texture2D>("Key_story");
 
             bgm = Content.Load<SoundEffect>("BGM");
             instance = bgm.CreateInstance();
@@ -576,6 +589,8 @@ namespace Project1
             capetPos = new Vector2(470, 200);
             staminaPos = new Vector2(250, 400);
             sanityPos = new Vector2(280, 400);
+            key2Pos = sanityPos + new Vector2(0, 40);
+            key1Pos = staminaPos + new Vector2(0, 40);
 
             fLine.X = pos.X + rad;
             bLine.X = pos.X - rad;
@@ -1212,6 +1227,7 @@ namespace Project1
                 spotLightR2_2.Position = Vector2.Zero;
                 spotLightR2_3.Position = Vector2.Zero;
                 spotLightR2_4.Position = Vector2.Zero;
+                capetPos = new Vector2(470, 200);
                 pos.X = 580;
             }
 
@@ -1224,10 +1240,11 @@ namespace Project1
                 dylight.Lights.Remove(spotLightR2_4);
                 dylight.Lights.Add(spotLightR3);
                 spotLightR3.Position = new Vector2(480, 30);
+                capetPos = new Vector2(512, 200);
                 pos.X = 200;
             }
 
-            if (personHit3 == true)
+            if (personHit3 == true && isPipe1Clear == true)
             {
                 mCurrentScreen = Screenstate.Room4;
                 dylight.Lights.Remove(spotLightR2_1);
@@ -1236,10 +1253,11 @@ namespace Project1
                 dylight.Lights.Remove(spotLightR2_4);
                 dylight.Lights.Add(spotLightR4);
                 spotLightR4.Position = new Vector2(360, 30);
+                capetPos = new Vector2(318, 190);
                 pos.X = 500;
             }
 
-            if (personHit4 == true)
+            if (personHit4 == true && cKey1 == true)
             {
                 mCurrentScreen = Screenstate.Room7;
                 dylight.Lights.Remove(spotLightR2_1);
@@ -1281,7 +1299,8 @@ namespace Project1
                     isRead = false;
                 }
             }
-
+            sanityText = sanity.ToString();
+            staminaText = stamina.ToString();
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             {
@@ -1565,12 +1584,17 @@ namespace Project1
                 }
                 if (personRectangle.Intersects(ball2_4Rectangle) == true)
                 {
-                    toRoom_4 = "F To Enter";
-                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Tnteract object
+                    toRoom_4 = "Lock";
+                    if (isPipe1Clear == true)
                     {
-                        //toRoom_4 = "Enter room ?";
-                        personHit3 = true;
-                        d_instance.Play();
+                        toRoom_4 = "F To Enter";
+                        if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Tnteract object
+                        {
+                            //toRoom_4 = "Enter room ?";
+                            personHit3 = true;
+                            d_instance.Play();
+                            
+                        }
                     }
                 }
                 else if (personRectangle.Intersects(ball2_4Rectangle) == false)
@@ -1580,13 +1604,18 @@ namespace Project1
                 }
                 if (personRectangle.Intersects(ball2_7Rectangle) == true)
                 {
-                    toRoom_7 = "F To Enter";
-                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Tnteract object
+                    toRoom_7 = "Lock";
+                    if (cKey1 == true )
                     {
-                        //toRoom_7 = "Enter room ?";
-                        personHit4 = true;
-                        d_instance.Play();
+                        toRoom_7 = "F to Enter";
+                        if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Tnteract object
+                            {
+                                 //toRoom_7 = "Enter room ?";
+                                 personHit4 = true;
+                                 d_instance.Play();
+                            }
                     }
+                    
                 }
                 else if (personRectangle.Intersects(ball2_7Rectangle) == false)
                 {
@@ -1632,7 +1661,6 @@ namespace Project1
         }
         void UpdateRoom3()
         {
-
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.Room2;
@@ -1652,7 +1680,8 @@ namespace Project1
                     isHide = false;
                 }
             }
-
+            sanityText = sanity.ToString();
+            staminaText = stamina.ToString();
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             
@@ -1790,6 +1819,7 @@ namespace Project1
             Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
             Rectangle ballRectangle = new Rectangle((int)ballPos3_2.X, (int)ballPos3_2.Y, 24, 24);
             Rectangle LockerRec3 = new Rectangle((int)ballLockerR3.X, (int)ballLockerR3.Y, 24, 24);
+            Rectangle capetRec = new Rectangle((int)capetPos.X, (int)capetPos.Y, 53, 41);
             if (personRectangle.Intersects(ballRectangle) == true)
             {
                 backRoom3_2 = "F To Enter";
@@ -1822,7 +1852,34 @@ namespace Project1
                  personHit2 = false;
                  locker3 = "";
             }
+            if (personRectangle.Intersects(capetRec) == true)
+            {
+                capetText = "F To Search";
+                {
+                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    {
+                        
+                        if (isSearch2 == false)
+                        {
+                            gotItemText = "Got SanityPill & GeneratorKey";
+                            AddSanityPill();
+                            cKey1 = true;
+                            isSearch2 = true;
+                        }
+                        else if (isSearch2 == true)
+                        {
+                            capetText = "Already Search";
+                        }
+                    }
+                }
+            }
+            else if (personRectangle.Intersects(capetRec) == false)
+            {
+                capetText = "";
+                gotItemText = "";
+            }
             old_ks = ks;
+            gotItemPos = pos + new Vector2(5, -45);
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(100, 40);
@@ -1830,6 +1887,7 @@ namespace Project1
         }
         void UpdateRoom4()
         {
+            Debug.Write(pos);
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.Room2;
@@ -1863,7 +1921,8 @@ namespace Project1
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
-
+            sanityText = sanity.ToString();
+            staminaText = stamina.ToString();
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             
@@ -1992,6 +2051,7 @@ namespace Project1
             Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
             Rectangle ballRectangle = new Rectangle((int)ballPos4_2.X, (int)ballPos4_2.Y, 24, 24);
             Rectangle ball2Rectangle = new Rectangle((int)ballPos4_5.X, (int)ballPos4_5.Y, 24, 24);
+            Rectangle capetRec = new Rectangle((int)capetPos.X, (int)capetPos.Y, 53, 41);
             if (personRectangle.Intersects(ballRectangle) == true)
             {
                 backRoom4_2 = "F To Enter";
@@ -2026,7 +2086,35 @@ namespace Project1
                 personHit2 = false;
                 toRoom_5 = "";
             }
+            if (personRectangle.Intersects(capetRec) == true)
+            {
+                capetText = "F To Search";
+                {
+                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    {
+
+                        if (isSearch3 == false)
+                        {
+                            gotItemText = "Got StaminaPill x2 ";
+                            AddStanimaPill();
+                            AddStanimaPill();
+                            cKey1 = true;
+                            isSearch3 = true;
+                        }
+                        else if (isSearch3 == true)
+                        {
+                            capetText = "Already Search";
+                        }
+                    }
+                }
+            }
+            else if (personRectangle.Intersects(capetRec) == false)
+            {
+                capetText = "";
+                gotItemText = "";
+            }
             old_ks = ks;
+            gotItemPos = pos + new Vector2(5, -45);
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(60, 40);
@@ -2042,6 +2130,7 @@ namespace Project1
                 dylight.Lights.Remove(spotLightR2_2);
                 dylight.Lights.Remove(spotLightR2_3);
                 dylight.Lights.Remove(spotLightR2_4);
+                capetPos = new Vector2(318, 190);
                 pos.X = 240;
             }
 
@@ -2079,6 +2168,8 @@ namespace Project1
                     isRead = false;
                 }
             }
+            sanityText = sanity.ToString();
+            staminaText = stamina.ToString();
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
@@ -2316,14 +2407,21 @@ namespace Project1
                 }
                 if (personRectangle.Intersects(puzzleRectangle) == true)
                 {
-
-                    puzzle2 = "F To Solve";
+                    if (isClear == true)
+                    {
+                        puzzle2 = "Got MainGate Key";
+                    }
+                    if (isClear == false)
+                    {
+                        puzzle2 = "F To Solve";
                     {
                         if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                         {
                             personHit3 = true;
                         }
                     }
+                    }
+                    
                 }
                 else if (personRectangle.Intersects(puzzleRectangle) == false)
                 {
@@ -2372,7 +2470,8 @@ namespace Project1
                 mCurrentScreen = Screenstate.PipePuzz;
                 inRoom6 = true;
             }
-
+            sanityText = sanity.ToString();
+            staminaText = stamina.ToString();
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             
@@ -2573,7 +2672,8 @@ namespace Project1
                     isRead = false;
                 }
             }
-
+            sanityText = sanity.ToString();
+            staminaText = stamina.ToString();
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             
@@ -2790,6 +2890,8 @@ namespace Project1
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
+            sanityText = sanity.ToString();
+            staminaText = stamina.ToString();
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             
@@ -3013,7 +3115,8 @@ namespace Project1
                     isHide = false;
                 }
             }
-
+            sanityText = sanity.ToString();
+            staminaText = stamina.ToString();
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             
@@ -3315,7 +3418,8 @@ namespace Project1
                     isHide = false;
                 }
             }
-
+            sanityText = sanity.ToString();
+            staminaText = stamina.ToString();
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             
@@ -3518,7 +3622,8 @@ namespace Project1
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
-
+            sanityText = sanity.ToString();
+            staminaText = stamina.ToString();
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             
@@ -3707,7 +3812,8 @@ namespace Project1
                     isHide = false;
                 }
             }
-
+            sanityText = sanity.ToString();
+            staminaText = stamina.ToString();
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             
@@ -3962,7 +4068,8 @@ namespace Project1
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
-
+            sanityText = sanity.ToString();
+            staminaText = stamina.ToString();
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             
@@ -4118,7 +4225,8 @@ namespace Project1
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
-
+            sanityText = sanity.ToString();
+            staminaText = stamina.ToString();
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             
@@ -4257,7 +4365,8 @@ namespace Project1
             {
                 mCurrentScreen = Screenstate.endcutscene;
             }
-
+            sanityText = sanity.ToString();
+            staminaText = stamina.ToString();
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             
@@ -4563,6 +4672,14 @@ namespace Project1
                 _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
                 _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
                 _spriteBatch.Draw(hPill, (sanityPos - camPos) * scroll_factor, Color.White);
+                if (cKey1 == true)
+                {
+                    _spriteBatch.Draw(keyNormal, key1Pos, Color.White);
+                }
+                if (isClear == true)
+                {
+                    _spriteBatch.Draw(keyStory, key2Pos, Color.White);
+                }
                 _spriteBatch.DrawString(deBugFont, staminaText, (textstaminaPos + new Vector2(10,45)), (Color.White));
                 _spriteBatch.DrawString(deBugFont, sanityText, (textsanityPos + new Vector2(10, 45)), (Color.White));
             }
@@ -4644,6 +4761,14 @@ namespace Project1
             {
                 _spriteBatch.Draw(note2, Vector2.Zero, (Color.White));
             }
+            if (cKey1 == true)
+            {
+                _spriteBatch.Draw(keyNormal, key1Pos, Color.White);
+            }
+            if (isClear == true)
+            {
+                _spriteBatch.Draw(keyStory, key2Pos, Color.White);
+            }
             //SpotLight
             spotLightR2_1.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
             spotLightR2_2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
@@ -4653,7 +4778,8 @@ namespace Project1
         void DrawRoom3()
         {
             _spriteBatch.Draw(room3, Vector2.Zero, Color.White);
-            if(isHide == false)
+            _spriteBatch.Draw(ballTexture, capetPos, new Rectangle(0, 24, 0, 0), (Color.White));
+            if (isHide == false)
             {
                 if (speed.X <= 0)
                 {
@@ -4670,17 +4796,33 @@ namespace Project1
                     _spriteBatch.Draw(farmer, pos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
                 }
             }
+            _spriteBatch.DrawString(deBugFont, capetText, (capetPos - new Vector2(0, 20)), (Color.White));
+            _spriteBatch.DrawString(deBugFont, gotItemText, (gotItemPos - new Vector2(40, 20)), (Color.Red));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
+            _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(hPill, (sanityPos - camPos) * scroll_factor, Color.White);
+            if (cKey1 == true)
+            {
+                _spriteBatch.Draw(keyNormal, key1Pos, Color.White);
+            }
+            if (isClear == true)
+            {
+                _spriteBatch.Draw(keyStory, key2Pos, Color.White);
+            }
+            _spriteBatch.DrawString(deBugFont, staminaText, ((textstaminaPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            _spriteBatch.DrawString(deBugFont, sanityText, ((textsanityPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
             _spriteBatch.Draw(ballTexture, ballPos3_2, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.Draw(ballTexture, ballLockerR3, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.DrawString(deBugFont,locker3, (ballLockerR3 - new Vector2(0, 80)), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom3_2, (ballPos3_2 - new Vector2(0, 80)), (Color.White));
+            
         }
         void DrawRoom4()
         {
             _spriteBatch.Draw(room4, Vector2.Zero, Color.White);
+            _spriteBatch.Draw(ballTexture, capetPos, new Rectangle(0, 24, 0, 0), (Color.White));
             if (speed.X <= 0)
             {
                 totalframe = 20;
@@ -4695,6 +4837,8 @@ namespace Project1
                 totalframe = 4;
                 _spriteBatch.Draw(farmer, pos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             }
+            _spriteBatch.DrawString(deBugFont, capetText, (capetPos - new Vector2(0, 20)), (Color.White));
+            _spriteBatch.DrawString(deBugFont, gotItemText, (gotItemPos - new Vector2(40, 20)), (Color.Red));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
@@ -4702,6 +4846,18 @@ namespace Project1
             _spriteBatch.Draw(ball2Texture, ballPos4_5, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom4_2, (ballPos4_2 - new Vector2(0, 80)), (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_5, (ballPos4_5 - new Vector2(0, 80)), (Color.White));
+            _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(hPill, (sanityPos - camPos) * scroll_factor, Color.White);
+            if (cKey1 == true)
+            {
+                _spriteBatch.Draw(keyNormal, key1Pos, Color.White);
+            }
+            if (isClear == true)
+            {
+                _spriteBatch.Draw(keyStory, key2Pos, Color.White);
+            }
+            _spriteBatch.DrawString(deBugFont, staminaText, ((textstaminaPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            _spriteBatch.DrawString(deBugFont, sanityText, ((textsanityPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
         }
         void DrawRoom5()
         {
@@ -4741,6 +4897,18 @@ namespace Project1
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
+            _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(hPill, (sanityPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.DrawString(deBugFont, staminaText, ((textstaminaPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            _spriteBatch.DrawString(deBugFont, sanityText, ((textsanityPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            if (cKey1 == true)
+            {
+                _spriteBatch.Draw(keyNormal, key1Pos, Color.White);
+            }
+            if (isClear == true)
+            {
+                _spriteBatch.Draw(keyStory, key2Pos, Color.White);
+            }
             enemy.Draw(_spriteBatch,camPos,scroll_factor,eframe);
             if (isRead == true)
             {
@@ -4778,6 +4946,18 @@ namespace Project1
             _spriteBatch.Draw(ballTexture, puzzlePos3, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom6_5, (ballPos6_5 - new Vector2(0, 80)), (Color.White));
             _spriteBatch.DrawString(deBugFont, puzzle3, (puzzlePos3 - new Vector2(20, 50)), (Color.White));
+            _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(hPill, (sanityPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.DrawString(deBugFont, staminaText, ((textstaminaPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            _spriteBatch.DrawString(deBugFont, sanityText, ((textsanityPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            if (cKey1 == true)
+            {
+                _spriteBatch.Draw(keyNormal, key1Pos, Color.White);
+            }
+            if (isClear == true)
+            {
+                _spriteBatch.Draw(keyStory, key2Pos, Color.White);
+            }
         }
         void DrawRoom7()
         {
@@ -4803,6 +4983,18 @@ namespace Project1
             _spriteBatch.DrawString(deBugFont, backRoom7_2, (ballPos7_2 - new Vector2(0, 80)), (Color.White));
             _spriteBatch.DrawString(deBugFont, puzzle1, (puzzlePos1 - new Vector2(20, 50)), (Color.White));
             _spriteBatch.DrawString(deBugFont, tu2, (paperPos - new Vector2(0, 20)), (Color.White));
+            _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(hPill, (sanityPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.DrawString(deBugFont, staminaText, ((textstaminaPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            _spriteBatch.DrawString(deBugFont, sanityText, ((textsanityPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            if (cKey1 == true)
+            {
+                _spriteBatch.Draw(keyNormal, key1Pos, Color.White);
+            }
+            if (isClear == true)
+            {
+                _spriteBatch.Draw(keyStory, key2Pos, Color.White);
+            }
             if (isRead == true)
             {
                 _spriteBatch.Draw(tutorial3, Vector2.Zero, (Color.White));
@@ -4840,6 +5032,18 @@ namespace Project1
             _spriteBatch.DrawString(deBugFont, toRoom_2, (ballPos - new Vector2(0, 20)), (Color.White));
             _spriteBatch.Draw(ball2Texture, ballPos8, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_8, (ballPos8 - new Vector2(0, 20)), (Color.White));
+            _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(hPill, (sanityPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.DrawString(deBugFont, staminaText, ((textstaminaPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            _spriteBatch.DrawString(deBugFont, sanityText, ((textsanityPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            if (cKey1 == true)
+            {
+                _spriteBatch.Draw(keyNormal, key1Pos, Color.White);
+            }
+            if (isClear == true)
+            {
+                _spriteBatch.Draw(keyStory, key2Pos, Color.White);
+            }
         }
         void DrawL_Room2()
         {
@@ -4881,6 +5085,18 @@ namespace Project1
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
+            _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(hPill, (sanityPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.DrawString(deBugFont, staminaText, ((textstaminaPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            _spriteBatch.DrawString(deBugFont, sanityText, ((textsanityPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            if (cKey1 == true)
+            {
+                _spriteBatch.Draw(keyNormal, key1Pos, Color.White);
+            }
+            if (isClear == true)
+            {
+                _spriteBatch.Draw(keyStory, key2Pos, Color.White);
+            }
             //SpotLight
             spotLightR2_1.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
             spotLightR2_2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
@@ -4914,6 +5130,18 @@ namespace Project1
             _spriteBatch.Draw(ballTexture, ballLockerR3, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.DrawString(deBugFont, locker3, (ballLockerR3 - new Vector2(0, 80)), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom3_2, (ballPos3_2 - new Vector2(0, 80)), (Color.White));
+            _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(hPill, (sanityPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.DrawString(deBugFont, staminaText, ((textstaminaPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            _spriteBatch.DrawString(deBugFont, sanityText, ((textsanityPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            if (cKey1 == true)
+            {
+                _spriteBatch.Draw(keyNormal, key1Pos, Color.White);
+            }
+            if (isClear == true)
+            {
+                _spriteBatch.Draw(keyStory, key2Pos, Color.White);
+            }
         }
         void DrawL_Room4()
         {
@@ -4939,6 +5167,18 @@ namespace Project1
             _spriteBatch.Draw(ball2Texture, ballPos4_5, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom4_2, (ballPos4_2 - new Vector2(0, 80)), (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_5, (ballPos4_5 - new Vector2(0, 80)), (Color.White));
+            _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(hPill, (sanityPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.DrawString(deBugFont, staminaText, ((textstaminaPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            _spriteBatch.DrawString(deBugFont, sanityText, ((textsanityPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            if (cKey1 == true)
+            {
+                _spriteBatch.Draw(keyNormal, key1Pos, Color.White);
+            }
+            if (isClear == true)
+            {
+                _spriteBatch.Draw(keyStory, key2Pos, Color.White);
+            }
         }
         void DrawL_Room5()
         {
@@ -4972,6 +5212,18 @@ namespace Project1
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
+            _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(hPill, (sanityPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.DrawString(deBugFont, staminaText, ((textstaminaPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            _spriteBatch.DrawString(deBugFont, sanityText, ((textsanityPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            if (cKey1 == true)
+            {
+                _spriteBatch.Draw(keyNormal, key1Pos, Color.White);
+            }
+            if (isClear == true)
+            {
+                _spriteBatch.Draw(keyStory, key2Pos, Color.White);
+            }
             //SpotLight
             spotLightR2_1.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
             spotLightR2_2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
@@ -5000,6 +5252,18 @@ namespace Project1
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(ballTexture, ballPos6_5, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom6_5, (ballPos6_5 - new Vector2(0, 80)), (Color.White));
+            _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(hPill, (sanityPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.DrawString(deBugFont, staminaText, ((textstaminaPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            _spriteBatch.DrawString(deBugFont, sanityText, ((textsanityPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            if (cKey1 == true)
+            {
+                _spriteBatch.Draw(keyNormal, key1Pos, Color.White);
+            }
+            if (isClear == true)
+            {
+                _spriteBatch.Draw(keyStory, key2Pos, Color.White);
+            }
         }
         void DrawL_Room7()
         {
@@ -5023,6 +5287,18 @@ namespace Project1
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(ballTexture, ballPos7_2, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom7_2, (ballPos7_2 - new Vector2(0, 80)), (Color.White));
+            _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(hPill, (sanityPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.DrawString(deBugFont, staminaText, ((textstaminaPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            _spriteBatch.DrawString(deBugFont, sanityText, ((textsanityPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            if (cKey1 == true)
+            {
+                _spriteBatch.Draw(keyNormal, key1Pos, Color.White);
+            }
+            if (isClear == true)
+            {
+                _spriteBatch.Draw(keyStory, key2Pos, Color.White);
+            }
         }
         void DrawL_Room8()
         {
@@ -5051,6 +5327,18 @@ namespace Project1
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
+            _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(hPill, (sanityPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.DrawString(deBugFont, staminaText, ((textstaminaPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            _spriteBatch.DrawString(deBugFont, sanityText, ((textsanityPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            if (cKey1 == true)
+            {
+                _spriteBatch.Draw(keyNormal, key1Pos, Color.White);
+            }
+            if (isClear == true)
+            {
+                _spriteBatch.Draw(keyStory, key2Pos, Color.White);
+            }
             //SpotLight
             spotLightR2_1.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
             spotLightR2_2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
