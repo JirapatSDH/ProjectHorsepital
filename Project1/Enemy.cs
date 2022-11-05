@@ -29,7 +29,6 @@ namespace Project1
         bool right;
         float distance;
         float oldDistance;
-
         public Enemy (Texture2D neweneTexture, Vector2 newenePos, float newdistance)
         {
             eneTexture = neweneTexture;
@@ -68,9 +67,10 @@ namespace Project1
             }
             Rectangle personRectangle = new Rectangle((int)playPos.X, (int)playPos.Y, 50, 120);
             Rectangle enemyRectangle = new Rectangle((int)enePos.X, (int)enePos.Y, 60, 100);
-            if (personRectangle.Intersects(enemyRectangle) == true )
+            if (personRectangle.Intersects(enemyRectangle) == true)
             {
                 isHit = true;
+                hBarRec.Width -= 5;
                 
             }
             else if (personRectangle.Intersects(enemyRectangle) == false)
