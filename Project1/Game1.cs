@@ -168,7 +168,7 @@ namespace Project1
         public bool personHit4;
         public bool personHit5;
         public bool personHit6;
-        public bool isHide;
+        public static bool isHide;
         bool isRead;
         Vector2 speed = new Vector2(3, 3);
         int direction = 0;
@@ -1867,8 +1867,11 @@ namespace Project1
             { 
                 mCurrentScreen = Screenstate.PassPuzz;
             }
-
-
+            bool hit = Enemy.isHit;
+            if(hit == true && isHide == false)
+            {
+                hBarRec.Width -= 5;
+            }
             if (personHit4 == true)
             {
                 if (Keyboard.GetState().IsKeyUp(Keys.F))
@@ -2144,6 +2147,7 @@ namespace Project1
 
                 old_ks = ks;
             }
+            enemy.Update(pos);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(40, 40);
             ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
