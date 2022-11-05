@@ -572,7 +572,14 @@ namespace Project1
                 case Screenstate.Room1:
                     {
                         UpdateRoom1();
-                        dylight.AmbientColor = new Color(new Vector3(0.3f));
+                        if(isRead == false)
+                        {
+                            dylight.AmbientColor = new Color(new Vector3(0.3f));
+                        }
+                        else if(isRead == true)
+                        {
+                            dylight.AmbientColor = new Color(new Vector3(0.7f));
+                        }
 
                         break;
                     }
@@ -609,7 +616,15 @@ namespace Project1
                 case Screenstate.Room7:
                     {
                         UpdateRoom7();
-                        dylight.AmbientColor = new Color(new Vector3(0.3f));
+                        if (isRead == false)
+                        {
+                            dylight.AmbientColor = new Color(new Vector3(0.3f));
+                        }
+                        else if (isRead == true)
+                        {
+                            dylight.AmbientColor = new Color(new Vector3(0.7f));
+                        }
+
                         break;
                     }
                 case Screenstate.LRoom1:
@@ -676,6 +691,7 @@ namespace Project1
                     {
                         timeSinceLastInput += (float)gameTime.ElapsedGameTime.TotalSeconds;
                         UpdatePipePuzz();
+                        dylight.AmbientColor = new Color(new Vector3(0.7f));
                         break;
                     }
                 case Screenstate.PassPuzz:
@@ -832,8 +848,11 @@ namespace Project1
             }
             if (isRead == true)
             {
+
                 if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
                 {
+                    dylight.Lights.Add(light);
+                    dylight.Lights.Add(spotLightR2_1);
                     isRead = false;
                 }
             }
@@ -989,6 +1008,9 @@ namespace Project1
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
                         isRead = true;
+                        dylight.Lights.Remove(light);
+                        dylight.Lights.Remove(spotLightR2_1);
+                        
                     }
                 }
             }
@@ -996,6 +1018,7 @@ namespace Project1
             {
                 isRead = false;
                 tu1 = "";
+                
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -1104,7 +1127,6 @@ namespace Project1
                 dylight.Lights.Remove(spotLightR2_3);
                 dylight.Lights.Remove(spotLightR2_4);
                 dylight.Lights.Add(spotLightR4);
-                dylight.Lights.Add(light);
                 spotLightR4.Position = new Vector2(360, 30);
                 pos.X = 500;
             }
@@ -1118,7 +1140,6 @@ namespace Project1
                 dylight.Lights.Remove(spotLightR2_4);
                 dylight.Lights.Add(spotLightR7);
                 spotLightR7.Position = new Vector2(350, 30);
-
                 pos.X = 350;
             }
 
@@ -1662,6 +1683,10 @@ namespace Project1
             {
                 mCurrentScreen = Screenstate.Room5;
                 dylight.Lights.Remove(spotLightR4);
+                dylight.Lights.Add(spotLightR2_1);
+                dylight.Lights.Add(spotLightR2_2);
+                dylight.Lights.Add(spotLightR2_3);
+                dylight.Lights.Add(spotLightR2_4);
                 pos.X = 100;
                 camPos.X = 0;
                 uiPos.X = 0;
@@ -1833,7 +1858,7 @@ namespace Project1
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
-            light.Position = pos - camPos + new Vector2(40, 40);
+            light.Position = pos - camPos + new Vector2(60, 40);
 
         }
         void UpdateRoom5()
@@ -2321,6 +2346,8 @@ namespace Project1
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
                 {
+                    dylight.Lights.Add(light);
+                    dylight.Lights.Add(spotLightR7);
                     isRead = false;
                 }
             }
@@ -2494,6 +2521,8 @@ namespace Project1
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
                         isRead = true;
+                        dylight.Lights.Remove(light);
+                        dylight.Lights.Remove(spotLightR7);
                     }
                 }
             }
@@ -3246,6 +3275,10 @@ namespace Project1
             {
                 mCurrentScreen = Screenstate.LRoom5;
                 dylight.Lights.Remove(spotLightR4);
+                dylight.Lights.Add(spotLightR2_1);
+                dylight.Lights.Add(spotLightR2_2);
+                dylight.Lights.Add(spotLightR2_3);
+                dylight.Lights.Add(spotLightR2_4);
                 pos.X = 100;
                 camPos.X = 0;
                 uiPos.X = 0;
@@ -3677,6 +3710,10 @@ namespace Project1
             {
                 mCurrentScreen = Screenstate.LRoom5;
                 dylight.Lights.Remove(spotLightR6);
+                dylight.Lights.Add(spotLightR2_1);
+                dylight.Lights.Add(spotLightR2_2);
+                dylight.Lights.Add(spotLightR2_3);
+                dylight.Lights.Add(spotLightR2_4);
                 pos.X = 1170;
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
@@ -4253,15 +4290,19 @@ namespace Project1
                 _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             }
             _spriteBatch.DrawString(deBugFont, tu1, (paperPos - new Vector2(0, 20)), (Color.White));
+            _spriteBatch.Draw(ballTexture, ballPos, new Rectangle(0, 24, 0, 0), (Color.White));
+            _spriteBatch.DrawString(deBugFont, toRoom_2, (ballPos - new Vector2(0, 20)), (Color.White));
             if (isRead == true)
             {
                 _spriteBatch.Draw(tutorial, Vector2.Zero, (Color.White));
             }
-            _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
-            _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
-            _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
-            _spriteBatch.Draw(ballTexture, ballPos, new Rectangle(0, 24, 0, 0), (Color.White));
-            _spriteBatch.DrawString(deBugFont, toRoom_2, (ballPos - new Vector2(0, 20)), (Color.White));
+            if(isRead == false)
+            {
+                _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+                _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
+                _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
+
+            }
         }
         void DrawMenu()
         {
@@ -4474,9 +4515,7 @@ namespace Project1
                 totalframe = 4;
                 _spriteBatch.Draw(farmer, pos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             }
-            _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
-            _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
-            _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
+
             _spriteBatch.Draw(ballTexture, ballPos7_2, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.Draw(ballTexture, puzzlePos1, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom7_2, (ballPos7_2 - new Vector2(0, 80)), (Color.White));
@@ -4485,6 +4524,12 @@ namespace Project1
             if (isRead == true)
             {
                 _spriteBatch.Draw(tutorial3, Vector2.Zero, (Color.White));
+            }
+            if(isRead == false)
+            {
+                _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+                _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
+                _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             }
 
         }
@@ -4867,9 +4912,8 @@ namespace Project1
                         {
                             mCurrentScreen = Screenstate.Room7;
                             Debug.Write("Active");
+                            dylight.Lights.Add(spotLightR7);
                         }
-                        dylight.Lights.Add(spotLightR7);
-                        pos.X = 400;
 
                         foreach (Vector2 ScoringSquare in WaterChain)
                         {
