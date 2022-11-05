@@ -237,7 +237,10 @@ namespace Project1
         int passNum4 = 2;
         KeyboardState old_ks;
         Texture2D passTexture;
-    /// -----------------------------------------------------------------------------<PuzzlePipe>
+        Texture2D passBackgroud;
+        /// -----------------------------------------------------------------------------<PuzzlePipe>
+        Texture2D sPill;
+        Texture2D hPill;
     //--------------------------------------------------------------------------Set Light---------------------------------------------
     Light light2 = new Spotlight
         {
@@ -1881,6 +1884,10 @@ namespace Project1
             {
                 if (isHide == false)
                 {
+                    if(ks.IsKeyDown(Keys.Space))
+                    {
+                        hBarRec.Width -= 5;
+                    }
                     if (ks.IsKeyDown(Keys.W))
                     {
                         w_instance.Play();
@@ -4439,6 +4446,8 @@ namespace Project1
                 totalframe = 4;
                 _spriteBatch.Draw(farmer, pos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             }
+            _spriteBatch.DrawString(deBugFont, tu2, (paperPos - new Vector2(0, 20)), (Color.White));
+            _spriteBatch.DrawString(deBugFont, tu1, (paperPos - new Vector2(0, 20)), (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
