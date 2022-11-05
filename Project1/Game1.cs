@@ -361,6 +361,8 @@ namespace Project1
             ShadowType = ShadowType.Illuminated
         };
         //-------------------------------------------------------------enemy-----------------------------------------------------------------------
+        Texture2D ghostStand;
+        Texture2D ghostWalk;
         Enemy enemy;
         bool isAlive = true;
         int eframe;
@@ -369,6 +371,13 @@ namespace Project1
         float etimeperframe;
         float etotalelapsed;
 
+        int gdirection;
+        int gframe;
+        int gtotalframe;
+        int gframepersec;
+        float gtimeperframe;
+        float gtotalelapsed;
+
         public Light eLight { get; } = new PointLight
         {
             Color = new Color(255, 0, 0),
@@ -376,13 +385,15 @@ namespace Project1
             Intensity = 1.5f
         };
         public Vector2 ePos;
+        public Vector2 gPos;
         public Vector2 trapPos;
         Vector2 eSpeed = new Vector2(1, 1);
         private string tu3;
         private bool isRead2;
         private bool isSearch2 = false;
         private bool isSearch3 = false;
-
+        private bool isHuant1 = false;
+        private bool isHuant2 = false;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -506,6 +517,8 @@ namespace Project1
             note2 = Content.Load<Texture2D>("NotePaperIsus");
             keyNormal = Content.Load<Texture2D>("Key_normal");
             keyStory = Content.Load<Texture2D>("Key_story");
+            ghostStand = Content.Load<Texture2D>("ghostDoor_standing");
+            ghostWalk = Content.Load<Texture2D>("ghostDoor_walk");
 
             bgm = Content.Load<SoundEffect>("BGM");
             instance = bgm.CreateInstance();
@@ -559,6 +572,12 @@ namespace Project1
             eframepersec = 6;
             etimeperframe = (float)1 / eframepersec;
             etotalelapsed = 0;
+
+            gframe = 0;
+            gtotalframe = 4;
+            gframepersec = 6;
+            gtimeperframe = (float)1 / eframepersec;
+            gtotalelapsed = 0;
 
             pos = new Vector2(150, 270);
             ballPos = new Vector2(650, 250);
