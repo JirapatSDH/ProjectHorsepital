@@ -381,7 +381,7 @@ namespace Project1
         private string tu3;
         private bool isRead2;
         private bool isSearch2 = false;
-        private bool isSearch3;
+        private bool isSearch3 = false;
 
         public Game1()
         {
@@ -1484,6 +1484,7 @@ namespace Project1
                         sBarRec.Width = 163;
                     }
                 }
+
                 
                 // -----------------------------------------------------------------------------------------------collistion
                 Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
@@ -1803,6 +1804,14 @@ namespace Project1
                         speed.X = 0;
                         UpdateFrame(elapsed);
                     }
+                    if (ks.IsKeyUp(Keys.D1) && old_ks.IsKeyDown(Keys.D1)) //Use stamina
+                    {
+                        UseStanimaPill();
+                    }
+                    if (ks.IsKeyUp(Keys.D2) && old_ks.IsKeyDown(Keys.D2)) //Use sanity 
+                    {
+                        UseSanityPill();
+                    }
                 }
 
                 else
@@ -2047,6 +2056,14 @@ namespace Project1
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
+                if (ks.IsKeyUp(Keys.D1) && old_ks.IsKeyDown(Keys.D1)) //Use stamina
+                {
+                    UseStanimaPill();
+                }
+                if (ks.IsKeyUp(Keys.D2) && old_ks.IsKeyDown(Keys.D2)) //Use sanity 
+                {
+                    UseSanityPill();
+                }
             }
             Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
             Rectangle ballRectangle = new Rectangle((int)ballPos4_2.X, (int)ballPos4_2.Y, 24, 24);
@@ -2134,7 +2151,7 @@ namespace Project1
                 pos.X = 240;
             }
 
-            if (personHit2 == true)
+            if (personHit2 == true && isClear == true)
             {
                 mCurrentScreen = Screenstate.Room6;
                 dylight.Lights.Add(spotLightR6);
@@ -2326,6 +2343,14 @@ namespace Project1
                         speed.X = 0;
                         UpdateFrame(elapsed);
                     }
+                    if (ks.IsKeyUp(Keys.D1) && old_ks.IsKeyDown(Keys.D1)) //Use stamina
+                    {
+                        UseStanimaPill();
+                    }
+                    if (ks.IsKeyUp(Keys.D2) && old_ks.IsKeyDown(Keys.D2)) //Use sanity 
+                    {
+                        UseSanityPill();
+                    }
                 }
                 else
                 {
@@ -2389,9 +2414,13 @@ namespace Project1
                 }
                 if (personRectangle.Intersects(ball2Rectangle) == true)
                 {
-
-                    toRoom_6 = "F To Enter";
+                    if(isClear == false)
                     {
+                        toRoom_6 = "Lock";
+                    }
+                    if (isClear == true)
+                    {
+                        toRoom_6 = "F to Enter";
                         if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                         {
                             //toRoom_6 = "Enter room ?";
@@ -2596,6 +2625,14 @@ namespace Project1
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
+                if (ks.IsKeyUp(Keys.D1) && old_ks.IsKeyDown(Keys.D1)) //Use stamina
+                {
+                    UseStanimaPill();
+                }
+                if (ks.IsKeyUp(Keys.D2) && old_ks.IsKeyDown(Keys.D2)) //Use sanity 
+                {
+                    UseSanityPill();
+                }
             }
             Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
             Rectangle ballRectangle = new Rectangle((int)ballPos6_5.X, (int)ballPos6_5.Y, 24, 24);
@@ -2797,6 +2834,14 @@ namespace Project1
                     r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
+                }
+                if (ks.IsKeyUp(Keys.D1) && old_ks.IsKeyDown(Keys.D1)) //Use stamina
+                {
+                    UseStanimaPill();
+                }
+                if (ks.IsKeyUp(Keys.D2) && old_ks.IsKeyDown(Keys.D2)) //Use sanity 
+                {
+                    UseSanityPill();
                 }
             }
             Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
@@ -3002,6 +3047,14 @@ namespace Project1
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
+                if (ks.IsKeyUp(Keys.D1) && old_ks.IsKeyDown(Keys.D1)) //Use stamina
+                {
+                    UseStanimaPill();
+                }
+                if (ks.IsKeyUp(Keys.D2) && old_ks.IsKeyDown(Keys.D2)) //Use sanity 
+                {
+                    UseSanityPill();
+                }
             }
             Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
             Rectangle ballRectangle = new Rectangle((int)ballPos.X, (int)ballPos.Y, 24, 24);
@@ -3175,6 +3228,8 @@ namespace Project1
                             bLine -= new Vector2(3, 0);
                             camPos -= new Vector2(3, 0);
                             uiPos -= new Vector2(3, 0);
+                            sanityPos -= new Vector2(3, 0);
+                            staminaPos -= new Vector2(3, 0);
                         }
                         if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                         {
@@ -3185,6 +3240,8 @@ namespace Project1
                             bLine -= new Vector2(6, 0);
                             camPos -= new Vector2(6, 0);
                             uiPos -= new Vector2(6, 0);
+                            sanityPos -= new Vector2(6, 0);
+                            staminaPos -= new Vector2(6, 0);
                             sBarRec.Width -= 3;
                         }
                         else
@@ -3215,6 +3272,8 @@ namespace Project1
                             bLine += new Vector2(3, 0);
                             camPos += new Vector2(3, 0);
                             uiPos += new Vector2(3, 0);
+                            sanityPos += new Vector2(3, 0);
+                            staminaPos += new Vector2(3, 0);
                         }
                         if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                         {
@@ -3225,6 +3284,8 @@ namespace Project1
                             bLine += new Vector2(6, 0);
                             camPos += new Vector2(6, 0);
                             uiPos += new Vector2(6, 0);
+                            sanityPos += new Vector2(6, 0);
+                            staminaPos += new Vector2(6, 0);
                             sBarRec.Width -= 3;
                         }
                         else
@@ -3250,6 +3311,14 @@ namespace Project1
                         r_instance.Stop();
                         speed.X = 0;
                         UpdateFrame(elapsed);
+                    }
+                    if (ks.IsKeyUp(Keys.D1) && old_ks.IsKeyDown(Keys.D1)) //Use stamina
+                    {
+                        UseStanimaPill();
+                    }
+                    if (ks.IsKeyUp(Keys.D2) && old_ks.IsKeyDown(Keys.D2)) //Use sanity 
+                    {
+                        UseSanityPill();
                     }
                 }
                 else
@@ -3532,6 +3601,14 @@ namespace Project1
                         speed.X = 0;
                         UpdateFrame(elapsed);
                     }
+                    if (ks.IsKeyUp(Keys.D1) && old_ks.IsKeyDown(Keys.D1)) //Use stamina
+                    {
+                        UseStanimaPill();
+                    }
+                    if (ks.IsKeyUp(Keys.D2) && old_ks.IsKeyDown(Keys.D2)) //Use sanity 
+                    {
+                        UseSanityPill();
+                    }
                 }
                 else
                 {
@@ -3733,6 +3810,14 @@ namespace Project1
                     r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
+                }
+                if (ks.IsKeyUp(Keys.D1) && old_ks.IsKeyDown(Keys.D1)) //Use stamina
+                {
+                    UseStanimaPill();
+                }
+                if (ks.IsKeyUp(Keys.D2) && old_ks.IsKeyDown(Keys.D2)) //Use sanity 
+                {
+                    UseSanityPill();
                 }
             }
             Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
@@ -3955,6 +4040,14 @@ namespace Project1
                         r_instance.Stop();
                         speed.X = 0;
                         UpdateFrame(elapsed);
+                    }
+                    if (ks.IsKeyUp(Keys.D1) && old_ks.IsKeyDown(Keys.D1)) //Use stamina
+                    {
+                        UseStanimaPill();
+                    }
+                    if (ks.IsKeyUp(Keys.D2) && old_ks.IsKeyDown(Keys.D2)) //Use sanity 
+                    {
+                        UseSanityPill();
                     }
                 }
                 else
@@ -4180,6 +4273,14 @@ namespace Project1
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
+                if (ks.IsKeyUp(Keys.D1) && old_ks.IsKeyDown(Keys.D1)) //Use stamina
+                {
+                    UseStanimaPill();
+                }
+                if (ks.IsKeyUp(Keys.D2) && old_ks.IsKeyDown(Keys.D2)) //Use sanity 
+                {
+                    UseSanityPill();
+                }
             }
             Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
             Rectangle ballRectangle = new Rectangle((int)ballPos6_5.X, (int)ballPos6_5.Y, 24, 24);
@@ -4332,6 +4433,14 @@ namespace Project1
                     r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
+                }
+                if (ks.IsKeyUp(Keys.D1) && old_ks.IsKeyDown(Keys.D1)) //Use stamina
+                {
+                    UseStanimaPill();
+                }
+                if (ks.IsKeyUp(Keys.D2) && old_ks.IsKeyDown(Keys.D2)) //Use sanity 
+                {
+                    UseSanityPill();
                 }
             }
             Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
@@ -4520,6 +4629,14 @@ namespace Project1
                     r_instance.Stop();
                     speed.X = 0;
                     UpdateFrame(elapsed);
+                }
+                if (ks.IsKeyUp(Keys.D1) && old_ks.IsKeyDown(Keys.D1)) //Use stamina
+                {
+                    UseStanimaPill();
+                }
+                if (ks.IsKeyUp(Keys.D2) && old_ks.IsKeyDown(Keys.D2)) //Use sanity 
+                {
+                    UseSanityPill();
                 }
                 // -----------------------------------------------------------------------------------------------collistion
                 Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
