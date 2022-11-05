@@ -225,6 +225,8 @@ namespace Project1
 
         Vector2 gameBoardDisplayOrigin = new Vector2(270, 89);
         bool isClear = false;
+        bool isPipe1Clear = false;
+        bool isPipe2Clear = false;
         bool inRoom6 = false;
 
         Rectangle EmptyPiece = new Rectangle(1, 247, 40, 40);
@@ -414,7 +416,7 @@ namespace Project1
             locker2_2 = "";
             locker3 = "";
             locker5 = "";
-            sanityText = stamina.ToString();
+            sanityText = sanity.ToString();
             staminaText = stamina.ToString();
             base.Initialize();
             dylight.Initialize();
@@ -878,7 +880,6 @@ namespace Project1
             textsanityPos = sanityPos + new Vector2(0, -20);
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
-            KeyboardState old_ks = Keyboard.GetState();
             {
                 
                 if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
@@ -1008,7 +1009,7 @@ namespace Project1
 
                 toRoom_2 = "F To Enter";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if (ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F)) //Intereact object
                     {
                         //toRoom_2 = "Enter room ?";
                         personHit2 = true;
@@ -1025,7 +1026,7 @@ namespace Project1
             {
                 tu1 = "F to Read";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if (ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F)) //Intereact object
                     {
                         isRead = true;
                         dylight.Lights.Remove(light);
@@ -1040,6 +1041,7 @@ namespace Project1
                 tu1 = "";
                 
             }
+            old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(40, 40);
@@ -1183,7 +1185,6 @@ namespace Project1
             }
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
-            KeyboardState old_ks = Keyboard.GetState();
             {
                 if(isHide == false)
                 {
@@ -1414,7 +1415,7 @@ namespace Project1
 
                     backRoom2_1 = "F To Enter";
                     {
-                        if (ks.IsKeyDown(Keys.F)) //Intereact object
+                        if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                         {
                             //backRoom2_1 = "Enter room ?";
                             personHit2 = true;
@@ -1430,7 +1431,7 @@ namespace Project1
                 if (personRectangle.Intersects(ball2_3Rectangle) == true)
                 {
                     toRoom_3 = "F To Enter";
-                    if (ks.IsKeyDown(Keys.F)) //Tnteract object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Tnteract object
                     {
                         //toRoom_3 = "Enter room ?";
                         personHit = true;
@@ -1445,7 +1446,7 @@ namespace Project1
                 if (personRectangle.Intersects(ball2_4Rectangle) == true)
                 {
                     toRoom_4 = "F To Enter";
-                    if (ks.IsKeyDown(Keys.F)) //Tnteract object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Tnteract object
                     {
                         //toRoom_4 = "Enter room ?";
                         personHit3 = true;
@@ -1460,7 +1461,7 @@ namespace Project1
                 if (personRectangle.Intersects(ball2_7Rectangle) == true)
                 {
                     toRoom_7 = "F To Enter";
-                    if (ks.IsKeyDown(Keys.F)) //Tnteract object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Tnteract object
                     {
                         //toRoom_7 = "Enter room ?";
                         personHit4 = true;
@@ -1510,7 +1511,7 @@ namespace Project1
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
-            KeyboardState old_ks = Keyboard.GetState();
+            
             {
                 if(isHide == false)
                 {
@@ -1649,7 +1650,7 @@ namespace Project1
             {
                 backRoom3_2 = "F To Enter";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
                         //backRoom3_2 = "Enter room ?";
                         personHit = true;
@@ -1677,6 +1678,7 @@ namespace Project1
                  personHit2 = false;
                  locker3 = "";
             }
+            old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(100, 40);
@@ -1716,7 +1718,7 @@ namespace Project1
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
-            KeyboardState old_ks = Keyboard.GetState();
+            
             {
                 if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
                 {
@@ -1846,7 +1848,7 @@ namespace Project1
             {
                 backRoom4_2 = "F To Enter";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
                         //backRoom4_2 = "Enter room ?";
                         personHit = true;
@@ -1863,7 +1865,7 @@ namespace Project1
             {
                 toRoom_5 = "F To Enter";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
                         //toRoom_5 = "Enter room ?";
                         personHit2 = true;
@@ -1876,6 +1878,7 @@ namespace Project1
                 personHit2 = false;
                 toRoom_5 = "";
             }
+            old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(60, 40);
@@ -1931,7 +1934,7 @@ namespace Project1
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
-            KeyboardState old_ks = Keyboard.GetState();
+            
             {
                 if (isHide == false)
                 {
@@ -2124,7 +2127,7 @@ namespace Project1
 
                     backRoom5_4 = "F To Enter";
                     {
-                        if (ks.IsKeyDown(Keys.F)) //Intereact object
+                        if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                         {
                             //backRoom5_4 = "Enter room ?";
                             personHit = true;
@@ -2142,7 +2145,7 @@ namespace Project1
 
                     toRoom_6 = "F To Enter";
                     {
-                        if (ks.IsKeyDown(Keys.F)) //Intereact object
+                        if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                         {
                             //toRoom_6 = "Enter room ?";
                             personHit2 = true;
@@ -2160,7 +2163,7 @@ namespace Project1
 
                     puzzle2 = "F To Solve";
                     {
-                        if (ks.IsKeyDown(Keys.F)) //Intereact object
+                        if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                         {
                             personHit3 = true;
                         }
@@ -2175,7 +2178,7 @@ namespace Project1
                 {
                     tu3 = "F to Read";
                     {
-                        if (ks.IsKeyDown(Keys.F)) //Intereact object
+                        if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                         {
                             isRead = true;
                         }
@@ -2206,7 +2209,7 @@ namespace Project1
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
-            if(personHit2 == true)
+            if(personHit2 == true && isPipe2Clear == false)
             {
                 mCurrentScreen = Screenstate.PipePuzz;
                 inRoom6 = true;
@@ -2214,7 +2217,7 @@ namespace Project1
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
-            KeyboardState old_ks = Keyboard.GetState();
+            
             {
                 if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
                 {
@@ -2344,7 +2347,7 @@ namespace Project1
             {
                 backRoom6_5 = "F To Enter";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
                         //backRoom6_5 = "Enter room ?";
                         personHit = true;
@@ -2361,9 +2364,9 @@ namespace Project1
             {
                 puzzle3 = "F To Solve";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
-                        puzzle3 = "Solving";
+                        puzzle3 = "Solved";
                         personHit2 = true;
                     }
                 }
@@ -2373,6 +2376,7 @@ namespace Project1
                 personHit2 = false;
                 puzzle3 = "Check";
             }
+            old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(40, 40);
@@ -2395,7 +2399,7 @@ namespace Project1
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
-            if (personHit2 == true)
+            if (personHit2 == true && isPipe1Clear == false)
             {
                 mCurrentScreen = Screenstate.PipePuzz;
                 dylight.Lights.Remove(spotLightR7);
@@ -2412,7 +2416,7 @@ namespace Project1
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
-            KeyboardState old_ks = Keyboard.GetState();
+            
             {
                 if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
                 {
@@ -2543,7 +2547,7 @@ namespace Project1
             {
                 backRoom7_2 = "F To Enter";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
                         //backRoom7_2 = "Enter room ?";
                         personHit = true;
@@ -2560,9 +2564,9 @@ namespace Project1
             {
                 puzzle1 = "F To Solve";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
-                        puzzle1 = "Solving";
+                        puzzle1 = "Solved";
                         personHit2 = true;
                     }
                 }
@@ -2576,7 +2580,7 @@ namespace Project1
             {
                 tu2= "F to Read";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
                         isRead = true;
                         dylight.Lights.Remove(light);
@@ -2589,6 +2593,7 @@ namespace Project1
                 isRead = false;
                 tu2 = "";
             }
+            old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(60,40);
@@ -2625,7 +2630,7 @@ namespace Project1
             }
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
-            KeyboardState old_ks = Keyboard.GetState();
+            
             {
                 if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
                 {
@@ -2742,7 +2747,7 @@ namespace Project1
 
                 toRoom_2 = "F To Enter";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
                         //toRoom_2 = "Enter room ?";
                         personHit2 = true;
@@ -2760,7 +2765,7 @@ namespace Project1
 
                 toRoom_8 = "F To Enter";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
                         //toRoom_8 = "Enter room ?";
                         personHit = true;
@@ -2773,6 +2778,7 @@ namespace Project1
                 personHit = false;
                 toRoom_8 = "";
             }
+            old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(40, 40);
@@ -2848,7 +2854,7 @@ namespace Project1
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
-            KeyboardState old_ks = Keyboard.GetState();
+            
             {
                 if(isHide == false)
                 {
@@ -3055,7 +3061,7 @@ namespace Project1
 
                     backRoom2_1 = "F To Enter";
                     {
-                        if (ks.IsKeyDown(Keys.F)) //Intereact object
+                        if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                         {
                             //backRoom2_1 = "Enter room ?";
                             personHit2 = true;
@@ -3071,7 +3077,7 @@ namespace Project1
                 if (personRectangle.Intersects(ball2_3Rectangle) == true)
                 {
                     toRoom_3 = "F To Enter";
-                    if (ks.IsKeyDown(Keys.F)) //Tnteract object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Tnteract object
                     {
                         //toRoom_3 = "Enter room ?";
                         personHit = true;
@@ -3086,7 +3092,7 @@ namespace Project1
                 if (personRectangle.Intersects(ball2_4Rectangle) == true)
                 {
                     toRoom_4 = "F To Enter";
-                    if (ks.IsKeyDown(Keys.F)) //Tnteract object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Tnteract object
                     {
                         //toRoom_4 = "Enter room ?";
                         personHit3 = true;
@@ -3102,7 +3108,7 @@ namespace Project1
                 if (personRectangle.Intersects(ball2_7Rectangle) == true)
                 {
                     toRoom_7 = "F To Enter";
-                    if (ks.IsKeyDown(Keys.F)) //Tnteract object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Tnteract object
                     {
                         //toRoom_7 = "Enter room ?";
                         personHit4 = true;
@@ -3148,7 +3154,7 @@ namespace Project1
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
-            KeyboardState old_ks = Keyboard.GetState();
+            
             {
                 if(isHide == false)
                 {
@@ -3278,7 +3284,7 @@ namespace Project1
             {
                 backRoom3_2 = "F To Enter";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
                         //backRoom3_2 = "Enter room ?";
                         personHit = true;
@@ -3306,6 +3312,7 @@ namespace Project1
                 personHit2 = false;
                 locker3 = "";
             }
+            old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(40, 40);
@@ -3346,7 +3353,7 @@ namespace Project1
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
-            KeyboardState old_ks = Keyboard.GetState();
+            
             {
                 if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
                 {
@@ -3462,7 +3469,7 @@ namespace Project1
             {
                 backRoom4_2 = "F To Enter";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
                         //backRoom4_2 = "Enter room ?";
                         personHit = true;
@@ -3479,7 +3486,7 @@ namespace Project1
             {
                 toRoom_5 = "F To Enter";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
                         //toRoom_5 = "Enter room ?";
                         personHit2 = true;
@@ -3492,6 +3499,7 @@ namespace Project1
                 personHit2 = false;
                 toRoom_5 = "";
             }
+            old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(40, 40);
@@ -3534,7 +3542,7 @@ namespace Project1
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
-            KeyboardState old_ks = Keyboard.GetState();
+            
             {
                 if(isHide == false)
                 {
@@ -3722,7 +3730,7 @@ namespace Project1
 
                     backRoom5_4 = "F To Enter";
                     {
-                        if (ks.IsKeyDown(Keys.F)) //Intereact object
+                        if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                         {
                             //backRoom5_4 = "Enter room ?";
                             personHit = true;
@@ -3740,7 +3748,7 @@ namespace Project1
 
                     toRoom_6 = "F To Enter";
                     {
-                        if (ks.IsKeyDown(Keys.F)) //Intereact object
+                        if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                         {
                             //toRoom_6 = "Enter room ?";
                             personHit2 = true;
@@ -3779,7 +3787,7 @@ namespace Project1
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
-            KeyboardState old_ks = Keyboard.GetState();
+            
             {
                 if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
                 {
@@ -3894,7 +3902,7 @@ namespace Project1
             {
                 backRoom6_5 = "F To Enter";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
                         //backRoom6_5 = "Enter room ?";
                         personHit = true;
@@ -3907,6 +3915,7 @@ namespace Project1
                 personHit = false;
                 backRoom6_5 = "";
             }
+            old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(40, 40);
@@ -3932,7 +3941,7 @@ namespace Project1
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
-            KeyboardState old_ks = Keyboard.GetState();
+            
             {
                 if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
                 {
@@ -4043,7 +4052,7 @@ namespace Project1
             {
                 backRoom7_2 = "F To Enter";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
                         //backRoom7_2 = "Enter room ?";
                         personHit = true;
@@ -4056,6 +4065,7 @@ namespace Project1
                 personHit = false;
                 backRoom7_2 = "";
             }
+            old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(60, 40);
@@ -4070,7 +4080,7 @@ namespace Project1
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
-            KeyboardState old_ks = Keyboard.GetState();
+            
             {
                 if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
                 {
@@ -4320,7 +4330,7 @@ namespace Project1
                 pos = new Vector2(201, 253);
             }
 
-            if (ks.IsKeyUp(Keys.Back) && old_ks.IsKeyDown(Keys.Back))
+            if (ks.IsKeyDown(Keys.Back))
             {
                 mCurrentScreen = Screenstate.Room5;
                 pos = new Vector2(201, 253);
@@ -4973,15 +4983,15 @@ namespace Project1
                         playerScore += DetermineScore(WaterChain.Count);
                         if (inRoom6 == true)
                         {
+                            isPipe2Clear = true;
                             mCurrentScreen = Screenstate.LRoom6;
                         }
                         else
                         {
+                            isPipe1Clear = true;
                             mCurrentScreen = Screenstate.Room7;
-                            Debug.Write("Active");
                             dylight.Lights.Add(spotLightR7);
                         }
-
                         foreach (Vector2 ScoringSquare in WaterChain)
                         {
                             pipeboard.SetSquare((int)ScoringSquare.X,
