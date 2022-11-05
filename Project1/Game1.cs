@@ -679,7 +679,6 @@ namespace Project1
             }
             if (hBarRec.Width <= 0)
             {
-
                 mCurrentScreen = Screenstate.over;
             }
             //camera.Update(gameTime, this);
