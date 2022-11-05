@@ -459,6 +459,7 @@ namespace Project1
             tutorial = Content.Load<Texture2D>("Pong_thai");
             tutorial2 = Content.Load<Texture2D>("2");
             tutorial3 = Content.Load<Texture2D>("3");
+            passBackgroud = Content.Load<Texture2D>("passPuzzle-BackGround");
 
 
             bgm = Content.Load<SoundEffect>("BGM");
@@ -1868,13 +1869,9 @@ namespace Project1
 
             if (personHit4 == true)
             {
-                if (Keyboard.GetState().IsKeyUp(Keys.F) && isHide == true)
-                isHide = true;
-
                 if (Keyboard.GetState().IsKeyUp(Keys.F))
                 {
                     isHide = false;
-                    pos = new Vector2(1100,210);
                 }
             }
 
@@ -2103,6 +2100,22 @@ namespace Project1
                 {
                     personHit2 = false;
                     toRoom_6 = "";
+                }
+                if (personRectangle.Intersects(puzzleRectangle) == true)
+                {
+
+                    puzzle2 = "F To Solve";
+                    {
+                        if (ks.IsKeyDown(Keys.F)) //Intereact object
+                        {
+                            personHit3 = true;
+                        }
+                    }
+                }
+                else if (personRectangle.Intersects(puzzleRectangle) == false)
+                {
+                    personHit3 = false;
+                    puzzle2 = "";
                 }
 
                 old_ks = ks;
@@ -4749,25 +4762,26 @@ namespace Project1
         }
         void DrawPassPuzz()
         {
-            _spriteBatch.Draw(passTexture, new Vector2(30, 64), new Rectangle(80 * passNum1, 0, 80, 288), Color.White);
+            _spriteBatch.Draw(passBackgroud, new Vector2(100, 30), Color.White);
+            _spriteBatch.Draw(passTexture, new Vector2(130, 94), new Rectangle(80 * passNum1, 0, 80, 288), Color.White);
             if (passNum1 == 6)
             {
-                _spriteBatch.Draw(passTexture, new Vector2(30, 64), new Rectangle(0 * passNum1, 0, 80, 288), Color.White);
+                _spriteBatch.Draw(passTexture, new Vector2(130, 94), new Rectangle(0 * passNum1, 0, 80, 288), Color.White);
             }
-            _spriteBatch.Draw(passTexture, new Vector2(143, 64), new Rectangle(80 * passNum2, 0, 80, 288), Color.White);
+            _spriteBatch.Draw(passTexture, new Vector2(243, 94), new Rectangle(80 * passNum2, 0, 80, 288), Color.White);
             if (passNum2 == 6)
             {
-                _spriteBatch.Draw(passTexture, new Vector2 (143, 64), new Rectangle(0 * passNum2, 0, 80, 288), Color.White);
+                _spriteBatch.Draw(passTexture, new Vector2 (243, 94), new Rectangle(0 * passNum2, 0, 80, 288), Color.White);
             }
-            _spriteBatch.Draw(passTexture, new Vector2(256, 64), new Rectangle(80 * passNum3, 0, 80, 288), Color.White);
+            _spriteBatch.Draw(passTexture, new Vector2(356, 94), new Rectangle(80 * passNum3, 0, 80, 288), Color.White);
             if (passNum3 == 6)
             {
-                _spriteBatch.Draw(passTexture, new Vector2(256, 64), new Rectangle(0 * passNum3, 0, 80, 288), Color.White);
+                _spriteBatch.Draw(passTexture, new Vector2(356, 94), new Rectangle(0 * passNum3, 0, 80, 288), Color.White);
             }
-            _spriteBatch.Draw(passTexture, new Vector2(369, 64), new Rectangle(80 * passNum4, 0, 80, 288), Color.White);
+            _spriteBatch.Draw(passTexture, new Vector2(469, 94), new Rectangle(80 * passNum4, 0, 80, 288), Color.White);
             if (passNum4 == 6)
             {
-                _spriteBatch.Draw(passTexture, new Vector2(369, 64), new Rectangle(0 * passNum4, 0, 80, 288), Color.White);
+                _spriteBatch.Draw(passTexture, new Vector2(469, 94), new Rectangle(0 * passNum4, 0, 80, 288), Color.White);
             }
         }
 
