@@ -25,7 +25,6 @@ namespace Project1
         Vector2 playPos;
         float enerotate = 0f;
         public static bool isHit = false;
-
         bool right;
         float distance;
         float oldDistance;
@@ -56,7 +55,7 @@ namespace Project1
 
             if (right) distance += 1; else distance -= 1;
             playerDistance = playPos.X - enePos.X;
-            if (playerDistance >= -20 && playerDistance <= 20)
+            if (playerDistance >= -20 && playerDistance <= 20 && isHit == false)
             {
                 if (playerDistance < -1)
                     velocity.X = -1f;
@@ -70,13 +69,12 @@ namespace Project1
             if (personRectangle.Intersects(enemyRectangle) == true)
             {
                 isHit = true;
-                hBarRec.Width -= 5;
-                
             }
             else if (personRectangle.Intersects(enemyRectangle) == false)
             {
                 isHit = false;
             }
+            Debug.Write(isHit);
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 newcampos,Vector2 newscroll,int neweframe)
