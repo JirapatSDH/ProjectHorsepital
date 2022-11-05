@@ -559,6 +559,18 @@
 /processorParam:TextureFormat=Color
 /build:cutscene6.png
 
+#begin Diagnosis_paper.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Diagnosis_paper.png
+
 #begin door.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -775,6 +787,18 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:MyFont.spritefont
+
+#begin NotePaperIsus.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:NotePaperIsus.png
 
 #begin Paper.png
 /importer:TextureImporter

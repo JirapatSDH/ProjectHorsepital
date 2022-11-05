@@ -99,6 +99,8 @@ namespace Project1
         private Texture2D tutorial3;
         public Texture2D farmer;
         public Texture2D pIdle;
+        public Texture2D note1;
+        public Texture2D note2;
         public Vector2 pos;
         public Vector2 bg2Pos = Vector2.Zero;
         public Vector2 bg5Pos = Vector2.Zero;
@@ -128,6 +130,9 @@ namespace Project1
         public Vector2 uiPos5;
         public Vector2 sbarPos = new Vector2(73, 12);
         public Vector2 paperPos = new Vector2(240, 300);
+        public Vector2 capetPos = new Vector2(0, 0);
+        public Vector2 note1Pos = new Vector2(0, 0);
+        public Vector2 note2Pos = new Vector2(0, 0);
 
         Vector2 camPos = Vector2.Zero;
         //Vector2 camPos5 = Vector2.Zero;
@@ -160,6 +165,7 @@ namespace Project1
         private string locker2_2;
         private string locker3;
         private string locker5;
+        private string capetText;
         public Rectangle hBarRec;
         public Rectangle sBarRec;
         public bool personHit;
@@ -169,6 +175,7 @@ namespace Project1
         public bool personHit5;
         public bool personHit6;
         public static bool isHide;
+        public static bool isSearch = false;
         bool isRead;
         Vector2 speed = new Vector2(3, 3);
         int direction = 0;
@@ -247,11 +254,13 @@ namespace Project1
 
         public static string sanityText;
         public static string staminaText;
+        public static string gotItemText;
         public static int sanity = 0;
         public static int stamina = 0;
 
-        Vector2 sanityPos = new Vector2(250,400);
-        Vector2 staminaPos = new Vector2(280,400);
+        Vector2 sanityPos;
+        Vector2 staminaPos;
+        Vector2 gotItemPos = new Vector2(0, 0);
         Vector2 textsanityPos;
         Vector2 textstaminaPos;
         //--------------------------------------------------------------------------Set Light---------------------------------------------
@@ -361,6 +370,7 @@ namespace Project1
         public Vector2 trapPos;
         Vector2 eSpeed = new Vector2(1, 1);
         private string tu3;
+        private bool isRead2;
 
         public Game1()
         {
@@ -416,6 +426,8 @@ namespace Project1
             locker2_2 = "";
             locker3 = "";
             locker5 = "";
+            capetText = "";
+            gotItemText = "";
             sanityText = sanity.ToString();
             staminaText = stamina.ToString();
             base.Initialize();
@@ -479,7 +491,8 @@ namespace Project1
             passBackgroud = Content.Load<Texture2D>("passPuzzle-BackGround");
             sPill = Content.Load<Texture2D>("stamina_pill");
             hPill = Content.Load<Texture2D>("sanity_pill");
-
+            note1 = Content.Load<Texture2D>("Diagnosis_paper");
+            note2 = Content.Load<Texture2D>("NotePaperIsus");
 
             bgm = Content.Load<SoundEffect>("BGM");
             instance = bgm.CreateInstance();
@@ -560,6 +573,9 @@ namespace Project1
             uiPos5 = new Vector2(0, 0);
             ePos = new Vector2(1850, 170);
             trapPos = new Vector2(900, 340);
+            capetPos = new Vector2(470, 200);
+            staminaPos = new Vector2(250, 400);
+            sanityPos = new Vector2(280, 400);
 
             fLine.X = pos.X + rad;
             bLine.X = pos.X - rad;
@@ -868,20 +884,40 @@ namespace Project1
             }
             if (isRead == true)
             {
-
                 if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
                 {
                     dylight.Lights.Add(light);
                     dylight.Lights.Add(spotLightR2_1);
+                    dylight.Lights.Add(spotLightR2_2);
+                    dylight.Lights.Add(spotLightR2_3);
+                    dylight.Lights.Add(spotLightR2_4);
                     isRead = false;
+                }
+            }
+            if (isRead2 == true)
+            {
+                dylight.Lights.Remove(spotLightR2_1);
+                dylight.Lights.Remove(spotLightR2_2);
+                dylight.Lights.Remove(spotLightR2_3);
+                dylight.Lights.Remove(spotLightR2_4);
+                if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
+                {
+                    dylight.Lights.Add(spotLightR2_1);
+                    dylight.Lights.Add(spotLightR2_2);
+                    dylight.Lights.Add(spotLightR2_3);
+                    dylight.Lights.Add(spotLightR2_4);
+                    isRead2 = false;
                 }
             }
             textstaminaPos = staminaPos + new Vector2(0,-20);
             textsanityPos = sanityPos + new Vector2(0, -20);
+            sanityText = sanity.ToString();
+            staminaText = stamina.ToString();
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             {
-                
+                if (isRead == false && isRead2 == false)
+                {
                 if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
                 {
                     hBarRec.Width -= 5;
@@ -992,7 +1028,13 @@ namespace Project1
                     {
                         sBarRec.Width = 163;
                     }
+                    if (hBarRec.Width >= 163)
+                    {
+                        hBarRec.Width = 163;
+                    }
                 }
+                }
+                
                 if (ks.IsKeyUp(Keys.A) && ks.IsKeyUp(Keys.D) && ks.IsKeyUp(Keys.S) && ks.IsKeyUp(Keys.W))
                 {
                     w_instance.Stop();
@@ -1000,10 +1042,19 @@ namespace Project1
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
+                if (ks.IsKeyUp(Keys.D1) && old_ks.IsKeyDown(Keys.D1)) //Use stamina
+                {
+                    UseStanimaPill();
+                }
+                if (ks.IsKeyUp(Keys.D2) && old_ks.IsKeyDown(Keys.D2)) //Use sanity 
+                {
+                    UseSanityPill();
+                }
             }
             Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
             Rectangle ballRectangle = new Rectangle((int)ballPos.X, (int)ballPos.Y, 24, 24);
             Rectangle paperRec = new Rectangle((int)paperPos.X, (int)paperPos.Y, 53, 41);
+            Rectangle capetRec = new Rectangle((int)capetPos.X, (int)capetPos.Y, 53, 41);
             if (personRectangle.Intersects(ballRectangle) == true)
             {
 
@@ -1022,6 +1073,33 @@ namespace Project1
                 personHit2 = false;
                 toRoom_2 = "";
             }
+            if (personRectangle.Intersects(capetRec) == true)
+            {
+                capetText = "F To Search";
+                {
+                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    {
+                        isRead2 = true;
+                        if (isSearch == false)
+                        {
+                            gotItemText = "Got SanityPill & StanimaPill";
+                            AddSanityPill();
+                            AddStanimaPill();
+                            isSearch = true;
+                        }
+                        else if (isSearch == true)
+                        {
+                            capetText = "Already Search";
+                        }
+                    }
+                }
+            }
+            else if (personRectangle.Intersects(capetRec) == false)
+            {
+                isRead2 = false;
+                capetText = "";
+                gotItemText = "";
+            }
             if (personRectangle.Intersects(paperRec) == true)
             {
                 tu1 = "F to Read";
@@ -1031,7 +1109,9 @@ namespace Project1
                         isRead = true;
                         dylight.Lights.Remove(light);
                         dylight.Lights.Remove(spotLightR2_1);
-                        
+                        dylight.Lights.Remove(spotLightR2_2);
+                        dylight.Lights.Remove(spotLightR2_3);
+                        dylight.Lights.Remove(spotLightR2_4);
                     }
                 }
             }
@@ -1042,6 +1122,7 @@ namespace Project1
                 
             }
             old_ks = ks;
+            gotItemPos = pos + new Vector2(5, -45);
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(40, 40);
@@ -1126,6 +1207,11 @@ namespace Project1
             if (personHit2 == true)
             {
                 mCurrentScreen = Screenstate.Room1;
+                spotLightR3.Position = Vector2.Zero;
+                spotLightR2_1.Position = Vector2.Zero;
+                spotLightR2_2.Position = Vector2.Zero;
+                spotLightR2_3.Position = Vector2.Zero;
+                spotLightR2_4.Position = Vector2.Zero;
                 pos.X = 580;
             }
 
@@ -1183,12 +1269,27 @@ namespace Project1
                     isHide = false;
                 }
             }
+            if (isRead == true)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
+                {
+                    dylight.Lights.Add(light);
+                    dylight.Lights.Add(spotLightR2_1);
+                    dylight.Lights.Add(spotLightR2_2);
+                    dylight.Lights.Add(spotLightR2_3);
+                    dylight.Lights.Add(spotLightR2_4);
+                    isRead = false;
+                }
+            }
+
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             {
                 if(isHide == false)
                 {
-                    if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
+                    if (isRead == false)
+                    {
+                       if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
                     {
                         hBarRec.Width -= 5;
                     }
@@ -1230,7 +1331,9 @@ namespace Project1
                             bLine -= new Vector2(3, 0);
                             camPos -= new Vector2(3, 0);
                             uiPos -= new Vector2(3, 0);
-                        }
+                            sanityPos -= new Vector2(3, 0);
+                            staminaPos -= new Vector2(3, 0);
+                            }
 
                         if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                         {
@@ -1241,6 +1344,8 @@ namespace Project1
                             bLine -= new Vector2(6, 0);
                             camPos -= new Vector2(6, 0);
                             uiPos -= new Vector2(6, 0);
+                            sanityPos -= new Vector2(6, 0);
+                            staminaPos -= new Vector2(6, 0);
                             sBarRec.Width -= 3;
                         }
                         else
@@ -1283,7 +1388,9 @@ namespace Project1
                             bLine += new Vector2(3, 0);
                             camPos += new Vector2(3, 0);
                             uiPos += new Vector2(3, 0);
-                        }
+                            sanityPos += new Vector2(3, 0);
+                            staminaPos += new Vector2(3, 0);
+                            }
                         if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                         {
                             w_instance.Stop();
@@ -1293,6 +1400,8 @@ namespace Project1
                             bLine += new Vector2(6, 0);
                             camPos += new Vector2(6, 0);
                             uiPos += new Vector2(6, 0);
+                            sanityPos += new Vector2(6, 0);
+                            staminaPos += new Vector2(6, 0);
                             sBarRec.Width -= 3;
                         }
                         else
@@ -1335,7 +1444,17 @@ namespace Project1
                     {
                         ePos.X = ePos.X - eSpeed.X - 16;
                     }
-                }
+                        if (ks.IsKeyUp(Keys.D1) && old_ks.IsKeyDown(Keys.D1)) //Use stamina
+                        {
+                            UseStanimaPill();
+                        }
+                        if (ks.IsKeyUp(Keys.D2) && old_ks.IsKeyDown(Keys.D2)) //Use sanity 
+                        {
+                            UseSanityPill();
+                        }
+                    } 
+            }
+                    
                 else
                 {
                     speed.X = 0;
@@ -1357,6 +1476,7 @@ namespace Project1
                 Rectangle LockerRec2 = new Rectangle((int)ballLockerR2_2.X, (int)ballLockerR2_2.Y, 24, 24);
                 Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
                 Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, 10, 10);
+                Rectangle paperRec = new Rectangle((int)paperPos.X, (int)paperPos.Y, 53, 41);
 
                 if (personRectangle.Intersects(trapRectangle) == true)
                 {
@@ -1473,17 +1593,41 @@ namespace Project1
                     personHit4 = false;
                     toRoom_7 = "";
                 }
+                if (personRectangle.Intersects(paperRec) == true)
+                {
+                    tu1 = "F to Read";
+                    {
+                        if (ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F)) //Intereact object
+                        {
+                            isRead = true;
+                            dylight.Lights.Remove(light);
+                            dylight.Lights.Remove(spotLightR2_1);
+                            dylight.Lights.Remove(spotLightR2_2);
+                            dylight.Lights.Remove(spotLightR2_3);
+                            dylight.Lights.Remove(spotLightR2_4);
+                        }
+                    }
+                }
+                else if (personRectangle.Intersects(paperRec) == false)
+                {
+                    isRead = false;
+                    tu1 = "";
+
+                }
 
                 old_ks = ks;
             }
             eLight.Position = ePos - camPos + new Vector2(40, 40);
-            if(isAlive == false)
+            gotItemPos = pos + new Vector2(5, -45);
+            if (isAlive == false)
             {
                 eLight.Position = new Vector2(4440, 40);
             }
             light.Position = pos - camPos + new Vector2(40, 40);
             ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
             textPos = pos + new Vector2(5, 95);
+            textstaminaPos = staminaPos;
+            textsanityPos = sanityPos;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
         }
         void UpdateRoom3()
@@ -1697,6 +1841,8 @@ namespace Project1
                 pos.X = 1000;
                 camPos.X = 780;
                 uiPos.X = 780;
+                staminaPos.X = 1025;
+                sanityPos.X = 1055;
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
@@ -1712,6 +1858,8 @@ namespace Project1
                 pos.X = 100;
                 camPos.X = 0;
                 uiPos.X = 0;
+                staminaPos.X = 245;
+                sanityPos.X = 275;
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
@@ -1979,6 +2127,8 @@ namespace Project1
                             bLine -= new Vector2(3, 0);
                             camPos -= new Vector2(3, 0);
                             uiPos -= new Vector2(3, 0);
+                            sanityPos -= new Vector2(3, 0);
+                            staminaPos -= new Vector2(3, 0);
                         }
                         if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                         {
@@ -1989,6 +2139,8 @@ namespace Project1
                             bLine -= new Vector2(6, 0);
                             camPos -= new Vector2(6, 0);
                             uiPos -= new Vector2(6, 0);
+                            sanityPos -= new Vector2(6, 0);
+                            staminaPos -= new Vector2(6, 0);
                             sBarRec.Width -= 3;
                         }
                         else
@@ -2031,6 +2183,8 @@ namespace Project1
                             bLine += new Vector2(3, 0);
                             camPos += new Vector2(3, 0);
                             uiPos += new Vector2(3, 0);
+                            sanityPos += new Vector2(3, 0);
+                            staminaPos += new Vector2(3, 0);
                         }
                         if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                         {
@@ -2041,6 +2195,8 @@ namespace Project1
                             bLine += new Vector2(6, 0);
                             camPos += new Vector2(6, 0);
                             uiPos += new Vector2(6, 0);
+                            sanityPos += new Vector2(6, 0);
+                            staminaPos += new Vector2(6, 0);
                             sBarRec.Width -= 3;
                         }
                         else
@@ -2197,6 +2353,8 @@ namespace Project1
             light.Position = pos - camPos + new Vector2(40, 40);
             ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
             textPos = pos + new Vector2(5, 95);
+            textstaminaPos = staminaPos;
+            textsanityPos = sanityPos;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
         }
         void UpdateRoom6()
@@ -2396,6 +2554,8 @@ namespace Project1
                 pos.X = 200;
                 camPos.X = 0;
                 uiPos.X = 0;
+                staminaPos.X = 245;
+                sanityPos.X = 275;
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
@@ -2624,7 +2784,9 @@ namespace Project1
                 spotLightR2_4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 pos.X = 2025;
                 camPos.X = 1450;
-                uiPos.X = 1450;
+                uiPos.X = 1450; 
+                staminaPos.X = 1695;
+                sanityPos.X = 1725;
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
@@ -3127,6 +3289,8 @@ namespace Project1
             light.Position = pos - camPos + new Vector2(40, 40);
             ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
             textPos = pos + new Vector2(5, 95);
+            textstaminaPos = staminaPos;
+            textsanityPos = sanityPos;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
         }
         void UpdateL_Room3()
@@ -3332,6 +3496,8 @@ namespace Project1
                 pos.X = 1000;
                 camPos.X = 780;
                 uiPos.X = 780;
+                staminaPos.X = 1025;
+                sanityPos.X = 1055;
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
@@ -3347,6 +3513,8 @@ namespace Project1
                 pos.X = 100;
                 camPos.X = 0;
                 uiPos.X = 0;
+                staminaPos.X = 245;
+                sanityPos.X = 275;
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
@@ -3598,6 +3766,8 @@ namespace Project1
                             bLine -= new Vector2(3, 0);
                             camPos -= new Vector2(3, 0);
                             uiPos -= new Vector2(3, 0);
+                            staminaPos -= new Vector2(3, 0);
+                            sanityPos -= new Vector2(3, 0);
                         }
                         if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                         {
@@ -3608,6 +3778,8 @@ namespace Project1
                             bLine -= new Vector2(6, 0);
                             camPos -= new Vector2(6, 0);
                             uiPos -= new Vector2(6, 0);
+                            staminaPos -= new Vector2(6, 0);
+                            sanityPos -= new Vector2(6, 0);
                             sBarRec.Width -= 3;
                         }
                         else
@@ -3638,6 +3810,8 @@ namespace Project1
                             bLine += new Vector2(3, 0);
                             camPos += new Vector2(3, 0);
                             uiPos += new Vector2(3, 0);
+                            staminaPos += new Vector2(3, 0);
+                            sanityPos += new Vector2(3, 0);
                         }
                         if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                         {
@@ -3648,6 +3822,8 @@ namespace Project1
                             bLine += new Vector2(6, 0);
                             camPos += new Vector2(6, 0);
                             uiPos += new Vector2(6, 0);
+                            staminaPos += new Vector2(6, 0);
+                            sanityPos += new Vector2(6, 0);
                             sBarRec.Width -= 3;
                         }
                         else
@@ -3768,6 +3944,8 @@ namespace Project1
             light.Position = pos - camPos + new Vector2(40, 40);
             ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
             textPos = pos + new Vector2(5, 95);
+            textstaminaPos = staminaPos;
+            textsanityPos = sanityPos;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
         }
         void UpdateL_Room6()
@@ -3935,6 +4113,8 @@ namespace Project1
                 pos.Y = 230;
                 camPos.X = 0;
                 uiPos.X = 0;
+                staminaPos.X = 245;
+                sanityPos.X = 275;
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
@@ -4124,6 +4304,8 @@ namespace Project1
                         bLine -= new Vector2(3, 0);
                         camPos -= new Vector2(3, 0);
                         uiPos -= new Vector2(3, 0);
+                        staminaPos -= new Vector2(3, 0);
+                        sanityPos -= new Vector2(3, 0);
                     }
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
@@ -4134,6 +4316,8 @@ namespace Project1
                         bLine -= new Vector2(6, 0);
                         camPos -= new Vector2(6, 0);
                         uiPos -= new Vector2(6, 0);
+                        staminaPos -= new Vector2(6, 0);
+                        sanityPos -= new Vector2(6, 0);
                         sBarRec.Width -= 3;
                     }
                     else
@@ -4176,6 +4360,8 @@ namespace Project1
                         bLine += new Vector2(3, 0);
                         camPos += new Vector2(3, 0);
                         uiPos += new Vector2(3, 0);
+                        staminaPos += new Vector2(3, 0);
+                        sanityPos += new Vector2(3, 0);
                     }
                     if (ks.IsKeyDown(Keys.LeftShift) && sBarRec.Width >= 0) //Stanima
                     {
@@ -4186,6 +4372,8 @@ namespace Project1
                         bLine += new Vector2(6, 0);
                         camPos += new Vector2(6, 0);
                         uiPos += new Vector2(6, 0);
+                        staminaPos += new Vector2(6, 0);
+                        sanityPos += new Vector2(6, 0);
                         sBarRec.Width -= 3;
                     }
                     else
@@ -4269,6 +4457,8 @@ namespace Project1
             light.Position = pos - camPos + new Vector2(40, 40);
             ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
             textPos = pos + new Vector2(5, 95);
+            textstaminaPos = staminaPos;
+            textsanityPos = sanityPos;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
         }
         void UpdatePipePuzz()
@@ -4342,7 +4532,7 @@ namespace Project1
         {
             _spriteBatch.Draw(room1, (bg2Pos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(paperTu, paperPos, new Rectangle(319, 264, 53, 41), (Color.White));
-            
+            _spriteBatch.Draw(ballTexture, capetPos, new Rectangle(0, 24, 0, 0), (Color.White));
             if (speed.X <= 0)
             {
                 totalframe = 20;
@@ -4358,6 +4548,8 @@ namespace Project1
                 _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             }
             _spriteBatch.DrawString(deBugFont, tu1, (paperPos - new Vector2(0, 20)), (Color.White));
+            _spriteBatch.DrawString(deBugFont, capetText, (capetPos - new Vector2(0, 20)), (Color.White));
+            _spriteBatch.DrawString(deBugFont, gotItemText, (gotItemPos - new Vector2(40, 20)), (Color.Red));
             _spriteBatch.Draw(ballTexture, ballPos, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_2, (ballPos - new Vector2(0, 20)), (Color.White));
             if (isRead == true)
@@ -4373,6 +4565,10 @@ namespace Project1
                 _spriteBatch.Draw(hPill, (sanityPos - camPos) * scroll_factor, Color.White);
                 _spriteBatch.DrawString(deBugFont, staminaText, (textstaminaPos + new Vector2(10,45)), (Color.White));
                 _spriteBatch.DrawString(deBugFont, sanityText, (textsanityPos + new Vector2(10, 45)), (Color.White));
+            }
+            if (isRead2 == true)
+            {
+                _spriteBatch.Draw(note1, Vector2.Zero, (Color.White));
             }
         }
         void DrawMenu()
@@ -4406,7 +4602,9 @@ namespace Project1
             _spriteBatch.Draw(ballTexture, (ballLockerR2_1 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), Color.White);
             _spriteBatch.Draw(ballTexture, (ballLockerR2_2 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), Color.White);
             _spriteBatch.Draw(trap, trapPos - camPos * scroll_factor, new Rectangle(0, 0, 26, 26), (Color.White));
-            if(isHide == false)
+            _spriteBatch.Draw(paperTu, (paperPos - camPos) * scroll_factor, new Rectangle(319, 264, 53, 41), (Color.White));
+            _spriteBatch.DrawString(deBugFont, tu1, ((paperPos - new Vector2(0, 20)) - camPos) * scroll_factor, (Color.White));
+            if (isHide == false)
             {
                 if (speed.X <= 0)
                 {
@@ -4438,6 +4636,14 @@ namespace Project1
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
+            _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.Draw(hPill, (sanityPos - camPos) * scroll_factor, Color.White);
+            _spriteBatch.DrawString(deBugFont, staminaText, ((textstaminaPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            _spriteBatch.DrawString(deBugFont, sanityText, ((textsanityPos + new Vector2(10, 25) - camPos) * scroll_factor), (Color.White));
+            if (isRead == true)
+            {
+                _spriteBatch.Draw(note2, Vector2.Zero, (Color.White));
+            }
             //SpotLight
             spotLightR2_1.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
             spotLightR2_2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
@@ -5017,6 +5223,30 @@ namespace Project1
                     pipeboard.RotatePiece(x, y, true);
                     timeSinceLastInput = 0.0f;
                 }
+            }
+        }
+        private void AddStanimaPill()
+        {
+            stamina++;
+        }
+        private void AddSanityPill()
+        {
+            sanity ++;
+        }
+        private void UseStanimaPill()
+        {
+            if(stamina >= 1)
+            {
+                stamina--;
+                sBarRec.Width += 50;
+            }
+        }
+        private void UseSanityPill()
+        {
+            if (sanity >= 1)
+            {
+                sanity--;
+                hBarRec.Width += 10;
             }
         }
     }
