@@ -14,6 +14,7 @@ using SharpDX.XAudio2;
 using SharpDX.Direct2D1.Effects;
 using System.Diagnostics;
 using Application = System.Windows.Forms.Application;
+using SharpDX.XInput;
 
 namespace Project1
 {
@@ -149,6 +150,7 @@ namespace Project1
         private string puzzle3;
         private string puzzle2;
         private string tu1;
+        private string tu2;
         private string locker2_1;
         private string locker2_2;
         private string locker3;
@@ -191,6 +193,7 @@ namespace Project1
         float totalelapsed;
         float elapsed;
 
+        float cooldowntime = 0;
         SoundEffect bgm;
         SoundEffectInstance instance;
 
@@ -391,6 +394,7 @@ namespace Project1
             puzzle2 = "";
             puzzle3 = "";
             tu1 = "";
+            tu2 = "";
             locker2_1 = "";
             locker2_2 = "";
             locker3 = "";
@@ -549,6 +553,7 @@ namespace Project1
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            cooldowntime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             switch (mCurrentScreen)
             {
                 case Screenstate.Title:
@@ -567,6 +572,7 @@ namespace Project1
                     {
                         UpdateRoom1();
                         dylight.AmbientColor = new Color(new Vector3(0.3f));
+
                         break;
                     }
                 case Screenstate.Room2:
@@ -831,7 +837,6 @@ namespace Project1
                     isRead = false;
                 }
             }
-            
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             KeyboardState old_ks = Keyboard.GetState();
@@ -845,12 +850,6 @@ namespace Project1
                 if (ks.IsKeyDown(Keys.W))
                 {
                     w_instance.Play();
-
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
                     pos.Y = pos.Y - speed.Y;
                     if (pos.Y <= 210)
                     {
@@ -863,12 +862,6 @@ namespace Project1
                 if (ks.IsKeyDown(Keys.S))
                 {
                     w_instance.Play();
-
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
                     pos.Y = pos.Y + speed.Y;
                     if (pos.Y >= 280)
                     {
@@ -900,8 +893,20 @@ namespace Project1
                     UpdateFrame(elapsed);
                 }
                 else
-                {
-                    sBarRec.Width += 1;
+                {   
+                    if ( sBarRec.Width >= 1)
+                    {
+                        sBarRec.Width += 1;
+                    }
+                    if ( sBarRec.Width <= 0 && cooldowntime >= 5000 )
+                    {
+                        sBarRec.Width = 0;
+                        cooldowntime = 0;
+                    }
+                    if (cooldowntime == 0)
+                    {
+                        sBarRec.Width += 1;
+                    }
                     if (sBarRec.Width >= 163)
                     {
                         sBarRec.Width = 163;
@@ -930,7 +935,19 @@ namespace Project1
                 }
                 else
                 {
-                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 1)
+                    {
+                        sBarRec.Width += 1;
+                    }
+                    if (sBarRec.Width <= 0 && cooldowntime >= 5000)
+                    {
+                        sBarRec.Width = 0;
+                        cooldowntime = 0;
+                    }
+                    if(cooldowntime == 0)
+                    {
+                        sBarRec.Width += 1;
+                    }
                     if (sBarRec.Width >= 163)
                     {
                         sBarRec.Width = 163;
@@ -1137,11 +1154,6 @@ namespace Project1
                     {
                         w_instance.Play();
 
-                        sBarRec.Width += 1;
-                        if (sBarRec.Width >= 163)
-                        {
-                            sBarRec.Width = 163;
-                        }
                         pos.Y = pos.Y - speed.Y;
                         if (pos.Y <= 210)
                         {
@@ -1155,11 +1167,6 @@ namespace Project1
                     {
                         w_instance.Play();
 
-                        sBarRec.Width += 1;
-                        if (sBarRec.Width >= 163)
-                        {
-                            sBarRec.Width = 163;
-                        }
                         pos.Y = pos.Y + speed.Y;
                         if (pos.Y >= 280)
                         {
@@ -1204,7 +1211,19 @@ namespace Project1
                     }
                     else
                     {
-                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 1)
+                        {
+                            sBarRec.Width += 1;
+                        }
+                        if (sBarRec.Width <= 0 && cooldowntime >= 5000)
+                        {
+                            sBarRec.Width = 0;
+                            cooldowntime = 0;
+                        }
+                        if (cooldowntime == 0)
+                        {
+                            sBarRec.Width += 1;
+                        }
                         if (sBarRec.Width >= 163)
                         {
                             sBarRec.Width = 163;
@@ -1244,7 +1263,19 @@ namespace Project1
                     }
                     else
                     {
-                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 1)
+                        {
+                            sBarRec.Width += 1;
+                        }
+                        if (sBarRec.Width <= 0 && cooldowntime >= 5000)
+                        {
+                            sBarRec.Width = 0;
+                            cooldowntime = 0;
+                        }
+                        if (cooldowntime == 0)
+                        {
+                            sBarRec.Width += 1;
+                        }
                         if (sBarRec.Width >= 163)
                         {
                             sBarRec.Width = 163;
@@ -1445,11 +1476,6 @@ namespace Project1
                     {
                         w_instance.Play();
 
-                        sBarRec.Width += 1;
-                        if (sBarRec.Width >= 163)
-                        {
-                            sBarRec.Width = 163;
-                        }
                         pos.Y = pos.Y - speed.Y;
                         if (pos.Y <= 210)
                         {
@@ -1463,11 +1489,6 @@ namespace Project1
                     {
                         w_instance.Play();
 
-                        sBarRec.Width += 1;
-                        if (sBarRec.Width >= 163)
-                        {
-                            sBarRec.Width = 163;
-                        }
                         pos.Y = pos.Y + speed.Y;
                         if (pos.Y >= 280)
                         {
@@ -1500,7 +1521,19 @@ namespace Project1
                     }
                     else
                     {
-                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 1)
+                        {
+                            sBarRec.Width += 1;
+                        }
+                        if (sBarRec.Width <= 0 && cooldowntime >= 5000)
+                        {
+                            sBarRec.Width = 0;
+                            cooldowntime = 0;
+                        }
+                        if (cooldowntime == 0)
+                        {
+                            sBarRec.Width += 1;
+                        }
                         if (sBarRec.Width >= 163)
                         {
                             sBarRec.Width = 163;
@@ -1529,7 +1562,19 @@ namespace Project1
                     }
                     else
                     {
-                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 1)
+                        {
+                            sBarRec.Width += 1;
+                        }
+                        if (sBarRec.Width <= 0 && cooldowntime >= 5000)
+                        {
+                            sBarRec.Width = 0;
+                            cooldowntime = 0;
+                        }
+                        if (cooldowntime == 0)
+                        {
+                            sBarRec.Width += 1;
+                        }
                         if (sBarRec.Width >= 163)
                         {
                             sBarRec.Width = 163;
@@ -1636,11 +1681,6 @@ namespace Project1
                 {
                     w_instance.Play();
 
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
                     pos.Y = pos.Y - speed.Y;
                     if (pos.Y <= 210)
                     {
@@ -1654,11 +1694,6 @@ namespace Project1
                 {
                     w_instance.Play();
 
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
                     pos.Y = pos.Y + speed.Y;
                     if (pos.Y >= 280)
                     {
@@ -1691,7 +1726,19 @@ namespace Project1
                 }
                 else
                 {
-                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 1)
+                    {
+                        sBarRec.Width += 1;
+                    }
+                    if (sBarRec.Width <= 0 && cooldowntime >= 5000)
+                    {
+                        sBarRec.Width = 0;
+                        cooldowntime = 0;
+                    }
+                    if (cooldowntime == 0)
+                    {
+                        sBarRec.Width += 1;
+                    }
                     if (sBarRec.Width >= 163)
                     {
                         sBarRec.Width = 163;
@@ -1720,7 +1767,19 @@ namespace Project1
                 }
                 else
                 {
-                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 1)
+                    {
+                        sBarRec.Width += 1;
+                    }
+                    if (sBarRec.Width <= 0 && cooldowntime >= 5000)
+                    {
+                        sBarRec.Width = 0;
+                        cooldowntime = 0;
+                    }
+                    if (cooldowntime == 0)
+                    {
+                        sBarRec.Width += 1;
+                    }
                     if (sBarRec.Width >= 163)
                     {
                         sBarRec.Width = 163;
@@ -1793,20 +1852,18 @@ namespace Project1
                 pos.X = 400;
             }
             if (personHit3 == true && isClear == false)
-            {
+            { 
                 mCurrentScreen = Screenstate.PassPuzz;
             }
 
             if (personHit4 == true)
             {
-                isHide = true;
-
-                if (Keyboard.GetState().IsKeyUp(Keys.F))
+                if (Keyboard.GetState().IsKeyUp(Keys.F) && isHide == true)
                 {
                     isHide = false;
+                    pos = new Vector2(1100,210);
                 }
             }
-
 
             bool hit = Enemy.isHit;
             if (hit == true)
@@ -1820,20 +1877,10 @@ namespace Project1
             {
                 if(isHide == false)
                 {
-                    if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
-                    {
-                        hBarRec.Width -= 5;
-                    }
-
                     if (ks.IsKeyDown(Keys.W))
                     {
                         w_instance.Play();
 
-                        sBarRec.Width += 1;
-                        if (sBarRec.Width >= 163)
-                        {
-                            sBarRec.Width = 163;
-                        }
                         pos.Y = pos.Y - speed.Y;
                         if (pos.Y <= 210)
                         {
@@ -1847,11 +1894,6 @@ namespace Project1
                     {
                         w_instance.Play();
 
-                        sBarRec.Width += 1;
-                        if (sBarRec.Width >= 163)
-                        {
-                            sBarRec.Width = 163;
-                        }
                         pos.Y = pos.Y + speed.Y;
                         if (pos.Y >= 280)
                         {
@@ -1895,7 +1937,19 @@ namespace Project1
                     }
                     else
                     {
-                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 1)
+                        {
+                            sBarRec.Width += 1;
+                        }
+                        if (sBarRec.Width <= 0 && cooldowntime >= 5000)
+                        {
+                            sBarRec.Width = 0;
+                            cooldowntime = 0;
+                        }
+                        if (cooldowntime == 0)
+                        {
+                            sBarRec.Width += 1;
+                        }
                         if (sBarRec.Width >= 163)
                         {
                             sBarRec.Width = 163;
@@ -1935,7 +1989,19 @@ namespace Project1
                     }
                     else
                     {
-                        sBarRec.Width += 1;
+                        if (sBarRec.Width >= 1)
+                        {
+                            sBarRec.Width += 1;
+                        }
+                        if (sBarRec.Width <= 0 && cooldowntime >= 5000)
+                        {
+                            sBarRec.Width = 0;
+                            cooldowntime = 0;
+                        }
+                        if (cooldowntime == 0)
+                        {
+                            sBarRec.Width += 1;
+                        }
                         if (sBarRec.Width >= 163)
                         {
                             sBarRec.Width = 163;
@@ -1952,14 +2018,12 @@ namespace Project1
                 else
                 {
                     speed.X = 0;
-
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
                     {
                         sBarRec.Width = 163;
                     }
                 }
-
                 // -----------------------------------------------------------------------------------------------collistion
                 Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
                 Rectangle ballRectangle = new Rectangle((int)ballPos5_4.X, (int)ballPos5_4.Y, 24, 24);
@@ -1984,6 +2048,7 @@ namespace Project1
                         if (ks.IsKeyDown(Keys.F)) //Intereact object
                         {
                             personHit4 = true;
+                            isHide = true;
                         }
                     }
                 }
@@ -2082,11 +2147,6 @@ namespace Project1
                 {
                     w_instance.Play();
 
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
                     pos.Y = pos.Y - speed.Y;
                     if (pos.Y <= 210)
                     {
@@ -2100,11 +2160,6 @@ namespace Project1
                 {
                     w_instance.Play();
 
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
                     pos.Y = pos.Y + speed.Y;
                     if (pos.Y >= 280)
                     {
@@ -2137,7 +2192,19 @@ namespace Project1
                 }
                 else
                 {
-                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 1)
+                    {
+                        sBarRec.Width += 1;
+                    }
+                    if (sBarRec.Width <= 0 && cooldowntime >= 5000)
+                    {
+                        sBarRec.Width = 0;
+                        cooldowntime = 0;
+                    }
+                    if (cooldowntime == 0)
+                    {
+                        sBarRec.Width += 1;
+                    }
                     if (sBarRec.Width >= 163)
                     {
                         sBarRec.Width = 163;
@@ -2166,7 +2233,19 @@ namespace Project1
                 }
                 else
                 {
-                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 1)
+                    {
+                        sBarRec.Width += 1;
+                    }
+                    if (sBarRec.Width <= 0 && cooldowntime >= 5000)
+                    {
+                        sBarRec.Width = 0;
+                        cooldowntime = 0;
+                    }
+                    if (cooldowntime == 0)
+                    {
+                        sBarRec.Width += 1;
+                    }
                     if (sBarRec.Width >= 163)
                     {
                         sBarRec.Width = 163;
@@ -2239,6 +2318,13 @@ namespace Project1
                 mCurrentScreen = Screenstate.PipePuzz;
                 dylight.Lights.Remove(spotLightR7);
             }
+            if (isRead == true)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
+                {
+                    isRead = false;
+                }
+            }
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
@@ -2253,11 +2339,6 @@ namespace Project1
                 {
                     w_instance.Play();
 
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
                     pos.Y = pos.Y - speed.Y;
                     if (pos.Y <= 210)
                     {
@@ -2271,11 +2352,6 @@ namespace Project1
                 {
                     w_instance.Play();
 
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
                     pos.Y = pos.Y + speed.Y;
                     if (pos.Y >= 280)
                     {
@@ -2308,7 +2384,19 @@ namespace Project1
                 }
                 else
                 {
-                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 1)
+                    {
+                        sBarRec.Width += 1;
+                    }
+                    if (sBarRec.Width <= 0 && cooldowntime >= 5000)
+                    {
+                        sBarRec.Width = 0;
+                        cooldowntime = 0;
+                    }
+                    if (cooldowntime == 0)
+                    {
+                        sBarRec.Width += 1;
+                    }
                     if (sBarRec.Width >= 163)
                     {
                         sBarRec.Width = 163;
@@ -2337,7 +2425,19 @@ namespace Project1
                 }
                 else
                 {
-                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 1)
+                    {
+                        sBarRec.Width += 1;
+                    }
+                    if (sBarRec.Width <= 0 && cooldowntime >= 5000)
+                    {
+                        sBarRec.Width = 0;
+                        cooldowntime = 0;
+                    }
+                    if (cooldowntime == 0)
+                    {
+                        sBarRec.Width += 1;
+                    }
                     if (sBarRec.Width >= 163)
                     {
                         sBarRec.Width = 163;
@@ -2354,6 +2454,7 @@ namespace Project1
             Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
             Rectangle ballRectangle = new Rectangle((int)ballPos7_2.X, (int)ballPos7_2.Y, 24, 24);
             Rectangle ballpuzzle = new Rectangle((int)puzzlePos1.X, (int)puzzlePos1.Y, 24, 24);
+            Rectangle paperRec = new Rectangle((int)paperPos.X, (int)paperPos.Y, 53, 41);
             if (personRectangle.Intersects(ballRectangle) == true)
             {
                 backRoom7_2 = "F To Enter";
@@ -2386,6 +2487,21 @@ namespace Project1
             {
                 personHit2 = false;
                 puzzle1 = "Check";
+            }
+            if (personRectangle.Intersects(paperRec) == true)
+            {
+                tu2= "F to Read";
+                {
+                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    {
+                        isRead = true;
+                    }
+                }
+            }
+            else if (personRectangle.Intersects(paperRec) == false)
+            {
+                isRead = false;
+                tu2 = "";
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -3857,11 +3973,6 @@ namespace Project1
                 {
                     w_instance.Play();
 
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
                     pos.Y = pos.Y - speed.Y;
                     if (pos.Y <= 210)
                     {
@@ -3875,11 +3986,7 @@ namespace Project1
                 {
                     w_instance.Play();
 
-                    sBarRec.Width += 1;
-                    if (sBarRec.Width >= 163)
-                    {
-                        sBarRec.Width = 163;
-                    }
+                    
                     pos.Y = pos.Y + speed.Y;
                     if (pos.Y >= 280)
                     {
@@ -3922,7 +4029,19 @@ namespace Project1
                 }
                 else
                 {
-                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 1)
+                    {
+                        sBarRec.Width += 1;
+                    }
+                    if (sBarRec.Width <= 0 && cooldowntime >= 5000)
+                    {
+                        sBarRec.Width = 0;
+                        cooldowntime = 0;
+                    }
+                    if (cooldowntime == 0)
+                    {
+                        sBarRec.Width += 1;
+                    }
                     if (sBarRec.Width >= 163)
                     {
                         sBarRec.Width = 163;
@@ -3962,7 +4081,19 @@ namespace Project1
                 }
                 else
                 {
-                    sBarRec.Width += 1;
+                    if (sBarRec.Width >= 1)
+                    {
+                        sBarRec.Width += 1;
+                    }
+                    if (sBarRec.Width <= 0 && cooldowntime >= 5000)
+                    {
+                        sBarRec.Width = 0;
+                        cooldowntime = 0;
+                    }
+                    if (cooldowntime == 0)
+                    {
+                        sBarRec.Width += 1;
+                    }
                     if (sBarRec.Width >= 163)
                     {
                         sBarRec.Width = 163;
@@ -4258,6 +4389,7 @@ namespace Project1
                 }
                 else
                 {
+
                     if (totalframe > 4)
                     {
                         frame = 0;
@@ -4266,6 +4398,7 @@ namespace Project1
                     _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
                 }
             }
+            _spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 0, 0), (Color.White));
 
             _spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom5_4, (ballPos5_4 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
@@ -4311,6 +4444,11 @@ namespace Project1
         void DrawRoom7()
         {
             _spriteBatch.Draw(room7, Vector2.Zero, Color.White);
+            _spriteBatch.Draw(paperTu, paperPos, new Rectangle(319, 264, 53, 41), (Color.White));
+            if (isRead == true)
+            {
+                _spriteBatch.Draw(tutorial, Vector2.Zero, (Color.White));
+            }
             if (speed.X <= 0)
             {
                 totalframe = 20;
@@ -4325,6 +4463,7 @@ namespace Project1
                 totalframe = 4;
                 _spriteBatch.Draw(farmer, pos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             }
+
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
@@ -4332,6 +4471,7 @@ namespace Project1
             _spriteBatch.Draw(ballTexture, puzzlePos1, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom7_2, (ballPos7_2 - new Vector2(0, 80)), (Color.White));
             _spriteBatch.DrawString(deBugFont, puzzle1, (puzzlePos1 - new Vector2(20, 50)), (Color.White));
+            _spriteBatch.DrawString(deBugFont, tu2, (paperPos - new Vector2(0, 20)), (Color.White));
         }
 
         void DrawL_Room1()
@@ -4696,7 +4836,17 @@ namespace Project1
                     if (pipeboard.HasConnector((int)LastPipe.X, (int)LastPipe.Y, "Right"))
                     {
                         playerScore += DetermineScore(WaterChain.Count);
-                        mCurrentScreen = Screenstate.LRoom7;
+                        if (inRoom6 == true)
+                        {
+                            mCurrentScreen = Screenstate.LRoom6;
+                        }
+                        else
+                        {
+                            mCurrentScreen = Screenstate.Room7;
+                            Debug.Write("Active");
+                        }
+                        dylight.Lights.Add(spotLightR7);
+
                         foreach (Vector2 ScoringSquare in WaterChain)
                         {
                             pipeboard.SetSquare((int)ScoringSquare.X,

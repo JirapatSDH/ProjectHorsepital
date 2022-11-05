@@ -29,7 +29,6 @@ namespace Project1
         bool right;
         float distance;
         float oldDistance;
-
         public Enemy (Texture2D neweneTexture, Vector2 newenePos, float newdistance)
         {
             eneTexture = neweneTexture;
