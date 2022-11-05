@@ -347,6 +347,7 @@ namespace Project1
         public Vector2 ePos;
         public Vector2 trapPos;
         Vector2 eSpeed = new Vector2(1, 1);
+        private string tu3;
 
         public Game1()
         {
@@ -397,6 +398,7 @@ namespace Project1
             puzzle3 = "";
             tu1 = "";
             tu2 = "";
+            tu3 = "";
             locker2_1 = "";
             locker2_2 = "";
             locker3 = "";
@@ -1874,6 +1876,13 @@ namespace Project1
                     isHide = false;
                 }
             }
+            if(isRead == true)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
+                {
+                    isRead = false;
+                }
+            }
 
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
@@ -2039,7 +2048,7 @@ namespace Project1
                 Rectangle LockerRec5 = new Rectangle((int)ballLockerR5.X, (int)ballLockerR5.Y, 24, 24);
                 Rectangle puzzleRectangle = new Rectangle((int)puzzlePos2.X, (int)puzzlePos2.Y, 24, 24);
                 Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
-                Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, -20, 50);
+                Rectangle paperRec = new Rectangle((int)paperPos.X, (int)paperPos.Y, 53, 41);
 
                 if (personRectangle.Intersects(enemyRectangle) == true)
                 {
@@ -2116,6 +2125,21 @@ namespace Project1
                 {
                     personHit3 = false;
                     puzzle2 = "";
+                }
+                if (personRectangle.Intersects(paperRec) == true)
+                {
+                    tu3 = "F to Read";
+                    {
+                        if (ks.IsKeyDown(Keys.F)) //Intereact object
+                        {
+                            isRead = true;
+                        }
+                    }
+                }
+                else if (personRectangle.Intersects(paperRec) == false)
+                {
+                    isRead = false;
+                    tu3 = "";
                 }
 
                 old_ks = ks;
@@ -4406,7 +4430,8 @@ namespace Project1
             _spriteBatch.Draw(ball2Texture, (ballPos5_6 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.Draw(ball2Texture, (puzzlePos2 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.Draw(ballTexture, (ballLockerR5 - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
-            if(isHide == false)
+            _spriteBatch.Draw(paperTu, paperPos - camPos * scroll_factor, new Rectangle(319, 264, 53, 41), (Color.White));
+            if (isHide == false)
             {
                 if (speed.X <= 0)
                 {
@@ -4425,17 +4450,21 @@ namespace Project1
                 }
             }
             _spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 0, 0), (Color.White));
-
             _spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom5_4, (ballPos5_4 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_6, (ballPos5_6 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, puzzle2, (puzzlePos2 - new Vector2(0, 50) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, locker5, (ballLockerR5 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
+            _spriteBatch.DrawString(deBugFont, tu3, (paperPos - new Vector2(0, 20) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             enemy.Draw(_spriteBatch,camPos,scroll_factor,eframe);
+            if (isRead == true)
+            {
+                _spriteBatch.Draw(tutorial2, Vector2.Zero, (Color.White));
+            }
             //SpotLight
             spotLightR2_1.Position = (new Vector2(894, 30) - camPos) * scroll_factor;
             spotLightR2_2.Position = (new Vector2(1212, 25) - camPos) * scroll_factor;
