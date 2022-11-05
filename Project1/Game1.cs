@@ -151,6 +151,7 @@ namespace Project1
         private string puzzle3;
         private string puzzle2;
         private string tu1;
+        private string tu2;
         private string locker2_1;
         private string locker2_2;
         private string locker3;
@@ -1853,16 +1854,10 @@ namespace Project1
             {
                 if (isHide == false)
                 {
-                    if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
+                    if(ks.IsKeyDown(Keys.Space))
                     {
                         hBarRec.Width -= 5;
                     }
-
-                    if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
-                    {
-                        hBarRec.Width -= 5;
-                    }
-
                     if (ks.IsKeyDown(Keys.W))
                     {
                         w_instance.Play();
@@ -2006,20 +2001,20 @@ namespace Project1
                     speed.X = 0;
                     sBarRec.Width += 1;
                     if (sBarRec.Width >= 163)
+                    {
+                        sBarRec.Width = 163;
+                    }
+                }
+                // -----------------------------------------------------------------------------------------------collistion
+                Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
+                Rectangle ballRectangle = new Rectangle((int)ballPos5_4.X, (int)ballPos5_4.Y, 24, 24);
+                Rectangle ball2Rectangle = new Rectangle((int)ballPos5_6.X, (int)ballPos5_6.Y, 24, 24);
+                Rectangle LockerRec5 = new Rectangle((int)ballLockerR5.X, (int)ballLockerR5.Y, 24, 24);
+                Rectangle puzzleRectangle = new Rectangle((int)puzzlePos2.X, (int)puzzlePos2.Y, 24, 24);
                 Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 0, 0);
-                Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
+                //Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
                 Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, -20, 50);
 
-                Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, 100, 100);
-
-                if (personRectangle.Intersects(trapRectangle) == true)
-                {
-                    sBarRec.Width -= 3;
-                }
-                else if (personRectangle.Intersects(trapRectangle) == false)
-                {
-
-                }
                 if (personRectangle.Intersects(enemyRectangle) == true)
                 {
                     hBarRec.Width -= 5;
@@ -2071,46 +2066,18 @@ namespace Project1
                         {
                             //toRoom_6 = "Enter room ?";
                             personHit2 = true;
-                    puzzle2 = "F To Solve";
-                    {
-                        if (ks.IsKeyDown(Keys.F)) //Intereact object
-                        {
-                            puzzle2 = "Solving";
-                            personHit3 = true;
+                            d_instance.Play();
                         }
                     }
                 }
-                else if (personRectangle.Intersects(puzzleRectangle) == false)
+                else if (personRectangle.Intersects(ball2Rectangle) == false)
                 {
-                    personHit3 = false;
-                    puzzle2 = "Check";
+                    personHit2 = false;
+                    toRoom_6 = "";
                 }
+
+                old_ks = ks;
             }
-            enemy.Update(pos);
-                        if (ks.IsKeyDown(Keys.F)) //Intereact object
-                        {
-                            puzzle2 = "Solving";
-                            personHit3 = true;
-                        }
-                    }
-                }
-                else if (personRectangle.Intersects(puzzleRectangle) == false)
-                {
-                    personHit3 = false;
-                    puzzle2 = "Check";
-                }
-            }
-            enemy.Update(pos);
-                        }
-                    }
-                }
-                else if (personRectangle.Intersects(puzzleRectangle) == false)
-                {
-                    personHit3 = false;
-                    puzzle2 = "Check";
-                }
-            }
-            enemy.Update(pos);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(40, 40);
             ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
@@ -2273,19 +2240,23 @@ namespace Project1
                     }
                 }
             }
+            else if (personRectangle.Intersects(ballRectangle) == false)
+            {
+                personHit = false;
+                backRoom6_5 = "";
             }
             if (personRectangle.Intersects(puzzleRectangle) == true)
             {
                 puzzle3 = "F To Solve";
                 {
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
-            if (isRead == true)
-            {
-                if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
-                {
-                    isRead = false;
+                    {
+                        puzzle3 = "Solving";
+                        personHit2 = true;
+                    }
                 }
             }
+            else if (personRectangle.Intersects(puzzleRectangle) == false)
             {
                 personHit2 = false;
                 puzzle3 = "Check";
@@ -2449,36 +2420,6 @@ namespace Project1
                     speed.X = 0;
                     UpdateFrame(elapsed);
                 }
-            if (personRectangle.Intersects(paperRec) == true)
-            {
-                tu1= "F to Read";
-                {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
-                    {
-                        isRead = true;
-                    }
-                }
-            }
-            else if (personRectangle.Intersects(paperRec) == false)
-            {
-                isRead = false;
-                tu1 = "";
-            }
-            if (personRectangle.Intersects(paperRec) == true)
-            {
-                tu2= "F to Read";
-                {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
-                    {
-                        isRead = true;
-                    }
-                }
-            }
-            else if (personRectangle.Intersects(paperRec) == false)
-            {
-                isRead = false;
-                tu2 = "";
-            }
             }
             Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
             Rectangle ballRectangle = new Rectangle((int)ballPos7_2.X, (int)ballPos7_2.Y, 24, 24);
@@ -2516,6 +2457,21 @@ namespace Project1
             {
                 personHit2 = false;
                 puzzle1 = "Check";
+            }
+            if (personRectangle.Intersects(paperRec) == true)
+            {
+                tu1= "F to Read";
+                {
+                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    {
+                        isRead = true;
+                    }
+                }
+            }
+            else if (personRectangle.Intersects(paperRec) == false)
+            {
+                isRead = false;
+                tu1 = "";
             }
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
@@ -4494,6 +4450,7 @@ namespace Project1
             _spriteBatch.Draw(ballTexture, puzzlePos1, new Rectangle(0, 24, 0, 0), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom7_2, (ballPos7_2 - new Vector2(0, 80)), (Color.White));
             _spriteBatch.DrawString(deBugFont, puzzle1, (puzzlePos1 - new Vector2(20, 50)), (Color.White));
+            _spriteBatch.DrawString(deBugFont, tu1, (paperPos - new Vector2(0, 20)), (Color.White));
         }
 
         void DrawL_Room1()
