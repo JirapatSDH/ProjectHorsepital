@@ -239,10 +239,21 @@ namespace Project1
         Texture2D passTexture;
         Texture2D passBackgroud;
         /// -----------------------------------------------------------------------------<PuzzlePipe>
+        /// -----------------------------------------------------------------------------<Item>
         Texture2D sPill;
         Texture2D hPill;
-    //--------------------------------------------------------------------------Set Light---------------------------------------------
-    Light light2 = new Spotlight
+
+        public static string sanityText;
+        public static string staminaText;
+        public static int sanity = 0;
+        public static int stamina = 0;
+
+        Vector2 sanityPos = new Vector2(250,400);
+        Vector2 staminaPos = new Vector2(280,400);
+        Vector2 textsanityPos;
+        Vector2 textstaminaPos;
+        //--------------------------------------------------------------------------Set Light---------------------------------------------
+        Light light2 = new Spotlight
         {
             Color = Color.White,
             Scale = new Vector2(0f),
@@ -403,6 +414,8 @@ namespace Project1
             locker2_2 = "";
             locker3 = "";
             locker5 = "";
+            sanityText = stamina.ToString();
+            staminaText = stamina.ToString();
             base.Initialize();
             dylight.Initialize();
         }
@@ -462,6 +475,8 @@ namespace Project1
             tutorial2 = Content.Load<Texture2D>("2");
             tutorial3 = Content.Load<Texture2D>("3");
             passBackgroud = Content.Load<Texture2D>("passPuzzle-BackGround");
+            sPill = Content.Load<Texture2D>("stamina_pill");
+            hPill = Content.Load<Texture2D>("sanity_pill");
 
 
             bgm = Content.Load<SoundEffect>("BGM");
@@ -859,6 +874,8 @@ namespace Project1
                     isRead = false;
                 }
             }
+            textstaminaPos = staminaPos + new Vector2(0,-20);
+            textsanityPos = sanityPos + new Vector2(0, -20);
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
             KeyboardState old_ks = Keyboard.GetState();
@@ -4342,7 +4359,10 @@ namespace Project1
                 _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
                 _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
                 _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
-
+                _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
+                _spriteBatch.Draw(hPill, (sanityPos - camPos) * scroll_factor, Color.White);
+                _spriteBatch.DrawString(deBugFont, staminaText, (textstaminaPos + new Vector2(10,45)), (Color.White));
+                _spriteBatch.DrawString(deBugFont, sanityText, (textsanityPos + new Vector2(10, 45)), (Color.White));
             }
         }
         void DrawMenu()
