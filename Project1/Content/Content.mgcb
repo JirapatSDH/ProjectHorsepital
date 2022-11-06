@@ -661,6 +661,12 @@
 /processorParam:TextureFormat=Color
 /build:Gameover_bg.png
 
+#begin generator.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:generator.wav
+
 #begin ghost_stand.png
 /importer:TextureImporter
 /processor:TextureProcessor

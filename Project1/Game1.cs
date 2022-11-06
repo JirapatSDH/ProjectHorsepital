@@ -267,6 +267,13 @@ namespace Project1
         SoundEffectInstance p_instance;
         AudioListener p_listener;
         AudioEmitter p_emitter;
+
+        SoundEffect genaretor;
+        SoundEffectInstance gen_instance;
+        AudioListener gen_listener;
+        AudioEmitter gen_emitter;
+
+
         /// -----------------------------------------------------------------------------<PuzlePipe>
         Texture2D playingPieces;
         Pipeboard pipeboard;
@@ -585,6 +592,36 @@ namespace Project1
             d_instance.IsLooped = false;
             d_listener = new AudioListener();   d_emitter = new AudioEmitter();
             d_instance.Apply3D(d_listener, d_emitter);
+
+            ghost1 = Content.Load<SoundEffect>("Ghost1");
+            g1_instance = ghost1.CreateInstance();
+            g1_instance.IsLooped = false;
+            g1_listener = new AudioListener(); g1_emitter = new AudioEmitter();
+            g1_instance.Apply3D(g1_listener, g1_emitter);
+
+            ghost2 = Content.Load<SoundEffect>("Ghost2");
+            g2_instance = ghost2.CreateInstance();
+            g2_instance.IsLooped = false;
+            g2_listener = new AudioListener(); g2_emitter = new AudioEmitter();
+            g2_instance.Apply3D(g2_listener, g2_emitter);
+
+            search = Content.Load<SoundEffect>("searching");
+            s_instance = search.CreateInstance();
+            s_instance.IsLooped = false;
+            s_listener = new AudioListener(); s_emitter = new AudioEmitter();
+            s_instance.Apply3D(s_listener, s_emitter);
+
+            paperFlip = Content.Load<SoundEffect>("paper-flutter");
+            p_instance = paperFlip.CreateInstance();
+            p_instance.IsLooped = false;
+            p_listener = new AudioListener(); p_emitter = new AudioEmitter();
+            p_instance.Apply3D(p_listener, p_emitter);
+
+            genaretor = Content.Load<SoundEffect>("generator");
+            gen_instance = genaretor.CreateInstance();
+            gen_instance.IsLooped = false;
+            gen_listener = new AudioListener(); gen_emitter = new AudioEmitter();
+            gen_instance.Apply3D(gen_listener, gen_emitter);
 
             startframe = 0;
             starttotalframe = 10;
@@ -982,6 +1019,7 @@ namespace Project1
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
                 {
+                    p_instance.Play();
                     dylight.Lights.Add(light);
                     dylight.Lights.Add(spotLightR2_1);
                     dylight.Lights.Add(spotLightR2_2);
@@ -998,6 +1036,7 @@ namespace Project1
                 dylight.Lights.Remove(spotLightR2_4);
                 if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
                 {
+                    p_instance.Play();
                     dylight.Lights.Add(spotLightR2_1);
                     dylight.Lights.Add(spotLightR2_2);
                     dylight.Lights.Add(spotLightR2_3);
@@ -1187,8 +1226,9 @@ namespace Project1
             {
                 capetText = "F To Search";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if (ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F)) //Intereact object
                     {
+                        s_instance.Play();
                         isRead2 = true;
                         if (isSearch == false)
                         {
@@ -1216,6 +1256,7 @@ namespace Project1
                 {
                     if (ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F)) //Intereact object
                     {
+                        p_instance.Play();
                         isRead = true;
                         dylight.Lights.Remove(light);
                         dylight.Lights.Remove(spotLightR2_1);
@@ -1389,6 +1430,7 @@ namespace Project1
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
                 {
+                    p_instance.Play();
                     dylight.Lights.Add(light);
                     dylight.Lights.Add(spotLightR2_1);
                     dylight.Lights.Add(spotLightR2_2);
@@ -1397,8 +1439,9 @@ namespace Project1
                     isRead = false;
                 }
             }
-            if (pos.X >= 633 && pos.X <= 870 && isPipe1Clear == true)
+            if (pos.X >= 633 && pos.X <= 870 && isPipe1Clear == true && cKey2 == false)
             {
+                g1_instance.Play();
                 isHuant1 = true;
             }
             if(isHuant1 == true && mCurrentScreen == Screenstate.Room2)
@@ -1413,6 +1456,7 @@ namespace Project1
                     Debug.Write(isHuant1);
                     gdirection = 0;
                     gPos.X = 912;
+                    cKey2 = true;
                     isHuant1 = false;
                 }
                 UpdateGhost(elapsed);
@@ -1661,7 +1705,8 @@ namespace Project1
                     if (personRectangle.Intersects(enemyRectangle) == true)
 
                     {
-                        hBarRec.Width -= 20;
+                        g2_instance.Play();
+                        hBarRec.Width -= 90;
                         isAlive = false;
                     }
                     else if (personRectangle.Intersects(enemyRectangle) == false)
@@ -1779,6 +1824,7 @@ namespace Project1
                     {
                         if (ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F)) //Intereact object
                         {
+                            p_instance.Play();
                             isRead = true;
                             dylight.Lights.Remove(light);
                             dylight.Lights.Remove(spotLightR2_1);
@@ -2027,9 +2073,9 @@ namespace Project1
             {
                 capetText = "F To Search";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
-                        
+                        s_instance.Play();
                         if (isSearch2 == false)
                         {
                             gotItemText = "Got SanityPill & GeneratorKey";
@@ -2281,9 +2327,9 @@ namespace Project1
             {
                 capetText = "F To Search";
                 {
-                    if (ks.IsKeyDown(Keys.F)) //Intereact object
+                    if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
-
+                        s_instance.Play();
                         if (isSearch3 == false)
                         {
                             gotItemText = "Got StaminaPill x2 ";
@@ -2356,6 +2402,7 @@ namespace Project1
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
                 {
+                    p_instance.Play();
                     isRead = false;
                 }
             }
@@ -2649,6 +2696,7 @@ namespace Project1
                     {
                         if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                         {
+                            p_instance.Play();
                             isRead = true;
                         }
                     }
@@ -2675,6 +2723,7 @@ namespace Project1
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.Room5;
+                gen_instance.Stop();
                 dylight.Lights.Remove(spotLightR6);
                 pos.X = 1170;
                 fLine.X = pos.X + rad;
@@ -2684,6 +2733,10 @@ namespace Project1
             {
                 mCurrentScreen = Screenstate.PipePuzz;
                 inRoom6 = true;
+            }
+            if (isPipe2Clear == true)
+            {
+                gen_instance.Play();
             }
             if (hBarRec.Width <= 163 && hBarRec.Width > 98)
             {
@@ -2880,6 +2933,7 @@ namespace Project1
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.Room2;
+                gen_instance.Stop();
                 dylight.Lights.Remove(spotLightR7);
                 dylight.Lights.Add(spotLightR2_1);
                 dylight.Lights.Add(spotLightR2_2);
@@ -2898,10 +2952,15 @@ namespace Project1
                 mCurrentScreen = Screenstate.PipePuzz;
                 dylight.Lights.Remove(spotLightR7);
             }
+            if (isPipe1Clear == true)
+            {
+                gen_instance.Play();
+            }
             if (isRead == true)
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
                 {
+                    p_instance.Play();
                     dylight.Lights.Add(light);
                     dylight.Lights.Add(spotLightR7);
                     isRead = false;
@@ -3097,6 +3156,7 @@ namespace Project1
                 {
                     if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
+                        p_instance.Play();
                         isRead = true;
                         dylight.Lights.Remove(light);
                         dylight.Lights.Remove(spotLightR7);
@@ -6196,7 +6256,7 @@ namespace Project1
             if (sanity >= 1)
             {
                 sanity--;
-                hBarRec.Width += 10;
+                hBarRec.Width += 70;
             }
         }
     }
