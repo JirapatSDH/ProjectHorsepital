@@ -1858,7 +1858,7 @@ namespace Project1
             gotItemPos = pos + new Vector2(5, -45);
             if (isAlive == false)
             {
-                eLight.Position = new Vector2(4440, 40);
+                eLight.Position = new Vector2(4440, 4440);
             }
             light.Position = pos - camPos + new Vector2(40, 40);
            // ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
@@ -5451,8 +5451,8 @@ namespace Project1
                     _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
                 }
             }
-            _spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 0, 0), (Color.White));
-            _spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
+            //_spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 0, 0), (Color.White));
+            //_spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom5_4, (ballPos5_4 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_6, (ballPos5_6 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, puzzle2, (puzzlePos2 - new Vector2(0, 50) - camPos) * scroll_factor, (Color.White));
