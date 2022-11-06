@@ -4092,7 +4092,7 @@ namespace Project1
                     w_instance.Play();
                     if (pos.X <= bLine.X && camPos.X > 0)
                     {
-                        r_instance.Stop();
+                        
                         fLine -= new Vector2(3, 0);
                         bLine -= new Vector2(3, 0);
                         camPos -= new Vector2(3, 0);
@@ -4112,6 +4112,7 @@ namespace Project1
                     else
                     {
                         speed.X = 3;
+                        r_instance.Stop();
                     }
                     pos.X = pos.X - speed.X;
                     direction = 1;
@@ -4144,7 +4145,7 @@ namespace Project1
 
                     if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width * 2)
                     {
-                        r_instance.Stop();
+                        
                         fLine += new Vector2(3, 0);
                         bLine += new Vector2(3, 0);
                         camPos += new Vector2(3, 0);
@@ -4163,6 +4164,7 @@ namespace Project1
                     }
                     else
                     {
+                        r_instance.Stop();
                         speed.X = 3;
                     }
                     pos.X = pos.X + speed.X;

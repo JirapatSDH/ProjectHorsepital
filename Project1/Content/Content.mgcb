@@ -415,6 +415,18 @@
 /processorParam:Quality=Best
 /build:BGM.wav
 
+#begin cry_mood_spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:cry_mood_spritesheet.png
+
 #begin cutscene_end1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -565,6 +577,30 @@
 /processorParam:Quality=Best
 /build:door.wav
 
+#begin Empty_Screen_Menu.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Empty_Screen_Menu.png
+
+#begin Empty_Screen_White.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Empty_Screen_White.png
+
 #begin endcutscene.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -576,6 +612,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:endcutscene.png
+
+#begin fear_mood_spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fear_mood_spritesheet.png
 
 #begin Game over_glitch.png
 /importer:TextureImporter
@@ -775,6 +823,18 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:MyFont.spritefont
+
+#begin normal_mood_spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:normal_mood_spritesheet.png
 
 #begin Paper.png
 /importer:TextureImporter
@@ -985,6 +1045,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:talisman.png
+
+#begin THE END.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:THE END.png
 
 #begin UI_emty.png
 /importer:TextureImporter
