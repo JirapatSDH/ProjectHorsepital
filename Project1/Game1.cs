@@ -2110,7 +2110,7 @@ namespace Project1
             gotItemPos = pos + new Vector2(5, -45);
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
-            light.Position = pos - camPos + new Vector2(100, 40);
+            light.Position = pos - camPos + new Vector2(1480, 50);
 
         }
         void UpdateRoom4()
@@ -2364,7 +2364,7 @@ namespace Project1
             gotItemPos = pos + new Vector2(5, -45);
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
-            light.Position = pos - camPos + new Vector2(60, 40);
+            light.Position = pos - camPos + new Vector2(725, 50);
 
         }
         void UpdateRoom5()
@@ -2934,7 +2934,7 @@ namespace Project1
             old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
-            light.Position = pos - camPos + new Vector2(40, 40);
+            light.Position = pos - camPos + new Vector2(770, 50);
 
         }
         void UpdateRoom7()
@@ -3181,7 +3181,7 @@ namespace Project1
             old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
-            light.Position = pos + new Vector2(60,40);
+            light.Position = pos + new Vector2(40,40);
 
         }
 
@@ -4217,7 +4217,7 @@ namespace Project1
                 spotLightR6.Position = new Vector2(300, 30);
                 pos.X = 400;
             }
-
+            gen_instance.Stop();
             if (personHit4 == true)
             {
                 isHide = true;
@@ -4503,6 +4503,10 @@ namespace Project1
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
+            if(isPipe2Clear == true)
+            {
+                gen_instance.Play();
+            }
             if (hBarRec.Width <= 163 && hBarRec.Width > 98)
             {
                 UpdateNormalMoodFrame(elapsed);
@@ -4658,7 +4662,7 @@ namespace Project1
             old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
-            light.Position = pos - camPos + new Vector2(40, 40);
+            light.Position = pos - camPos + new Vector2(770, 50);
 
         }
         void UpdateL_Room7()

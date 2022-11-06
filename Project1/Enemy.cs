@@ -82,9 +82,9 @@ namespace Project1
             escroll_factor = newscroll;
             eneframe = neweframe % 2;
             if (velocity.X > 0)
-                spriteBatch.Draw(eneTexture, enePos - ecamPos * escroll_factor, new Rectangle(120 * eneframe, 0, 120, 120), Color.White, enerotate, eneOrigin, 1f, SpriteEffects.FlipHorizontally, 0f);
+                spriteBatch.Draw(eneTexture, enePos - ecamPos * escroll_factor, new Rectangle(120 * eneframe, 120, 120, 120), Color.White, enerotate, eneOrigin, 1f, SpriteEffects.FlipHorizontally, 0f);
             else
-                spriteBatch.Draw(eneTexture, enePos - ecamPos * escroll_factor, new Rectangle(120 * eneframe, 0, 120, 120), Color.White, enerotate, eneOrigin, 1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(eneTexture, enePos - ecamPos * escroll_factor, new Rectangle(120 * eneframe, 120, 120, 120), Color.White, enerotate, eneOrigin, 1f, SpriteEffects.None, 0f);
         }
     }
 }
