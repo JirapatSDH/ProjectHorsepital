@@ -685,6 +685,18 @@
 /processorParam:TextureFormat=Color
 /build:ghost_walk.png
 
+#begin Ghost1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Ghost1.wav
+
+#begin Ghost2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Ghost2.wav
+
 #begin ghostDoor_standing.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -860,6 +872,18 @@
 /processorParam:TextureFormat=Compressed
 /build:MyFont.spritefont
 
+#begin normal_mood_spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:normal_mood_spritesheet.png
+
 #begin NotePaperIsus.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -872,17 +896,11 @@
 /processorParam:TextureFormat=Color
 /build:NotePaperIsus.png
 
-#begin normal_mood_spritesheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:normal_mood_spritesheet.png
+#begin paper-flutter.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:paper-flutter.wav
 
 #begin Paper.png
 /importer:TextureImporter
@@ -1045,6 +1063,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SanityBar.png
+
+#begin searching.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:searching.wav
 
 #begin stamina_pill.png
 /importer:TextureImporter

@@ -248,6 +248,25 @@ namespace Project1
         AudioListener d_listener;
         AudioEmitter d_emitter;
 
+        SoundEffect ghost1;
+        SoundEffectInstance g1_instance;
+        AudioListener g1_listener;
+        AudioEmitter g1_emitter;
+
+        SoundEffect ghost2;
+        SoundEffectInstance g2_instance;
+        AudioListener g2_listener;
+        AudioEmitter g2_emitter;
+
+        SoundEffect search;
+        SoundEffectInstance s_instance;
+        AudioListener s_listener;
+        AudioEmitter s_emitter;
+
+        SoundEffect paperFlip;
+        SoundEffectInstance p_instance;
+        AudioListener p_listener;
+        AudioEmitter p_emitter;
         /// -----------------------------------------------------------------------------<PuzlePipe>
         Texture2D playingPieces;
         Pipeboard pipeboard;
@@ -1227,8 +1246,8 @@ namespace Project1
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D1) == true)
             {
-                //mCurrentScreen = Screenstate.Room1;
-                mCurrentScreen = Screenstate.endcutscene;
+                mCurrentScreen = Screenstate.Room1;
+                //mCurrentScreen = Screenstate.endcutscene;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.E) == true)
             {
