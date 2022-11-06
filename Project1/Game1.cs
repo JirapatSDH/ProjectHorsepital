@@ -914,6 +914,7 @@ namespace Project1
                 spotLightR2_2.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 spotLightR2_3.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
                 spotLightR2_4.Position = (new Vector2(0, 0) - camPos) * scroll_factor;
+                gPos = new Vector2(399,252);
                 pos.X = 50;
             }
             if (isRead == true)
@@ -1274,6 +1275,7 @@ namespace Project1
                 spotLightR4.Position = new Vector2(360, 30);
                 capetPos = new Vector2(318, 190);
                 pos.X = 500;
+                isHuant1 = false;
             }
 
             if (personHit4 == true && cKey1 == true)
@@ -1317,6 +1319,26 @@ namespace Project1
                     dylight.Lights.Add(spotLightR2_4);
                     isRead = false;
                 }
+            }
+            if (pos.X >= 633 && pos.X <= 870 && isPipe1Clear == true)
+            {
+                isHuant1 = true;
+            }
+            if(isHuant1 == true && mCurrentScreen == Screenstate.Room2)
+            {
+                if(gPos.X <= 912)
+                {
+                    gdirection = 2;
+                    gPos.X += 3;
+                }
+                if(gPos.X >= 912)
+                {
+                    Debug.Write(isHuant1);
+                    gdirection = 0;
+                    gPos.X = 912;
+                    isHuant1 = false;
+                }
+                UpdateGhost(elapsed);
             }
             sanityText = sanity.ToString();
             staminaText = stamina.ToString();
@@ -1515,6 +1537,26 @@ namespace Project1
                 Rectangle LockerRec2 = new Rectangle((int)ballLockerR2_2.X, (int)ballLockerR2_2.Y, 24, 24);
                 Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
                 Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, 10, 10);
+                if(isHuant1 == true)
+                {
+                    Rectangle ghostRectangle = new Rectangle((int)gPos.X, (int)gPos.Y, 50, 80);
+                    if (isHuant1 == true)
+                    {
+                        if (isHide == false)
+                        {
+                           if (personRectangle.Intersects(ghostRectangle) == true)
+
+                            {
+                            hBarRec.Width -= 20;
+                            }
+                             else if (personRectangle.Intersects(ghostRectangle) == false)
+                                {
+
+                                }
+                        }
+                        
+                    }
+                }
                 Rectangle paperRec = new Rectangle((int)paperPos.X, (int)paperPos.Y, 53, 41);
 
                 if (personRectangle.Intersects(trapRectangle) == true)
@@ -1539,7 +1581,7 @@ namespace Project1
                     }
                 }
 
-                if(personRectangle.Intersects(LockerRec1) == true)
+                if (personRectangle.Intersects(LockerRec1) == true)
                 {
                     locker2_1 = "F to Hide";
 
@@ -4886,6 +4928,10 @@ namespace Project1
             _spriteBatch.DrawString(deBugFont, locker2_1, (ballLockerR2_1 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, locker2_2, (ballLockerR2_2 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
+            if(isHuant1 == true)
+            {
+                _spriteBatch.Draw(ghostWalk, (gPos - camPos) * scroll_factor,new Rectangle(72 *gframe,100 * gdirection,72,100), Color.White);
+            }
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
@@ -5566,6 +5612,16 @@ namespace Project1
             {
                 eframe = (eframe + 1) % etotalframe;
                 etotalelapsed -= etimeperframe;
+            }
+        }
+
+        void UpdateGhost(float elapsed)
+        {
+            gtotalelapsed += elapsed;
+            if (gtotalelapsed > gtimeperframe)
+            {
+                gframe = (gframe + 1) % gtotalframe;
+                gtotalelapsed -= gtimeperframe;
             }
         }
         protected void ProcessInput()
