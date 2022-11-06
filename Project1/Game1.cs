@@ -2993,6 +2993,7 @@ namespace Project1
                 uiPos.X = 1450; 
                 staminaPos.X = 1695;
                 sanityPos.X = 1725;
+                eLight.Position = Vector2.Zero;
                 gPos = new Vector2(1881,262);
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
@@ -4540,13 +4541,13 @@ namespace Project1
             staminaText = stamina.ToString();
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
-            if (pos.X <= 1771)
+            if (pos.X <= 1701)
             {
                 isHuant2 = true;
             }
             if (isHuant2 == true)
             {
-                eLight.Position = gPos;
+                eLight.Position = ((gPos - camPos) + new Vector2(40, 40)) * scroll_factor;
                 gPos.X -= 4;
             }
             {
@@ -4752,7 +4753,6 @@ namespace Project1
 
                 old_ks = ks;
             }
-            eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(40, 40);
             ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
             textPos = pos + new Vector2(5, 95);
@@ -5520,7 +5520,6 @@ namespace Project1
                 _spriteBatch.Draw(ghostWalk, gPos - camPos * scroll_factor, new Rectangle(72 * gframe, 100, 72, 100), (Color.White));
                 _spriteBatch.Draw(trap, trapPos - camPos * scroll_factor, new Rectangle(26*gframe, 0, 26, 26), (Color.White));
             }
-            
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, toEnd, (ballPos8_End - new Vector2(0, 40) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
