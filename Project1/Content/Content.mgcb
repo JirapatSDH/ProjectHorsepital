@@ -415,6 +415,12 @@
 /processorParam:Quality=Best
 /build:BGM.wav
 
+#begin chase.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:chase.wav
+
 #begin cry_mood_spritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -660,6 +666,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Gameover_bg.png
+
+#begin generator.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:generator.wav
 
 #begin ghost_stand.png
 /importer:TextureImporter
