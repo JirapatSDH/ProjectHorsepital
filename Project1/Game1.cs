@@ -2993,6 +2993,7 @@ namespace Project1
                 uiPos.X = 1450; 
                 staminaPos.X = 1695;
                 sanityPos.X = 1725;
+                gPos = new Vector2(1881,262);
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
@@ -4539,7 +4540,15 @@ namespace Project1
             staminaText = stamina.ToString();
             ProcessInput();
             KeyboardState ks = Keyboard.GetState();
-            
+            if (pos.X <= 1771)
+            {
+                isHuant2 = true;
+            }
+            if (isHuant2 == true)
+            {
+                eLight.Position = gPos;
+                gPos.X -= 4;
+            }
             {
                 if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
                 {
@@ -4702,7 +4711,18 @@ namespace Project1
                 // -----------------------------------------------------------------------------------------------collistion
                 Rectangle personRectangle = new Rectangle((int)pos.X, (int)pos.Y, 50, 80);
                 Rectangle ballRectangle = new Rectangle((int)ballPos8_End.X, (int)ballPos8_End.Y, 24, 24);
-                Rectangle enemyRectangle = new Rectangle((int)ePos.X, (int)ePos.Y, 60, 100);
+                if (isHuant2)
+                {
+                    Rectangle ghostRectangle = new Rectangle((int)gPos.X, (int)gPos.Y, 50, 80);
+                    if (personRectangle.Intersects(ghostRectangle) == true)
+                    {
+                        hBarRec.Width -= 25;
+                    }
+                    else if (personRectangle.Intersects(ghostRectangle) == false)
+                    {
+                        UpdateGhost(elapsed);
+                    }
+                }
                 Rectangle trapRectangle = new Rectangle((int)trapPos.X, (int)trapPos.Y, 100, 100);
 
                 if (personRectangle.Intersects(trapRectangle) == true)
@@ -4712,14 +4732,6 @@ namespace Project1
                 else if (personRectangle.Intersects(trapRectangle) == false)
                 {
 
-                }
-                if (personRectangle.Intersects(enemyRectangle) == true)
-                {
-                    hBarRec.Width -= 5;
-                }
-                else if (personRectangle.Intersects(enemyRectangle) == false)
-                {
-                    UpdateEnemy(elapsed);
                 }
 
                 if (personRectangle.Intersects(ballRectangle) == true)
@@ -5488,7 +5500,7 @@ namespace Project1
             _spriteBatch.Draw(Lroom8_2, (bg2Pos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
             _spriteBatch.Draw(Lroom8_3, (bg2Pos - camPos) * scroll_factor + new Vector2(_graphics.GraphicsDevice.Viewport.Width + 720, 0), Color.White);
             _spriteBatch.Draw(ballTexture, (ballPos8_End - camPos) * scroll_factor, new Rectangle(0, 24, 0, 0), (Color.White));
-            //_spriteBatch.Draw(trap, trapPos - camPos * scroll_factor, new Rectangle(0, 0, 26, 26), (Color.White));
+            
             if (speed.X <= 0)
             {
                 totalframe = 20;
@@ -5503,7 +5515,12 @@ namespace Project1
                 totalframe = 4;
                 _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             }
-            //_spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
+            if (isHuant2 == true)
+            {
+                _spriteBatch.Draw(ghostWalk, gPos - camPos * scroll_factor, new Rectangle(72 * gframe, 100, 72, 100), (Color.White));
+                _spriteBatch.Draw(trap, trapPos - camPos * scroll_factor, new Rectangle(26*gframe, 0, 26, 26), (Color.White));
+            }
+            
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, toEnd, (ballPos8_End - new Vector2(0, 40) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
