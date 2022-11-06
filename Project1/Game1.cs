@@ -18,6 +18,8 @@ using SharpDX.XInput;
 using System.Threading;
 using SharpDX.Direct2D1;
 using SpriteBatch = Microsoft.Xna.Framework.Graphics.SpriteBatch;
+using SharpDX.Direct3D9;
+using Light = Penumbra.Light;
 
 namespace Project1
 {
@@ -884,6 +886,10 @@ namespace Project1
             {
                 mCurrentScreen = Screenstate.over;
             }
+            if (hBarRec.Width >= 163)
+            {
+                hBarRec.Width = 163;
+            }
             //camera.Update(gameTime, this);
 
             base.Update(gameTime);
@@ -1315,7 +1321,7 @@ namespace Project1
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D5) == true)
             {
-                //mCurrentScreen = Screenstate.Room5;
+                mCurrentScreen = Screenstate.Room5;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.T) == true)
             {
@@ -1452,12 +1458,12 @@ namespace Project1
             }
             if (pos.X >= 633 && pos.X <= 870 && isPipe1Clear == true && cKey2 == false)
             {
-                g1_instance.Play();
+                g1_instance.Play(); 
                 isHuant1 = true;
             }
             if(isHuant1 == true && mCurrentScreen == Screenstate.Room2)
             {
-                if(gPos.X <= 912)
+                if (gPos.X <= 912)
                 {
                     gdirection = 2;
                     gPos.X += 5;
@@ -1854,11 +1860,14 @@ namespace Project1
 
                 old_ks = ks;
             }
-            eLight.Position = ePos - camPos + new Vector2(40, 40);
+            
             gotItemPos = pos + new Vector2(5, -45);
-            if (isAlive == false)
+            if (isAlive == true)
             {
-                eLight.Position = new Vector2(4440, 4440);
+                eLight.Position = ePos - camPos + new Vector2(40, 40);
+            }
+            else{
+                eLight.Position = new Vector2(40, 940);
             }
             light.Position = pos - camPos + new Vector2(40, 40);
            // ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
@@ -2110,7 +2119,7 @@ namespace Project1
             gotItemPos = pos + new Vector2(5, -45);
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
-            light.Position = pos - camPos + new Vector2(1480, 50);
+            light.Position = pos + new Vector2(40, 50);
 
         }
         void UpdateRoom4()
@@ -2363,8 +2372,8 @@ namespace Project1
             old_ks = ks;
             gotItemPos = pos + new Vector2(5, -45);
             light2.Position = uiPos - camPos + new Vector2(65, -370);
-            eLight.Position = ePos - camPos + new Vector2(40, 40);
-            light.Position = pos - camPos + new Vector2(725, 50);
+            eLight.Position = new Vector2(4300, 4440);
+            light.Position = pos + new Vector2(45, 50);
 
         }
         void UpdateRoom5()
@@ -2615,7 +2624,7 @@ namespace Project1
 
                 if (personRectangle.Intersects(enemyRectangle) == true)
                 {
-                    hBarRec.Width -= 5;
+
                 }
                 else if (personRectangle.Intersects(enemyRectangle) == false)
                 {
@@ -2720,7 +2729,7 @@ namespace Project1
                 old_ks = ks;
             }
             enemy.Update(pos);
-            eLight.Position = ePos - camPos + new Vector2(40, 40);
+            eLight.Position = (new Vector2(1110, 240) - camPos) + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(40, 40);
             //ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
             textPos = pos + new Vector2(5, 95);
@@ -3180,7 +3189,7 @@ namespace Project1
             }
             old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
-            eLight.Position = ePos - camPos + new Vector2(40, 40);
+            eLight.Position = new Vector2(500, 240);
             light.Position = pos + new Vector2(40,40);
 
         }
@@ -3212,7 +3221,7 @@ namespace Project1
                 uiPos.X = 1450; 
                 staminaPos.X = 1695;
                 sanityPos.X = 1725;
-                eLight.Position = Vector2.Zero;
+                eLight.Position = (Vector2.Zero - camPos) *scroll_factor;
                 gPos = new Vector2(1881,262);
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
@@ -3659,7 +3668,7 @@ namespace Project1
                 }
                 if (personRectangle.Intersects(enemyRectangle) == true)
                 {
-                    hBarRec.Width -= 5;
+                 
                 }
                 else if (personRectangle.Intersects(enemyRectangle) == false)
                 {
@@ -3763,7 +3772,7 @@ namespace Project1
 
                 old_ks = ks;
             }
-            eLight.Position = ePos - camPos + new Vector2(40, 40);
+            eLight.Position = ePos - camPos + new Vector2(40, 1040);
             light.Position = pos - camPos + new Vector2(40, 40);
             //ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
             textPos = pos + new Vector2(5, 95);
@@ -3977,7 +3986,7 @@ namespace Project1
             }
             old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
-            eLight.Position = ePos - camPos + new Vector2(40, 40);
+            eLight.Position = ePos - camPos + new Vector2(40, 1040);
             light.Position = pos - camPos + new Vector2(40, 40);
 
         }
@@ -4189,7 +4198,7 @@ namespace Project1
             }
             old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
-            eLight.Position = ePos - camPos + new Vector2(40, 40);
+            eLight.Position = ePos - camPos + new Vector2(40, 1140);
             light.Position = pos - camPos + new Vector2(40, 40);
 
         }
@@ -4208,14 +4217,7 @@ namespace Project1
 
             if (personHit2 == true)
             {
-                mCurrentScreen = Screenstate.LRoom6;
-                dylight.Lights.Add(spotLightR6);
-                dylight.Lights.Remove(spotLightR2_1);
-                dylight.Lights.Remove(spotLightR2_2);
-                dylight.Lights.Remove(spotLightR2_3);
-                dylight.Lights.Remove(spotLightR2_4);
-                spotLightR6.Position = new Vector2(300, 30);
-                pos.X = 400;
+               
             }
             gen_instance.Stop();
             if (personHit4 == true)
@@ -4413,7 +4415,7 @@ namespace Project1
 
                 if (personRectangle.Intersects(trapRectangle) == true)
                 {
-                    sBarRec.Width -= 3;
+                   
                 }
                 else if (personRectangle.Intersects(trapRectangle) == false)
                 {
@@ -4421,7 +4423,7 @@ namespace Project1
                 }
                 if (personRectangle.Intersects(enemyRectangle) == true)
                 {
-                    hBarRec.Width -= 5;
+                  
                 }
                 else if (personRectangle.Intersects(enemyRectangle) == false)
                 {
@@ -4481,7 +4483,7 @@ namespace Project1
 
                 old_ks = ks;
             }
-            eLight.Position = ePos - camPos + new Vector2(40, 40);
+            eLight.Position = new Vector2(350,1250);
             light.Position = pos - camPos + new Vector2(40, 40);
             //ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
             textPos = pos + new Vector2(5, 95);
@@ -4661,7 +4663,7 @@ namespace Project1
             }
             old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
-            eLight.Position = ePos - camPos + new Vector2(40, 40);
+            eLight.Position = new Vector2(500,250);
             light.Position = pos - camPos + new Vector2(770, 50);
 
         }
@@ -4874,6 +4876,10 @@ namespace Project1
                 c_instance.Play();
                 eLight.Position = ((gPos - camPos) + new Vector2(40, 40)) * scroll_factor;
                 gPos.X -= 4;
+            }
+            else
+            {
+                eLight.Position = ((Vector2.Zero - camPos) + new Vector2(40, 40)) * scroll_factor;
             }
             {
                 if (ks.IsKeyDown(Keys.Space))//------------------------------Health debug----------------------------------------
@@ -5089,6 +5095,7 @@ namespace Project1
         }
         void UpdatePipePuzz()
         {
+
             if (timeSinceLastInput >= MinTimeSinceLastInput)
             {
                 HandleMouseInput(Mouse.GetState(Window));
@@ -5107,6 +5114,11 @@ namespace Project1
         {
             ///-------------------------------------------------------------------- passWord is 5432--------------------------------------------------
             KeyboardState ks = Keyboard.GetState();
+            dylight.Lights.Remove(spotLightR2_1);
+            dylight.Lights.Remove(spotLightR2_2);
+            dylight.Lights.Remove(spotLightR2_3);
+            dylight.Lights.Remove(spotLightR2_4);
+            dylight.Lights.Remove(light);
             if (ks.IsKeyUp(Keys.Q)&& old_ks.IsKeyDown(Keys.Q))
             {
                 passNum1++;
@@ -5150,6 +5162,11 @@ namespace Project1
             {
                 mCurrentScreen = Screenstate.Room5;
                 pos = new Vector2(201, 253);
+                dylight.Lights.Add(spotLightR2_1);
+                dylight.Lights.Add(spotLightR2_2);
+                dylight.Lights.Add(spotLightR2_3);
+                dylight.Lights.Add(spotLightR2_4);
+                dylight.Lights.Add(light);
             }
             old_ks = ks;
         }
@@ -5691,7 +5708,7 @@ namespace Project1
                     _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
                 }
             }
-            _spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
+            //_spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom2_1, (ballPos2_1 - new Vector2(0, 20) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_3, (ballPos2_3 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_4, (ballPos2_4 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
@@ -5857,7 +5874,7 @@ namespace Project1
                     _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
                 }
             }
-            _spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
+            //_spriteBatch.Draw(eTexture, ePos - camPos * scroll_factor, new Rectangle(120 * eframe, 0, 120, 120), (Color.White));
             _spriteBatch.DrawString(deBugFont, backRoom5_4, (ballPos5_4 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, toRoom_6, (ballPos5_6 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, locker5, (ballLockerR5 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
