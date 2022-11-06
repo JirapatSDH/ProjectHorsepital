@@ -452,7 +452,7 @@ namespace Project1
             _graphics.GraphicsProfile = GraphicsProfile.HiDef;
             _graphics.PreferredBackBufferWidth = 720;
             _graphics.PreferredBackBufferHeight = 480;
-            //_graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
