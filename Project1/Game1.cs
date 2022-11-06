@@ -273,6 +273,11 @@ namespace Project1
         AudioListener gen_listener;
         AudioEmitter gen_emitter;
 
+        SoundEffect chase;
+        SoundEffectInstance c_instance;
+        AudioListener c_listener;
+        AudioEmitter c_emitter;
+
 
         /// -----------------------------------------------------------------------------<PuzlePipe>
         Texture2D playingPieces;
@@ -574,6 +579,12 @@ namespace Project1
             instance = bgm.CreateInstance();
             instance.IsLooped = true;
             instance.Play();
+
+            chase = Content.Load<SoundEffect>("chase");
+            c_instance = chase.CreateInstance();
+            c_instance.IsLooped = true;
+            c_listener = new AudioListener(); c_emitter = new AudioEmitter();
+            c_instance.Apply3D(c_listener, c_emitter);
 
             walk = Content.Load<SoundEffect>("Walk1");
             w_instance = walk.CreateInstance();
@@ -1449,7 +1460,7 @@ namespace Project1
                 if(gPos.X <= 912)
                 {
                     gdirection = 2;
-                    gPos.X += 3;
+                    gPos.X += 5;
                 }
                 if(gPos.X >= 912)
                 {
@@ -1850,7 +1861,7 @@ namespace Project1
                 eLight.Position = new Vector2(4440, 40);
             }
             light.Position = pos - camPos + new Vector2(40, 40);
-            ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
+           // ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
             textPos = pos + new Vector2(5, 95);
             textstaminaPos = staminaPos;
             textsanityPos = sanityPos;
@@ -2104,7 +2115,6 @@ namespace Project1
         }
         void UpdateRoom4()
         {
-            Debug.Write(pos);
             if (personHit == true)
             {
                 mCurrentScreen = Screenstate.Room2;
@@ -2712,7 +2722,7 @@ namespace Project1
             enemy.Update(pos);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(40, 40);
-            ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
+            //ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
             textPos = pos + new Vector2(5, 95);
             textstaminaPos = staminaPos;
             textsanityPos = sanityPos;
@@ -3171,7 +3181,7 @@ namespace Project1
             old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
             eLight.Position = ePos - camPos + new Vector2(40, 40);
-            light.Position = pos - camPos + new Vector2(60,40);
+            light.Position = pos + new Vector2(60,40);
 
         }
 
@@ -3755,7 +3765,7 @@ namespace Project1
             }
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(40, 40);
-            ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
+            //ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
             textPos = pos + new Vector2(5, 95);
             textstaminaPos = staminaPos;
             textsanityPos = sanityPos;
@@ -4473,7 +4483,7 @@ namespace Project1
             }
             eLight.Position = ePos - camPos + new Vector2(40, 40);
             light.Position = pos - camPos + new Vector2(40, 40);
-            ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
+            //ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
             textPos = pos + new Vector2(5, 95);
             textstaminaPos = staminaPos;
             textsanityPos = sanityPos;
@@ -4828,6 +4838,9 @@ namespace Project1
         {
             if(personHit == true)
             {
+                c_instance.Stop();
+                w_instance.Stop();
+                r_instance.Stop();
                 mCurrentScreen = Screenstate.endcutscene;
             }
             if (hBarRec.Width <= 163 && hBarRec.Width > 98)
@@ -4852,6 +4865,9 @@ namespace Project1
             }
             if (isHuant2 == true)
             {
+                instance.Stop();
+                g1_instance.Play();
+                c_instance.Play();
                 eLight.Position = ((gPos - camPos) + new Vector2(40, 40)) * scroll_factor;
                 gPos.X -= 4;
             }
@@ -5061,7 +5077,7 @@ namespace Project1
                 old_ks = ks;
             }
             light.Position = pos - camPos + new Vector2(40, 40);
-            ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
+            //ptext = "Position :" + pos.ToString() + "Speed :" + speed.ToString(); // Debug Text
             textPos = pos + new Vector2(5, 95);
             textstaminaPos = staminaPos;
             textsanityPos = sanityPos;
