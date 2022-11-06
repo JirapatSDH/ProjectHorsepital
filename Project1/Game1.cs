@@ -454,7 +454,7 @@ namespace Project1
             _graphics.GraphicsProfile = GraphicsProfile.HiDef;
             _graphics.PreferredBackBufferWidth = 720;
             _graphics.PreferredBackBufferHeight = 480;
-            _graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = false;
             _graphics.ApplyChanges();
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -1304,7 +1304,7 @@ namespace Project1
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D1) == true)
             {
-                mCurrentScreen = Screenstate.Room1;
+                //mCurrentScreen = Screenstate.Room1;
                 //mCurrentScreen = Screenstate.endcutscene;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.E) == true)
@@ -1321,9 +1321,13 @@ namespace Project1
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D5) == true)
             {
-                mCurrentScreen = Screenstate.Room5;
+                //mCurrentScreen = Screenstate.Room5;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.T) == true)
+            {
+                //mCurrentScreen = Screenstate.LRoom5;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.F) == true)
             {
                 //mCurrentScreen = Screenstate.LRoom5;
             }
@@ -5156,6 +5160,11 @@ namespace Project1
                 mCurrentScreen = Screenstate.Room5;
                 isClear = true;
                 pos = new Vector2(201, 253);
+                dylight.Lights.Add(spotLightR2_1);
+                dylight.Lights.Add(spotLightR2_2);
+                dylight.Lights.Add(spotLightR2_3);
+                dylight.Lights.Add(spotLightR2_4);
+                dylight.Lights.Add(light);
             }
 
             if (ks.IsKeyDown(Keys.Back))
