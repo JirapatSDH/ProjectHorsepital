@@ -74,7 +74,6 @@ namespace Project1
             {
                 isHit = false;
             }
-            Debug.Write(isHit);
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 newcampos,Vector2 newscroll,int neweframe)
