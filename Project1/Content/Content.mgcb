@@ -805,6 +805,18 @@
 /processorParam:TextureFormat=Color
 /build:key_story.png
 
+#begin lock.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:lock.wav
+
+#begin locker.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:locker.wav
+
 #begin MainMenu_bg.png
 /importer:TextureImporter
 /processor:TextureProcessor

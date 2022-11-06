@@ -18,6 +18,7 @@ using SharpDX.XInput;
 using System.Threading;
 using SharpDX.Direct2D1;
 using SpriteBatch = Microsoft.Xna.Framework.Graphics.SpriteBatch;
+using SharpDX.DirectWrite;
 
 namespace Project1
 {
@@ -583,8 +584,21 @@ namespace Project1
             door = Content.Load<SoundEffect>("door");
             d_instance = door.CreateInstance();
             d_instance.IsLooped = false;
-            d_listener = new AudioListener();   d_emitter = new AudioEmitter();
+            d_listener = new AudioListener(); d_emitter = new AudioEmitter();
             d_instance.Apply3D(d_listener, d_emitter);
+
+            paperFlip = Content.Load<SoundEffect>("paper-flutter");
+            p_instance = paperFlip.CreateInstance();
+            p_instance.IsLooped = false;
+            p_listener = new AudioListener(); p_emitter = new AudioEmitter();
+            p_instance.Apply3D(p_listener, p_emitter);
+
+            search = Content.Load<SoundEffect>("searching");
+            s_instance = search.CreateInstance();
+            s_instance.IsLooped = false;
+            s_listener = new AudioListener(); s_emitter = new AudioEmitter();
+            s_instance.Apply3D(s_listener, s_emitter);
+
 
             startframe = 0;
             starttotalframe = 10;
@@ -735,7 +749,14 @@ namespace Project1
                 case Screenstate.Room5:
                     {
                         UpdateRoom5();
-                        dylight.AmbientColor = new Color(new Vector3(0.3f));
+                        if (isRead == false)
+                        {
+                            dylight.AmbientColor = new Color(new Vector3(0.3f));
+                        }
+                        else if (isRead == true)
+                        {
+                            dylight.AmbientColor = new Color(new Vector3(0.7f));
+                        }
                         break;
                     }
                 case Screenstate.Room6:
@@ -1189,6 +1210,8 @@ namespace Project1
                 {
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
+                        s_instance.Play();
+
                         isRead2 = true;
                         if (isSearch == false)
                         {
@@ -1209,6 +1232,7 @@ namespace Project1
                 isRead2 = false;
                 capetText = "";
                 gotItemText = "";
+                s_instance.Stop();
             }
             if (personRectangle.Intersects(paperRec) == true)
             {
@@ -1216,6 +1240,7 @@ namespace Project1
                 {
                     if (ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F)) //Intereact object
                     {
+                        p_instance.Play();
                         isRead = true;
                         dylight.Lights.Remove(light);
                         dylight.Lights.Remove(spotLightR2_1);
@@ -1229,7 +1254,8 @@ namespace Project1
             {
                 isRead = false;
                 tu1 = "";
-                
+                p_instance.Stop();
+
             }
             old_ks = ks;
             gotItemPos = pos + new Vector2(5, -45);
@@ -1263,7 +1289,7 @@ namespace Project1
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D5) == true)
             {
-                //mCurrentScreen = Screenstate.Room5;
+                mCurrentScreen = Screenstate.Room5;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.T) == true)
             {
@@ -1295,10 +1321,12 @@ namespace Project1
             dylight.Lights.Remove(spotLightR2_4);
             dylight.Lights.Remove(light);
             dylight.Lights.Remove(eLight);
+            w_instance.Stop();
+            r_instance.Stop();
 
             if (endframe == 5)
             {
-                wait(5000);
+                wait(3000);
                 Exit();
             }
 
@@ -1735,7 +1763,8 @@ namespace Project1
                 }
                 if (personRectangle.Intersects(ball2_4Rectangle) == true)
                 {
-                    toRoom_4 = "Lock";
+                    toRoom_4 = "Lock";;
+
                     if (isPipe1Clear == true)
                     {
                         toRoom_4 = "F To Enter";
@@ -1761,9 +1790,9 @@ namespace Project1
                         toRoom_7 = "F to Enter";
                         if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Tnteract object
                             {
-                                 //toRoom_7 = "Enter room ?";
-                                 personHit4 = true;
-                                 d_instance.Play();
+                                //toRoom_7 = "Enter room ?";
+                                personHit4 = true;
+                                d_instance.Play();
                             }
                     }
                     
@@ -1779,6 +1808,7 @@ namespace Project1
                     {
                         if (ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F)) //Intereact object
                         {
+                            p_instance.Play();
                             isRead = true;
                             dylight.Lights.Remove(light);
                             dylight.Lights.Remove(spotLightR2_1);
@@ -1792,7 +1822,7 @@ namespace Project1
                 {
                     isRead = false;
                     tu1 = "";
-
+                    p_instance.Stop();
                 }
 
                 old_ks = ks;
@@ -2029,7 +2059,7 @@ namespace Project1
                 {
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
-                        
+                        s_instance.Play();
                         if (isSearch2 == false)
                         {
                             gotItemText = "Got SanityPill & GeneratorKey";
@@ -2048,6 +2078,7 @@ namespace Project1
             {
                 capetText = "";
                 gotItemText = "";
+                s_instance.Stop();
             }
             old_ks = ks;
             gotItemPos = pos + new Vector2(5, -45);
@@ -2283,6 +2314,7 @@ namespace Project1
                 {
                     if (ks.IsKeyDown(Keys.F)) //Intereact object
                     {
+                        s_instance.Play();
 
                         if (isSearch3 == false)
                         {
@@ -2303,6 +2335,7 @@ namespace Project1
             {
                 capetText = "";
                 gotItemText = "";
+                s_instance.Stop();
             }
             old_ks = ks;
             gotItemPos = pos + new Vector2(5, -45);
@@ -2354,9 +2387,17 @@ namespace Project1
             }
             if(isRead == true)
             {
+                dylight.Lights.Remove(spotLightR2_1);
+                dylight.Lights.Remove(spotLightR2_2);
+                dylight.Lights.Remove(spotLightR2_3);
+                dylight.Lights.Remove(spotLightR2_4);
                 if (Keyboard.GetState().IsKeyDown(Keys.Back) == true)
                 {
                     isRead = false;
+                    dylight.Lights.Add(spotLightR2_1);
+                    dylight.Lights.Add(spotLightR2_2);
+                    dylight.Lights.Add(spotLightR2_3);
+                    dylight.Lights.Add(spotLightR2_4);
                 }
             }
             if (hBarRec.Width <= 163 && hBarRec.Width > 98)
@@ -2416,7 +2457,6 @@ namespace Project1
 
                         if (pos.X <= bLine.X && camPos.X > 0)
                         {
-                            r_instance.Stop();
                             fLine -= new Vector2(3, 0);
                             bLine -= new Vector2(3, 0);
                             camPos -= new Vector2(3, 0);
@@ -2440,6 +2480,7 @@ namespace Project1
                         else
                         {
                             speed.X = 3;
+                            r_instance.Stop();
                         }
                         pos.X = pos.X - speed.X;
                         direction = 1;
@@ -2469,10 +2510,10 @@ namespace Project1
                     if (ks.IsKeyDown(Keys.D) && pos.X < GraphicsDevice.Viewport.Width * 2 - 25)
                     {
                         w_instance.Play();
+                        r_instance.Stop();
 
                         if (pos.X >= fLine.X && camPos.X < GraphicsDevice.Viewport.Width)
                         {
-                            r_instance.Stop();
                             fLine += new Vector2(3, 0);
                             bLine += new Vector2(3, 0);
                             camPos += new Vector2(3, 0);
@@ -2649,6 +2690,7 @@ namespace Project1
                     {
                         if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                         {
+                            r_instance.Play();
                             isRead = true;
                         }
                     }
@@ -2657,6 +2699,7 @@ namespace Project1
                 {
                     isRead = false;
                     tu3 = "";
+                    r_instance.Stop();
                 }
 
                 old_ks = ks;
@@ -3097,6 +3140,7 @@ namespace Project1
                 {
                     if ((ks.IsKeyUp(Keys.F) && old_ks.IsKeyDown(Keys.F))) //Intereact object
                     {
+                        r_instance.Play();
                         isRead = true;
                         dylight.Lights.Remove(light);
                         dylight.Lights.Remove(spotLightR7);
@@ -3107,6 +3151,7 @@ namespace Project1
             {
                 isRead = false;
                 tu2 = "";
+                r_instance.Stop();
             }
             old_ks = ks;
             light2.Position = uiPos - camPos + new Vector2(65, -370);
