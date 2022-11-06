@@ -77,7 +77,7 @@ namespace Project1
         private Texture2D Lroom8_2;
         private Texture2D Lroom8_3;
         private Texture2D menu;
-        private Texture2D menuchar1;
+        private Texture2D menuBG;
         private Texture2D menuchar2;
         private Texture2D menuCharGlitch;
         private Texture2D menuGlitch;
@@ -103,6 +103,9 @@ namespace Project1
         public Texture2D pIdle;
         public Texture2D note1;
         public Texture2D note2;
+        public Texture2D normal_mood;
+        public Texture2D cry_mood;
+        public Texture2D fear_mood;
         public Vector2 pos;
         public Vector2 bg2Pos = Vector2.Zero;
         public Vector2 bg5Pos = Vector2.Zero;
@@ -200,6 +203,24 @@ namespace Project1
         float endframepersec;
         float endtimeperframe;
         float endtotalelapsed;
+
+        int normalframe;
+        int normaltotalframe;
+        int normalframepersec;
+        float normaltimeperframe;
+        float normaltotalelapsed;
+
+        int cryframe;
+        int crytotalframe;
+        int cryframepersec;
+        float crytimeperframe;
+        float crytotalelapsed;
+
+        int fearframe;
+        int feartotalframe;
+        int fearframepersec;
+        float feartimeperframe;
+        float feartotalelapsed;
 
         int frame;
         int totalframe;
@@ -487,6 +508,9 @@ namespace Project1
             deBugFont = Content.Load<SpriteFont>("MyFont");
             farmer = Content.Load<Texture2D>("kaolad_walk_newV2");
             pIdle = Content.Load<Texture2D>("kaolad_standing");
+            normal_mood = Content.Load<Texture2D>("normal_mood_spritesheet");
+            cry_mood = Content.Load<Texture2D>("cry_mood_spritesheet");
+            fear_mood = Content.Load<Texture2D>("fear_mood_spritesheet");
             uiTexture = Content.Load<Texture2D>("UI_emty");
             sanityBar = Content.Load<Texture2D>("SanityBar");
             staminaBar = Content.Load<Texture2D>("StaminaBar");
@@ -495,7 +519,7 @@ namespace Project1
             trap = Content.Load<Texture2D>("Hand_up-down");
             room1 = Content.Load<Texture2D>("1D");
             menu = Content.Load<Texture2D>("MainMenu_new");
-            menuchar1 = Content.Load<Texture2D>("MainMenu_kaolad1");
+            menuBG = Content.Load<Texture2D>("Empty_Screen_Menu");
             menuchar2 = Content.Load<Texture2D>("MainMenu_kaolad2");
             menuCharGlitch = Content.Load<Texture2D>("MainMenu_kaolad_Tile1");
             menuGlitch = Content.Load<Texture2D>("Horspital_glitch");
@@ -550,16 +574,34 @@ namespace Project1
             starttotalelapsed = 0;
 
             endframe = 0;
-            endtotalframe = 5;
+            endtotalframe = 6;
             endframepersec = 0.8f;
             endtimeperframe = (float)1 / endframepersec;
             endtotalelapsed = 0;
 
             bgframe = 0;
             bgtotalframe = 4;
-            bgframepersec = 2;
+            bgframepersec = 4;
             bgtimeperframe = (float)1 / bgframepersec;
             bgtotalelapsed = 0;
+
+            normalframe = 0;
+            normaltotalframe = 4;
+            normalframepersec = 2;
+            normaltimeperframe = (float)1 / normalframepersec;
+            normaltotalelapsed = 0;
+
+            cryframe = 0;
+            crytotalframe = 4;
+            cryframepersec = 2;
+            crytimeperframe = (float)1 / cryframepersec;
+            crytotalelapsed = 0;
+
+            fearframe = 0;
+            feartotalframe = 4;
+            fearframepersec = 2;
+            feartimeperframe = (float)1 / fearframepersec;
+            feartotalelapsed = 0;
 
             frame = 0;
             totalframe = 4;
@@ -944,6 +986,20 @@ namespace Project1
                     isRead2 = false;
                 }
             }
+
+            if(hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                UpdateNormalMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                UpdateCryMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                UpdateFearMoodFrame(elapsed);
+            }
+
             textstaminaPos = staminaPos + new Vector2(0,-20);
             textsanityPos = sanityPos + new Vector2(0, -20);
             sanityText = sanity.ToString();
@@ -1171,23 +1227,24 @@ namespace Project1
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D1) == true)
             {
-                mCurrentScreen = Screenstate.Room1;
+                //mCurrentScreen = Screenstate.Room1;
+                mCurrentScreen = Screenstate.endcutscene;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.E) == true)
             {
-                mCurrentScreen = Screenstate.LRoom1;
+                //mCurrentScreen = Screenstate.LRoom1;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D2) == true)
             {
-                mCurrentScreen = Screenstate.Room2;
+                //mCurrentScreen = Screenstate.Room2;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.R) == true)
             {
-                mCurrentScreen = Screenstate.LRoom2;
+                //mCurrentScreen = Screenstate.LRoom2;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D5) == true)
             {
-                mCurrentScreen = Screenstate.Room5;
+                //mCurrentScreen = Screenstate.Room5;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.T) == true)
             {
@@ -1218,10 +1275,11 @@ namespace Project1
             dylight.Lights.Remove(spotLightR2_3);
             dylight.Lights.Remove(spotLightR2_4);
             dylight.Lights.Remove(light);
+            dylight.Lights.Remove(eLight);
 
-            if (endframe == 4)
+            if (endframe == 5)
             {
-                wait(2000);
+                wait(5000);
                 Exit();
             }
 
@@ -1339,6 +1397,18 @@ namespace Project1
                     isHuant1 = false;
                 }
                 UpdateGhost(elapsed);
+            }
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                UpdateNormalMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                UpdateCryMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                UpdateFearMoodFrame(elapsed);
             }
             sanityText = sanity.ToString();
             staminaText = stamina.ToString();
@@ -1742,6 +1812,18 @@ namespace Project1
                     isHide = false;
                 }
             }
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                UpdateNormalMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                UpdateCryMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                UpdateFearMoodFrame(elapsed);
+            }
             sanityText = sanity.ToString();
             staminaText = stamina.ToString();
             ProcessInput();
@@ -1990,6 +2072,18 @@ namespace Project1
                 sanityPos.X = 275;
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
+            }
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                UpdateNormalMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                UpdateCryMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                UpdateFearMoodFrame(elapsed);
             }
             sanityText = sanity.ToString();
             staminaText = stamina.ToString();
@@ -2245,6 +2339,18 @@ namespace Project1
                 {
                     isRead = false;
                 }
+            }
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                UpdateNormalMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                UpdateCryMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                UpdateFearMoodFrame(elapsed);
             }
             sanityText = sanity.ToString();
             staminaText = stamina.ToString();
@@ -2560,6 +2666,18 @@ namespace Project1
                 mCurrentScreen = Screenstate.PipePuzz;
                 inRoom6 = true;
             }
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                UpdateNormalMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                UpdateCryMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                UpdateFearMoodFrame(elapsed);
+            }
             sanityText = sanity.ToString();
             staminaText = stamina.ToString();
             ProcessInput();
@@ -2769,6 +2887,18 @@ namespace Project1
                     dylight.Lights.Add(spotLightR7);
                     isRead = false;
                 }
+            }
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                UpdateNormalMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                UpdateCryMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                UpdateFearMoodFrame(elapsed);
             }
             sanityText = sanity.ToString();
             staminaText = stamina.ToString();
@@ -2997,6 +3127,18 @@ namespace Project1
                 gPos = new Vector2(1881,262);
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
+            }
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                UpdateNormalMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                UpdateCryMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                UpdateFearMoodFrame(elapsed);
             }
             sanityText = sanity.ToString();
             staminaText = stamina.ToString();
@@ -3230,6 +3372,18 @@ namespace Project1
                 {
                     isHide = false;
                 }
+            }
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                UpdateNormalMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                UpdateCryMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                UpdateFearMoodFrame(elapsed);
             }
             sanityText = sanity.ToString();
             staminaText = stamina.ToString();
@@ -3550,6 +3704,18 @@ namespace Project1
                     isHide = false;
                 }
             }
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                UpdateNormalMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                UpdateCryMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                UpdateFearMoodFrame(elapsed);
+            }
             sanityText = sanity.ToString();
             staminaText = stamina.ToString();
             ProcessInput();
@@ -3762,6 +3928,18 @@ namespace Project1
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                UpdateNormalMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                UpdateCryMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                UpdateFearMoodFrame(elapsed);
+            }
             sanityText = sanity.ToString();
             staminaText = stamina.ToString();
             ProcessInput();
@@ -3959,6 +4137,18 @@ namespace Project1
                 {
                     isHide = false;
                 }
+            }
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                UpdateNormalMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                UpdateCryMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                UpdateFearMoodFrame(elapsed);
             }
             sanityText = sanity.ToString();
             staminaText = stamina.ToString();
@@ -4224,6 +4414,18 @@ namespace Project1
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                UpdateNormalMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                UpdateCryMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                UpdateFearMoodFrame(elapsed);
+            }
             sanityText = sanity.ToString();
             staminaText = stamina.ToString();
             ProcessInput();
@@ -4389,6 +4591,18 @@ namespace Project1
                 fLine.X = pos.X + rad;
                 bLine.X = pos.X - rad;
             }
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                UpdateNormalMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                UpdateCryMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                UpdateFearMoodFrame(elapsed);
+            }
             sanityText = sanity.ToString();
             staminaText = stamina.ToString();
             ProcessInput();
@@ -4536,6 +4750,18 @@ namespace Project1
             if(personHit == true)
             {
                 mCurrentScreen = Screenstate.endcutscene;
+            }
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                UpdateNormalMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                UpdateCryMoodFrame(elapsed);
+            }
+            else if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                UpdateFearMoodFrame(elapsed);
             }
             sanityText = sanity.ToString();
             staminaText = stamina.ToString();
@@ -4860,6 +5086,18 @@ namespace Project1
             if(isRead == false)
             {
                 _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+                if(hBarRec.Width <= 163 && hBarRec.Width > 98)
+                {
+                    _spriteBatch.Draw(normal_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * normalframe, 0, 74, 74), Color.White);
+                }
+                if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+                {
+                    _spriteBatch.Draw(cry_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * cryframe, 0, 74, 74), Color.White);
+                }
+                if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+                {
+                    _spriteBatch.Draw(fear_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * fearframe, 0, 74, 74), Color.White);
+                }
                 _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
                 _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
                 _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
@@ -4882,8 +5120,8 @@ namespace Project1
         }
         void DrawMenu()
         {
+            _spriteBatch.Draw(menuBG, Vector2.Zero, Color.White);
             _spriteBatch.Draw(menu, new Vector2 (0,80),new Rectangle(720 * bgframe, 0, 720, 480), Color.White);
-            //_spriteBatch.Draw(menuCharGlitch, Vector2.Zero, new Rectangle(720 * bgframe, 0, 720, 480), Color.White);
             _spriteBatch.Draw(menuGlitch, new Vector2(30, -20), new Rectangle(722 * frame, 0, 722, 482), Color.White);
         }
         void DrawStartcutscene()
@@ -4947,6 +5185,18 @@ namespace Project1
                 _spriteBatch.Draw(ghostWalk, (gPos - camPos) * scroll_factor,new Rectangle(72 *gframe,100 * gdirection,72,100), Color.White);
             }
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                _spriteBatch.Draw(normal_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * normalframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                _spriteBatch.Draw(cry_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * cryframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                _spriteBatch.Draw(fear_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * fearframe, 0, 74, 74), Color.White);
+            }
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
@@ -4995,6 +5245,18 @@ namespace Project1
             _spriteBatch.DrawString(deBugFont, capetText, (capetPos - new Vector2(0, 20)), (Color.White));
             _spriteBatch.DrawString(deBugFont, gotItemText, (gotItemPos - new Vector2(40, 20)), (Color.Red));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                _spriteBatch.Draw(normal_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * normalframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                _spriteBatch.Draw(cry_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * cryframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                _spriteBatch.Draw(fear_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * fearframe, 0, 74, 74), Color.White);
+            }
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
@@ -5036,6 +5298,18 @@ namespace Project1
             _spriteBatch.DrawString(deBugFont, capetText, (capetPos - new Vector2(0, 20)), (Color.White));
             _spriteBatch.DrawString(deBugFont, gotItemText, (gotItemPos - new Vector2(40, 20)), (Color.Red));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                _spriteBatch.Draw(normal_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * normalframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                _spriteBatch.Draw(cry_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * cryframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                _spriteBatch.Draw(fear_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * fearframe, 0, 74, 74), Color.White);
+            }
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(ballTexture, ballPos4_2, new Rectangle(0, 24, 0, 0), (Color.White));
@@ -5091,6 +5365,18 @@ namespace Project1
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, tu3, (paperPos - new Vector2(0, 20) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                _spriteBatch.Draw(normal_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * normalframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                _spriteBatch.Draw(cry_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * cryframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                _spriteBatch.Draw(fear_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * fearframe, 0, 74, 74), Color.White);
+            }
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
@@ -5136,6 +5422,18 @@ namespace Project1
             _spriteBatch.DrawString(deBugFont, tu2, (paperPos - new Vector2(0, 20)), (Color.White));
             _spriteBatch.DrawString(deBugFont, tu1, (paperPos - new Vector2(0, 20)), (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                _spriteBatch.Draw(normal_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * normalframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                _spriteBatch.Draw(cry_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * cryframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                _spriteBatch.Draw(fear_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * fearframe, 0, 74, 74), Color.White);
+            }
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(ballTexture, ballPos6_5, new Rectangle(0, 24, 0, 0), (Color.White));
@@ -5198,6 +5496,18 @@ namespace Project1
             if(isRead == false)
             {
                 _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+                if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+                {
+                    _spriteBatch.Draw(normal_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * normalframe, 0, 74, 74), Color.White);
+                }
+                if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+                {
+                    _spriteBatch.Draw(cry_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * cryframe, 0, 74, 74), Color.White);
+                }
+                if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+                {
+                    _spriteBatch.Draw(fear_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * fearframe, 0, 74, 74), Color.White);
+                }
                 _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
                 _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             }
@@ -5222,6 +5532,18 @@ namespace Project1
                 _spriteBatch.Draw(farmer, pos - camPos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             }
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                _spriteBatch.Draw(normal_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * normalframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                _spriteBatch.Draw(cry_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * cryframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                _spriteBatch.Draw(fear_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * fearframe, 0, 74, 74), Color.White);
+            }
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(ballTexture, ballPos, new Rectangle(0, 24, 0, 0), (Color.White));
@@ -5279,6 +5601,18 @@ namespace Project1
             _spriteBatch.DrawString(deBugFont, locker2_2, (ballLockerR2_2 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                _spriteBatch.Draw(normal_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * normalframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                _spriteBatch.Draw(cry_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * cryframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                _spriteBatch.Draw(fear_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * fearframe, 0, 74, 74), Color.White);
+            }
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
@@ -5320,6 +5654,18 @@ namespace Project1
                 }
             }
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                _spriteBatch.Draw(normal_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * normalframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                _spriteBatch.Draw(cry_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * cryframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                _spriteBatch.Draw(fear_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * fearframe, 0, 74, 74), Color.White);
+            }
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(ballTexture, ballPos3_2, new Rectangle(0, 24, 0, 0), (Color.White));
@@ -5357,6 +5703,18 @@ namespace Project1
                 _spriteBatch.Draw(farmer, pos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             }
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                _spriteBatch.Draw(normal_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * normalframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                _spriteBatch.Draw(cry_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * cryframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                _spriteBatch.Draw(fear_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * fearframe, 0, 74, 74), Color.White);
+            }
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(ballTexture, ballPos4_2, new Rectangle(0, 24, 0, 0), (Color.White));
@@ -5406,6 +5764,18 @@ namespace Project1
             _spriteBatch.DrawString(deBugFont, locker5, (ballLockerR5 - new Vector2(0, 80) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                _spriteBatch.Draw(normal_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * normalframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                _spriteBatch.Draw(cry_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * cryframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                _spriteBatch.Draw(fear_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * fearframe, 0, 74, 74), Color.White);
+            }
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
@@ -5444,6 +5814,18 @@ namespace Project1
                 _spriteBatch.Draw(farmer, pos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             }
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                _spriteBatch.Draw(normal_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * normalframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                _spriteBatch.Draw(cry_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * cryframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                _spriteBatch.Draw(fear_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * fearframe, 0, 74, 74), Color.White);
+            }
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(ballTexture, ballPos6_5, new Rectangle(0, 24, 0, 0), (Color.White));
@@ -5479,6 +5861,18 @@ namespace Project1
                 _spriteBatch.Draw(farmer, pos, new Rectangle(72 * frame, 100 * direction, 72, 100), (Color.White));
             }
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                _spriteBatch.Draw(normal_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * normalframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                _spriteBatch.Draw(cry_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * cryframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                _spriteBatch.Draw(fear_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * fearframe, 0, 74, 74), Color.White);
+            }
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(ballTexture, ballPos7_2, new Rectangle(0, 24, 0, 0), (Color.White));
@@ -5525,6 +5919,18 @@ namespace Project1
             _spriteBatch.DrawString(deBugFont, ptext, (textPos - camPos) * scroll_factor, (Color.White));
             _spriteBatch.DrawString(deBugFont, toEnd, (ballPos8_End - new Vector2(0, 40) - camPos) * scroll_factor, (Color.White));
             _spriteBatch.Draw(uiTexture, (uiPos - camPos) * scroll_factor, Color.White);
+            if (hBarRec.Width <= 163 && hBarRec.Width > 98)
+            {
+                _spriteBatch.Draw(normal_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * normalframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 98 && hBarRec.Width > 49)
+            {
+                _spriteBatch.Draw(cry_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * cryframe, 0, 74, 74), Color.White);
+            }
+            if (hBarRec.Width <= 49 && hBarRec.Width > 0)
+            {
+                _spriteBatch.Draw(fear_mood, (uiPos - camPos) * scroll_factor, new Rectangle(74 * fearframe, 0, 74, 74), Color.White);
+            }
             _spriteBatch.Draw(sanityBar, ((uiPos + sbarPos) - camPos) * scroll_factor, hBarRec, Color.White);
             _spriteBatch.Draw(staminaBar, ((uiPos + sbarPos + new Vector2(0, 33)) - camPos) * scroll_factor, sBarRec, Color.White);
             _spriteBatch.Draw(sPill, (staminaPos - camPos) * scroll_factor, Color.White);
@@ -5612,6 +6018,33 @@ namespace Project1
             {
                 endframe = (endframe + 1) % endtotalframe;
                 endtotalelapsed -= endtimeperframe;
+            }
+        }
+        void UpdateNormalMoodFrame(float elapsed)
+        {
+            normaltotalelapsed += elapsed;
+            if (normaltotalelapsed > normaltimeperframe)
+            {
+                normalframe = (normalframe + 1) % normaltotalframe;
+                normaltotalelapsed -= normaltimeperframe;
+            }
+        }
+        void UpdateCryMoodFrame(float elapsed)
+        {
+            crytotalelapsed += elapsed;
+            if (crytotalelapsed > crytimeperframe)
+            {
+                cryframe = (cryframe + 1) % crytotalframe;
+                crytotalelapsed -= crytimeperframe;
+            }
+        }
+        void UpdateFearMoodFrame(float elapsed)
+        {
+            feartotalelapsed += elapsed;
+            if (feartotalelapsed > feartimeperframe)
+            {
+                fearframe = (fearframe + 1) % feartotalframe;
+                feartotalelapsed -= feartimeperframe;
             }
         }
         void UpdateFrame(float elapsed)
